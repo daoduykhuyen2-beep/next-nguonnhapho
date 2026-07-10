@@ -5,9 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 const LOAI_LABEL: Record<string, string> = {
-  tin_tuc: "Tin tuc",
-  thi_truong: "Thi truong",
-  founder: "Goc nhin Founder",
+  tin_tuc: "Tin tức",
+  thi_truong: "Thị trường",
+  founder: "Góc nhìn Founder",
   video: "Video",
 };
 
@@ -41,7 +41,7 @@ export default async function TinTucDetail({
   return (
     <article className="mx-auto max-w-3xl">
       <Link href="/tin-tuc" className="text-sm text-brand hover:underline">
-        &larr; Quay lai Tin tuc
+        &larr; Quay lại Tin tức
       </Link>
 
       <div className="mt-4">
