@@ -1,122 +1,62 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { Post } from "@/lib/types";
-import { formatGia } from "@/components/PostCard";
-import DeletePostButton from "@/components/DeletePostButton";
+import AdminNav from "@/components/AdminNav";
 
 export const metadata = { title: "Quản trị" };
+export const dynamic = "force-dynamic";
 const ADMIN_EMAIL = "daoduykhuyen2@gmail.com";
+
+function vnd(n: number) { return Number(n || 0).toLocaleString("vi-VN") + "đ"; }
 
 export default async function AdminPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/dang-nhap?next=/admin");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_admin")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  const isAdmin = user.email === ADMIN_EMAIL || profile?.is_admin === true;
+  const { data: prof } = await supabase.from("profiles").select("is_admin").eq("id", user.id).maybeSingle();
+  const isAdmin = user.email === ADMIN_EMAIL || prof?.is_admin === true;
   if (!isAdmin) {
-    return (
-      <div className="mx-auto max-w-lg rounded-xl border bg-white p-8 text-center">
-        <h2 className="mb-2 text-xl font-bold">Không có quyền truy cập</h2>
-        <p className="text-gray-500">Trang này chỉ dành cho quản trị viên.</p>
-      </div>
-    );
+    return (<div className="mx-auto max-w-lg rounded-xl border bg-white p-8 text-center"><h2 className="mb-2 text-xl font-bold">Không có quyền truy cập</h2><p className="text-gray-500">Trang này chỉ dành cho quản trị viên.</p></div>);
   }
 
-  const { data, count: postCount } = await supabase
-    .from("web_posts")
-    .select("*", { count: "exact" })
-    .order("created_at", { ascending: false })
-    .limit(200);
-
-  const { count: userCount } = await supabase
-    .from("profiles")
-    .select("id", { count: "exact", head: true });
-
-  const posts = (data as Post[]) || [];
+  const today = new Date().toISOString().slice(0, 10);
+  const [posts, users, news, paidPays, viewsToday, viewsTotal] = await Promise.all([
+    supabase.from("web_posts").select("id", { count: "exact", head: true }),
+    supabase.from("profiles").select("id", { count: "exact", head: true }),
+    supabase.from("news").select("id", { count: "exact", head: true }),
+    supabase.from("payments").select("amount, status").eq("status", "paid"),
+    supabase.from("page_views").select("id", { count: "exact", head: true }).eq("ngay", today),
+    supabase.from("page_views").select("id", { count: "exact", head: true }),
+  ]);
+  const doanhThu = (paidPays.data || []).reduce((s, r) => s + Number(r.amount || 0), 0);
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Trang quản trị</h1>
-
-      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <Stat label="Tổng tin đăng" value={postCount ?? posts.length} />
-        <Stat label="Thành viên" value={userCount ?? 0} />
-        <Stat label="Hiển thị (trang này)" value={posts.length} />
+      <h1 className="mb-2 text-2xl font-bold">Trang quản trị</h1>
+      <p className="mb-4 text-gray-500">Xin chào, bạn có toàn quyền quản lý website ngay tại đây.</p>
+      <AdminNav />
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <Stat label="Tổng tin đăng" value={(posts.count || 0).toLocaleString("vi-VN")} />
+        <Stat label="Thành viên" value={(users.count || 0).toLocaleString("vi-VN")} />
+        <Stat label="Bài tin tức" value={(news.count || 0).toLocaleString("vi-VN")} />
+        <Stat label="Doanh thu" value={vnd(doanhThu)} />
+        <Stat label="Truy cập hôm nay" value={(viewsToday.count || 0).toLocaleString("vi-VN")} />
+        <Stat label="Tổng truy cập" value={(viewsTotal.count || 0).toLocaleString("vi-VN")} />
       </div>
-
-      <div className="overflow-x-auto rounded-lg border bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b bg-gray-50 text-gray-600">
-            <tr>
-              <th className="px-4 py-3">Tiêu đề</th>
-              <th className="px-4 py-3">Giá</th>
-              <th className="px-4 py-3">Quận</th>
-              <th className="px-4 py-3">Ngày</th>
-              <th className="px-4 py-3">Trạng thái</th>
-              <th className="px-4 py-3 text-right">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((p) => (
-              <tr key={p.id} className="border-b last:border-0">
-                <td className="px-4 py-3">
-                  <Link
-                    href={"/tin-dang/" + p.id}
-                    className="font-medium hover:text-brand"
-                  >
-                    {p.title || "(Không có tiêu đề)"}
-                  </Link>
-                </td>
-                <td className="px-4 py-3">{formatGia(p.gia)}</td>
-                <td className="px-4 py-3">{p.quan || "-"}</td>
-                <td className="px-4 py-3 text-gray-500">
-                  {p.created_at
-                    ? new Date(p.created_at).toLocaleDateString("vi-VN")
-                    : "-"}
-                </td>
-                <td className="px-4 py-3">{p.trang_thai || "-"}</td>
-                <td className="px-4 py-3 text-right">
-                  <div className="flex justify-end gap-2">
-                    <Link
-                      href={"/sua-tin/" + p.id}
-                      className="rounded border px-2 py-1 text-xs hover:bg-gray-50"
-                    >
-                      Sửa
-                    </Link>
-                    <DeletePostButton id={p.id} />
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {posts.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                  Chưa có tin đăng nào.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Card href="/admin/bai-dang" title="Quản lý bài đăng" desc="Sửa, ẩn, xóa, duyệt tin nhà đất" />
+        <Card href="/admin/thanh-vien" title="Quản lý thành viên" desc="Xem & sửa thông tin, phân quyền" />
+        <Card href="/admin/tin-tuc" title="Quản lý tin tức" desc="Thêm / sửa bài viết" />
+        <Card href="/admin/thong-bao" title="Thông báo / Khuyến mãi" desc="Gửi thông báo cho mọi người" />
+        <Card href="/admin/nap-tien" title="Nạp tiền & Gói" desc="Danh sách giao dịch, đăng ký gói" />
       </div>
     </div>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-xl border bg-white p-4">
-      <div className="text-2xl font-bold text-brand">{value}</div>
-      <div className="text-sm text-gray-500">{label}</div>
-    </div>
-  );
+function Stat({ label, value }: { label: string; value: string }) {
+  return (<div className="rounded-xl border bg-white p-4"><p className="text-sm text-gray-500">{label}</p><p className="mt-1 text-2xl font-bold text-brand">{value}</p></div>);
+}
+function Card({ href, title, desc }: { href: string; title: string; desc: string }) {
+  return (<Link href={href} className="rounded-xl border bg-white p-5 transition hover:border-brand hover:shadow-sm"><p className="text-lg font-bold">{title}</p><p className="mt-1 text-sm text-gray-500">{desc}</p></Link>);
 }
