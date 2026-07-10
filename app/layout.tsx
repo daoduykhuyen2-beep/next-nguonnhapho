@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   description:
     "Kênh đăng tin mua bán, cho thuê nhà phố, shophouse, căn hộ, đất nền trung tâm TP. Hồ Chí Minh. Giá thật, pháp lý rõ ràng, uy tín.",
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+    icon: "/logo-black.png",
+    shortcut: "/logo-black.png",
+    apple: "/logo-black.png",
   },
   openGraph: {
     title: "Nguồn Nhà Phố HCM",
@@ -46,12 +46,12 @@ export default async function RootLayout({
 
   return (
     <html lang="vi">
-      <body className="flex min-h-screen flex-col bg-gray-50 text-gray-900">
-        <header className="sticky top-0 z-40 bg-brand text-white shadow-md">
+      <body className="flex min-h-screen flex-col bg-white text-black">
+        <header className="sticky top-0 z-40 border-b border-gray-200 bg-white text-black shadow-sm">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/logo.png"
+                src="/logo-black.png"
                 alt="Nguồn Nhà Phố HCM"
                 width={44}
                 height={44}
@@ -80,7 +80,7 @@ export default async function RootLayout({
                   </Link>
                   <Link
                     href="/tai-khoan"
-                    className="rounded-md bg-white px-3 py-1.5 text-brand hover:bg-gray-100"
+                    className="rounded-md bg-brand px-3 py-1.5 text-white hover:opacity-90"
                   >
                     Tài khoản
                   </Link>
@@ -92,7 +92,7 @@ export default async function RootLayout({
                   </Link>
                   <Link
                     href="/dang-nhap"
-                    className="rounded-md bg-white px-3 py-1.5 text-brand hover:bg-gray-100"
+                    className="rounded-md bg-brand px-3 py-1.5 text-white hover:opacity-90"
                   >
                     Đăng nhập
                   </Link>
@@ -100,7 +100,7 @@ export default async function RootLayout({
               )}
             </div>
           </div>
-          <nav className="flex gap-4 overflow-x-auto border-t border-white/20 px-4 py-2 text-sm font-medium md:hidden">
+          <nav className="flex gap-4 overflow-x-auto border-t border-gray-200 px-4 py-2 text-sm font-medium md:hidden">
             {navLinks.map((l) => (
               <Link key={l.label} href={l.href} className="whitespace-nowrap hover:underline">
                 {l.label}
@@ -111,7 +111,7 @@ export default async function RootLayout({
 
         <main className="flex-1">{children}</main>
 
-        <footer className="mt-12 border-t bg-brand text-white">
+        <footer className="mt-12 border-t border-gray-200 bg-neutral-900 text-white">
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2">
