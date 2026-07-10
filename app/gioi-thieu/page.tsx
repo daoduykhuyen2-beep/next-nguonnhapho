@@ -1,161 +1,198 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Gioi thieu",
+  title: "Giới thiệu",
   description:
-    "NguonNhaPho - Kenh dang tin mua ban nha pho uy tin tai TP. Ho Chi Minh.",
+    "Nguồn Nhà Phố HCM — làm việc chuyên nghiệp, minh bạch từng bước. Tầm nhìn, quy trình, giá trị cốt lõi và cam kết với khách hàng.",
 };
 
-const GIA_TRI = [
-  {
-    icon: "\u{2705}",
-    title: "Minh bach",
-    desc: "Thong tin nha dat that, gia that, phap ly ro rang, khong tin ao.",
-  },
-  {
-    icon: "\u{1F91D}",
-    title: "Tan tam",
-    desc: "Dat quyen loi khach hang len hang dau, ho tro tan tinh moi giao dich.",
-  },
-  {
-    icon: "\u{26A1}",
-    title: "Nhanh chong",
-    desc: "Ket noi nguoi mua va nguoi ban nhanh chong, tiet kiem thoi gian.",
-  },
-  {
-    icon: "\u{1F3C6}",
-    title: "Uy tin",
-    desc: "Xay dung thuong hieu bang chat luong dich vu va su hai long cua khach hang.",
-  },
+const QUY_TRINH = [
+  { b: "01", t: "Đội tìm nguồn", d: "Săn nhà thật từ chủ nhà, xác minh sổ và hiện trạng trước khi nhận đăng." },
+  { b: "02", t: "Đội thẩm định pháp lý", d: "Kiểm tra sổ hồng, quy hoạch, tranh chấp, thế chấp — loại tin ảo, giá ảo." },
+  { b: "03", t: "Đội tư vấn khách hàng", d: "Lắng nghe nhu cầu, chọn lọc căn phù hợp và dẫn xem nhà đúng như đăng." },
+  { b: "04", t: "Đội hỗ trợ giao dịch", d: "Đồng hành công chứng, sang tên, hỗ trợ vay ngân hàng đến khi bàn giao." },
 ];
 
-const QUY_TRINH = [
-  { buoc: "01", title: "Tiep nhan nhu cau", desc: "Lang nghe va tu van nhu cau mua ban cua khach hang." },
-  { buoc: "02", title: "Khao sat & Tham dinh", desc: "Kiem tra phap ly, tham dinh gia tri that cua bat dong san." },
-  { buoc: "03", title: "Ket noi giao dich", desc: "Ket noi nguoi mua - nguoi ban, ho tro thuong luong gia." },
-  { buoc: "04", title: "Hoan tat & Ban giao", desc: "Ho tro thu tuc phap ly, cong chung va ban giao an toan." },
+const GIA_TRI = [
+  { icon: "🛡️", t: "Minh bạch", d: "Thông tin thật, giá thị trường, không tin ảo — không giá ảo." },
+  { icon: "⚖️", t: "Pháp lý an toàn", d: "Mọi căn đều được kiểm tra sổ và quy hoạch trước khi giao dịch." },
+  { icon: "🤝", t: "Tận tâm", d: "Đặt lợi ích khách hàng làm trung tâm trong từng quyết định." },
+  { icon: "⭐", t: "Chuyên nghiệp", d: "Quy trình khép kín 4 bước, đội ngũ đào tạo bài bản." },
 ];
 
 const SO_LIEU = [
-  { con_so: "3.500+", nhan: "Nha pho dang ban" },
-  { con_so: "10.000+", nhan: "Khach hang tin tuong" },
-  { con_so: "24", nhan: "Quan/huyen phu song" },
-  { con_so: "98%", nhan: "Khach hang hai long" },
+  { n: "1.700+", l: "Căn nhà phố trong kho" },
+  { n: "4", l: "Đội chuyên trách" },
+  { n: "100%", l: "Tin kiểm tra pháp lý" },
+  { n: "10+", l: "Ngân hàng đối tác" },
 ];
 
-const KHACH_HANG = [
-  {
-    ten: "Chi Nguyen Thi Mai",
-    vai_tro: "Khach mua nha Quan 3",
-    noi_dung: "Duoc tu van rat nhiet tinh, thong tin nha dung nhu mo ta. Toi rat hai long voi dich vu.",
-  },
-  {
-    ten: "Anh Tran Van Hung",
-    vai_tro: "Khach ban nha Binh Thanh",
-    noi_dung: "Nha cua toi duoc rao ban va ket noi khach hang chi trong 2 tuan. Rat chuyen nghiep.",
-  },
-  {
-    ten: "Chi Le Thanh Ha",
-    vai_tro: "Nha dau tu",
-    noi_dung: "Kenh thong tin dang tin uy tin nhat toi tung dung. Gia that, phap ly minh bach.",
-  },
+const RUI_RO = [
+  "Mua nhầm nhà dính quy hoạch, giải tỏa — mất trắng phần lớn giá trị.",
+  "Nhà đang thế chấp / tranh chấp thừa kế — không thể sang tên.",
+  "Đặt cọc theo giá ảo, tin ảo rồi bị 'lùa' sang căn khác.",
+  "Giấy tờ giả, vi bằng không có giá trị pháp lý khi ra tòa.",
 ];
 
-const NGAN_HANG = ["Vietcombank", "BIDV", "VietinBank", "Techcombank", "ACB", "Sacombank"];
+const CAM_KET = [
+  "Thông tin căn nhà là thật, hình ảnh đúng hiện trạng.",
+  "Giá công bố là giá thị trường, không thổi giá.",
+  "Kiểm tra pháp lý kỹ trước khi khách xuống tiền.",
+  "Đồng hành đến khi hoàn tất sang tên, bàn giao.",
+];
 
 export default function GioiThieuPage() {
   return (
-    <div className="space-y-14">
-      <section className="rounded-2xl bg-brand px-6 py-12 text-center text-white">
-        <h1 className="text-3xl font-bold sm:text-4xl">Ve NguonNhaPho</h1>
-        <p className="mx-auto mt-3 max-w-2xl text-white/90">
-          Kenh dang tin mua ban nha pho uy tin hang dau tai TP. Ho Chi Minh, ket noi
-          hang ngan giao dich thanh cong moi nam.
+    <>
+      {/* Hero */}
+      <section className="bg-brand text-white">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+          <p className="text-sm font-semibold uppercase tracking-widest opacity-80">
+            Về chúng tôi
+          </p>
+          <h1 className="mt-2 max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
+            Nguồn Nhà Phố HCM — làm việc chuyên nghiệp, minh bạch từng bước
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm opacity-90 sm:text-base">
+            Chuyên nhà phố, shophouse trung tâm TP.HCM. Kho 1.700+ căn được kiểm
+            tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch, an toàn.
+          </p>
+          <Link
+            href="/tin-dang"
+            className="mt-6 inline-block rounded-lg bg-white px-5 py-2.5 font-semibold text-brand hover:bg-gray-100"
+          >
+            Xem nhà đang bán →
+          </Link>
+        </div>
+      </section>
+
+      {/* Tầm nhìn & sứ mệnh */}
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <h2 className="text-2xl font-bold text-brand">Tầm nhìn & sứ mệnh</h2>
+        <p className="mt-4 max-w-4xl leading-relaxed text-gray-700">
+          Nguồn Nhà Phố HCM mong muốn trở thành địa chỉ đáng tin cậy hàng đầu cho
+          người mua – bán nhà phố khu trung tâm Sài Gòn: nơi mọi thông tin đều
+          minh bạch, mọi giao dịch đều an toàn, và khách hàng luôn được đặt ở vị
+          trí trung tâm. Trong một thị trường còn nhiều tin ảo và rủi ro pháp lý,
+          chúng tôi chọn con đường khó hơn nhưng bền hơn — làm thật, nói thật, và
+          phục vụ khách hàng bằng cả sự chuyên nghiệp lẫn cái tâm với nghề.
         </p>
       </section>
 
-      <section className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <div className="rounded-xl border bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-bold text-brand">Tam nhin</h2>
-          <p className="mt-3 text-gray-700">
-            Tro thanh nen tang giao dich bat dong san nha pho minh bach va dang tin cay
-            nhat tai Viet Nam, noi moi nguoi deu co the tim thay ngoi nha mo uoc.
+      {/* Quy trình 4 bước */}
+      <section className="bg-white py-12">
+        <div className="mx-auto max-w-6xl px-4">
+          <h2 className="text-2xl font-bold text-brand">
+            Quy trình làm việc của Nguồn Nhà Phố
+          </h2>
+          <p className="mt-1 text-gray-500">
+            Bốn đội chuyên trách — mỗi căn nhà đi qua đủ 4 bước trước khi đến tay
+            khách hàng.
           </p>
-        </div>
-        <div className="rounded-xl border bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-bold text-brand">Su menh</h2>
-          <p className="mt-3 text-gray-700">
-            Ket noi nguoi mua va nguoi ban bang thong tin that, dich vu tan tam, gop phan
-            xay dung thi truong bat dong san lanh manh va ben vung.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-900">Gia tri cot loi</h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {GIA_TRI.map((g) => (
-            <div key={g.title} className="rounded-xl border bg-white p-6 text-center shadow-sm">
-              <div className="text-4xl">{g.icon}</div>
-              <h3 className="mt-3 font-semibold text-gray-900">{g.title}</h3>
-              <p className="mt-2 text-sm text-gray-600">{g.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="rounded-2xl bg-brand px-6 py-10">
-        <div className="grid grid-cols-2 gap-6 text-center text-white lg:grid-cols-4">
-          {SO_LIEU.map((s) => (
-            <div key={s.nhan}>
-              <p className="text-3xl font-bold sm:text-4xl">{s.con_so}</p>
-              <p className="mt-1 text-sm text-white/90">{s.nhan}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-900">Quy trinh mua ban</h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {QUY_TRINH.map((q) => (
-            <div key={q.buoc} className="rounded-xl border bg-white p-6 shadow-sm">
-              <span className="text-3xl font-bold text-brand/30">{q.buoc}</span>
-              <h3 className="mt-2 font-semibold text-gray-900">{q.title}</h3>
-              <p className="mt-2 text-sm text-gray-600">{q.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-900">Khach hang noi gi</h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {KHACH_HANG.map((k) => (
-            <div key={k.ten} className="rounded-xl border bg-white p-6 shadow-sm">
-              <p className="italic text-gray-700">&ldquo;{k.noi_dung}&rdquo;</p>
-              <div className="mt-4">
-                <p className="font-semibold text-gray-900">{k.ten}</p>
-                <p className="text-sm text-gray-500">{k.vai_tro}</p>
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {QUY_TRINH.map((s) => (
+              <div key={s.b} className="rounded-2xl border p-6 shadow-sm">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-brand text-lg font-bold text-white">
+                  {s.b}
+                </div>
+                <h3 className="mt-4 font-semibold">{s.t}</h3>
+                <p className="mt-2 text-sm text-gray-600">{s.d}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Số liệu */}
+      <section className="bg-brand text-white">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-12 lg:grid-cols-4">
+          {SO_LIEU.map((s) => (
+            <div key={s.l} className="text-center">
+              <div className="text-3xl font-extrabold sm:text-4xl">{s.n}</div>
+              <div className="mt-1 text-sm opacity-90">{s.l}</div>
             </div>
           ))}
         </div>
       </section>
 
-      <section>
-        <h2 className="mb-6 text-center text-2xl font-bold text-gray-900">Ngan hang doi tac</h2>
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          {NGAN_HANG.map((n) => (
-            <span
-              key={n}
-              className="rounded-lg border bg-white px-6 py-3 font-semibold text-gray-700 shadow-sm"
-            >
-              {n}
-            </span>
+      {/* Giá trị cốt lõi */}
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <h2 className="text-2xl font-bold text-brand">Giá trị cốt lõi</h2>
+        <p className="mt-1 text-gray-500">Những điều Nguồn Nhà Phố luôn giữ vững.</p>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {GIA_TRI.map((g) => (
+            <div key={g.t} className="rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="text-3xl">{g.icon}</div>
+              <h3 className="mt-3 font-semibold">{g.t}</h3>
+              <p className="mt-2 text-sm text-gray-600">{g.d}</p>
+            </div>
           ))}
         </div>
       </section>
-    </div>
+
+      {/* Khách hàng được gì */}
+      <section className="bg-white py-12">
+        <div className="mx-auto max-w-4xl px-4 text-center">
+          <h2 className="text-2xl font-bold text-brand">
+            Khách hàng được gì khi làm việc với Nguồn Nhà Phố?
+          </h2>
+          <p className="mt-4 leading-relaxed text-gray-700">
+            Khi làm việc với chúng tôi, anh chị được phục vụ bởi một quy trình
+            chuyên nghiệp khép kín: thông tin căn nhà là thật, giá là giá thị
+            trường, nhà xem đúng như đăng, và pháp lý được kiểm tra kỹ trước khi
+            giao dịch. Không tin ảo, không giá ảo, không bất ngờ khó chịu vào phút
+            chót — đó là cách Nguồn Nhà Phố giữ uy tín.
+          </p>
+        </div>
+      </section>
+
+      {/* Rủi ro & Cam kết */}
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6">
+            <h2 className="text-xl font-bold text-brand">
+              Rủi ro khi mua nhà — chuyện có thật, không dọa
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm text-gray-700">
+              {RUI_RO.map((r) => (
+                <li key={r} className="flex gap-2">
+                  <span className="text-brand">⚠️</span>
+                  <span>{r}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-2xl border p-6">
+            <h2 className="text-xl font-bold text-brand">Cam kết làm việc</h2>
+            <ul className="mt-4 space-y-3 text-sm text-gray-700">
+              {CAM_KET.map((c) => (
+                <li key={c} className="flex gap-2">
+                  <span className="text-green-600">✓</span>
+                  <span>{c}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-gray-100">
+        <div className="mx-auto max-w-6xl px-4 py-12 text-center">
+          <h2 className="text-2xl font-bold text-brand">
+            Sẵn sàng tìm căn nhà phù hợp?
+          </h2>
+          <div className="mt-5 flex justify-center gap-3">
+            <Link href="/tin-dang" className="rounded-lg bg-brand px-5 py-2.5 font-semibold text-white hover:opacity-90">
+              Xem nhà đang bán
+            </Link>
+            <Link href="/tuyen-dung" className="rounded-lg border border-brand px-5 py-2.5 font-semibold text-brand hover:bg-brand hover:text-white">
+              Gia nhập đội ngũ
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
