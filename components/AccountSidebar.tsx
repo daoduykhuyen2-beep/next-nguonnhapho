@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
 
 const items = [
-  { href: "/tai-khoan", label: "Thông tin cá nhân", icon: "👤" },
-  { href: "/tai-khoan/hoa-don-vat", label: "Thông tin xuất hóa đơn VAT", icon: "🧾" },
-  { href: "/tai-khoan/bao-mat", label: "Bảo mật", icon: "🛡️" },
+  { href: "/tai-khoan", label: "Thông tin tài khoản", icon: "👤" },
+  { href: "/tai-khoan/tin-cua-toi", label: "Tin của tôi", icon: "🏠" },
+  { href: "/tai-khoan/bien-dong", label: "Nạp tiền & biến động số dư", icon: "💳" },
   { href: "/tai-khoan/nhat-ky", label: "Nhật ký hoạt động", icon: "🕒" },
-  { href: "/tai-khoan/bien-dong", label: "Biến động số dư", icon: "💳" },
+  { href: "/tai-khoan/bao-mat", label: "Bảo mật", icon: "🛡️" },
   { href: "/tai-khoan/doi-mat-khau", label: "Thay đổi mật khẩu", icon: "🔑" },
 ];
 
