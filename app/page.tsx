@@ -5,17 +5,49 @@ import PostCard from "@/components/PostCard";
 
 export const revalidate = 60;
 
-async function layTin(opts: { status?: string; limit?: number } = {}): Promise<Post[]> {
+async function layTin(opts: { status?: string; limit?: number; hotToday?: boolean } = {}): Promise<Post[]> {
   const supabase = await createClient();
-  let q = supabase
-    .from("web_posts")
-    .select("*")
-    .eq("trang_thai", "duyet");
+  let q = supabase.from("web_posts").select("*").eq("trang_thai", "duyet");
   if (opts.status) q = q.eq("status", opts.status);
+  if (opts.hotToday) {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    q = q.gte("created_at", start.toISOString());
+  }
   q = q.order("created_at", { ascending: false }).limit(opts.limit ?? 8);
   const { data, error } = await q;
   if (error) return [];
   return (data as Post[]) ?? [];
+}
+
+async function demKhoNha(): Promise<number> {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from("web_posts")
+    .select("id", { count: "exact", head: true })
+    .eq("trang_thai", "duyet");
+  return count ?? 0;
+}
+
+type XepHang = { ten: string; so: number };
+
+async function layXepHang(limit = 8): Promise<XepHang[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("web_posts")
+    .select("owner, contact_name")
+    .eq("trang_thai", "duyet")
+    .not("owner", "is", null);
+  if (!data) return [];
+  const dem = new Map<string, { ten: string; so: number }>();
+  for (const row of data as { owner: string | null; contact_name: string | null }[]) {
+    if (!row.owner) continue;
+    const cur = dem.get(row.owner) ?? { ten: row.contact_name || "Thành viên", so: 0 };
+    cur.so += 1;
+    if (row.contact_name) cur.ten = row.contact_name;
+    dem.set(row.owner, cur);
+  }
+  return [...dem.values()].sort((a, b) => b.so - a.so).slice(0, limit);
 }
 
 type NewsItem = {
@@ -26,13 +58,12 @@ type NewsItem = {
   loai: string | null;
 };
 
-async function layTinTuc(limit = 3): Promise<NewsItem[]> {
+async function layTinTuc(opts: { loai?: string; limit?: number } = {}): Promise<NewsItem[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("news")
-    .select("id, tieu_de, mo_ta, anh_bia, loai")
-    .order("created_at", { ascending: false })
-    .limit(limit);
+  let q = supabase.from("news").select("id, tieu_de, mo_ta, anh_bia, loai");
+  if (opts.loai) q = q.eq("loai", opts.loai);
+  q = q.order("created_at", { ascending: false }).limit(opts.limit ?? 3);
+  const { data, error } = await q;
   if (error) return [];
   return (data as NewsItem[]) ?? [];
 }
@@ -42,27 +73,29 @@ function Khoi({
   moTa,
   tin,
   xemThem,
+  huy,
 }: {
   tieuDe: string;
   moTa?: string;
   tin: Post[];
   xemThem?: string;
+  huy?: string;
 }) {
   if (!tin.length) return null;
   return (
     <section className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-5 flex items-end justify-between">
         <div>
-          <h2 className="text-xl font-bold text-brand sm:text-2xl">{tieuDe}</h2>
+          <h2 className={\`text-xl font-bold sm:text-2xl \${huy ?? "text-brand"}\`}>{tieuDe}</h2>
           {moTa ? <p className="mt-1 text-sm text-gray-500">{moTa}</p> : null}
         </div>
         {xemThem ? (
-          <Link href={xemThem} className="text-sm font-medium text-brand hover:underline">
+          <Link href={xemThem} className="shrink-0 text-sm font-semibold text-brand hover:underline">
             Xem tất cả →
           </Link>
         ) : null}
       </div>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {tin.map((p) => (
           <PostCard key={p.id} post={p} />
         ))}
@@ -84,23 +117,20 @@ const KHU_VUC = [
   "Bình Chánh",
 ];
 
-const NHOM = [
-  { label: "Nhà mặt tiền", href: "/tin-dang?nhom=mat-tien", icon: "🏬" },
-  { label: "Nhà hẻm xe hơi", href: "/tin-dang?nhom=hem-xe-hoi", icon: "🚗" },
-  { label: "Nhà giá tốt < 5 tỷ", href: "/tin-dang?nhom=gia-tot", icon: "💰" },
-  { label: "Shophouse cho thuê", href: "/tin-dang?loai=thue", icon: "🏢" },
-  { label: "Đất nền", href: "/tin-dang?nhom=dat-nen", icon: "🌱" },
-  { label: "Căn hộ", href: "/tin-dang?nhom=can-ho", icon: "🏠" },
-];
-
 export default async function TrangChu() {
-  const [kimCuong, vang, thuongMoi, moiVe, tinTuc] = await Promise.all([
-    layTin({ status: "kim_cuong", limit: 4 }),
-    layTin({ status: "vang", limit: 8 }),
-    layTin({ status: "thuong", limit: 8 }),
-    layTin({ limit: 8 }),
-    layTinTuc(3),
-  ]);
+    const [hotHomNay, kimCuong, vang, tinMoi, xepHang, tinTuc, video, canhBao, khoNha] =
+    await Promise.all([
+      layTin({ hotToday: true, limit: 8 }),
+      layTin({ status: "kim_cuong", limit: 8 }),
+      layTin({ status: "vang", limit: 8 }),
+      layTin({ limit: 8 }),
+      layXepHang(8),
+      layTinTuc({ limit: 3 }),
+      layTinTuc({ loai: "video", limit: 3 }),
+      layTinTuc({ loai: "tin_tuc", limit: 4 }),
+      demKhoNha(),
+    ]);
+
 
   return (
     <>
@@ -156,76 +186,91 @@ export default async function TrangChu() {
         </div>
       </section>
 
-      <Khoi tieuDe="Nhà VIP Kim Cương" moTa="Bất động sản nổi bật, vị trí đắc địa" tin={kimCuong} xemThem="/tin-dang" />
-      <Khoi tieuDe="Nhà VIP Vàng" moTa="Tin ưu tiên, cập nhật liên tục" tin={vang} xemThem="/tin-dang" />
-
-      {/* Khám phá theo nhóm */}
-      <section className="mx-auto max-w-6xl px-4 py-8">
-        <h2 className="mb-5 text-xl font-bold text-brand sm:text-2xl">Khám phá theo nhóm</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-          {NHOM.map((n) => (
-            <Link
-              key={n.label}
-              href={n.href}
-              className="flex flex-col items-center gap-2 rounded-xl border bg-white p-4 text-center text-sm font-medium shadow-sm transition hover:border-brand hover:shadow-md"
-            >
-              <span className="text-2xl">{n.icon}</span>
-              {n.label}
-            </Link>
-          ))}
+      {/* Bang thong ke kho nha cong khai */}
+      <section className="mx-auto max-w-6xl px-4 pt-8">
+        <div className="flex flex-wrap items-center justify-center gap-4 rounded-2xl bg-brand/5 px-6 py-5 text-center">
+          <div>
+            <div className="text-3xl font-extrabold text-brand">{khoNha.toLocaleString("vi-VN")}</div>
+            <div className="text-xs font-medium text-gray-500">Tin nhà đang công khai trong kho</div>
+          </div>
+          <div className="hidden h-10 w-px bg-gray-200 sm:block" />
+          <p className="max-w-md text-sm text-gray-600">
+            Toàn bộ tin đăng bán được công khai tức thì. Đăng tin nhà của bạn để tiếp cận hàng ngàn khách mua mỗi ngày.
+          </p>
+          <Link href="/dang-tin" className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
+            Đăng tin ngay
+          </Link>
         </div>
       </section>
 
-      <Khoi tieuDe="Nhà mới về tuần này" moTa="Tin đăng mới nhất trên hệ thống" tin={moiVe} xemThem="/tin-dang" />
-      <Khoi tieuDe="Nhà tin thường mới" tin={thuongMoi} xemThem="/tin-dang" />
-
-      {/* Tìm nhà theo khu vực */}
-      <section className="mx-auto max-w-6xl px-4 py-8">
-        <h2 className="mb-5 text-xl font-bold text-brand sm:text-2xl">Tìm nhà theo khu vực</h2>
-        <div className="flex flex-wrap gap-3">
-          {KHU_VUC.map((kv) => (
-            <Link
-              key={kv}
-              href={"/tin-dang?quan=" + encodeURIComponent(kv)}
-              className="rounded-full border bg-white px-4 py-2 text-sm font-medium shadow-sm transition hover:border-brand hover:bg-brand hover:text-white"
-            >
-              {kv}
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Tin tức teaser */}
-      {tinTuc.length ? (
+      {/* 1. Tin HOT trong ngay */}
+      {hotHomNay.length ? (
         <section className="mx-auto max-w-6xl px-4 py-8">
           <div className="mb-5 flex items-end justify-between">
-            <h2 className="text-xl font-bold text-brand sm:text-2xl">
-              Tin tức & kiến thức mua nhà an toàn
-            </h2>
-            <Link href="/tin-tuc" className="text-sm font-medium text-brand hover:underline">
-              Xem tất cả →
-            </Link>
+            <div>
+              <h2 className="flex items-center gap-2 text-xl font-bold text-brand sm:text-2xl">
+                <span>🔥</span> Tin HÓT trong ngày
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">Những tin đăng mới nhất hôm nay, cập nhật liên tục</p>
+            </div>
+            <Link href="/tin-dang" className="shrink-0 text-sm font-semibold text-brand hover:underline">Xem tất cả →</Link>
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {tinTuc.map((t) => (
-              <Link
-                key={t.id}
-                href={"/tin-tuc/" + t.id}
-                className="overflow-hidden rounded-xl border bg-white shadow-sm transition hover:shadow-md"
-              >
-                <div className="h-40 w-full bg-gray-100">
-                  {t.anh_bia ? (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {hotHomNay.map((p) => <PostCard key={p.id} post={p} />)}
+          </div>
+        </section>
+      ) : null}
+
+      {/* 2. VIP Kim Cuong */}
+      <Khoi tieuDe="💎 Nhà VIP Kim Cương" moTa="Bất động sản nổi bật, vị trí đắc địa — xếp từ mới đến cũ" tin={kimCuong} xemThem="/tin-dang" />
+
+      {/* 3. VIP Vang */}
+      <Khoi tieuDe="🏅 Nhà VIP Vàng" moTa="Tin chọn lọc — xếp từ mới đến cũ" tin={vang} xemThem="/tin-dang" />
+
+      {/* 4. Tin moi */}
+      <Khoi tieuDe="🆕 Tin mới nhất" moTa="Tất cả tin đăng mới — xếp từ mới đến cũ" tin={tinMoi} xemThem="/tin-dang" />
+
+      {/* 5. Bang xep hang nguoi day tin */}
+      {xepHang.length ? (
+        <section className="mx-auto max-w-6xl px-4 py-8">
+          <div className="mb-5">
+            <h2 className="text-xl font-bold text-brand sm:text-2xl">🏆 Bảng xếp hạng người đẩy tin</h2>
+            <p className="mt-1 text-sm text-gray-500">Thành viên đăng nhiều tin nhất được vinh danh top đầu</p>
+          </div>
+          <div className="overflow-hidden rounded-xl border bg-white">
+            {xepHang.map((h, i) => (
+              <div key={i} className="flex items-center justify-between border-b px-4 py-3 last:border-b-0">
+                <div className="flex items-center gap-3">
+                  <span className={\`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold \${i === 0 ? "bg-yellow-400 text-white" : i === 1 ? "bg-gray-300 text-white" : i === 2 ? "bg-amber-600 text-white" : "bg-gray-100 text-gray-600"}\`}>{i + 1}</span>
+                  <span className="font-medium text-gray-800">{h.ten}</span>
+                </div>
+                <span className="text-sm font-semibold text-brand">{h.so} tin</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {/* 6. Tin tuc & Video */}
+      {tinTuc.length || video.length ? (
+        <section className="mx-auto max-w-6xl px-4 py-8">
+          <div className="mb-5 flex items-end justify-between">
+            <h2 className="text-xl font-bold text-brand sm:text-2xl">📰 Tin tức & Video</h2>
+            <Link href="/tin-tuc" className="shrink-0 text-sm font-semibold text-brand hover:underline">Xem tất cả →</Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[...tinTuc, ...video].slice(0, 6).map((n) => (
+              <Link key={n.loai + "-" + n.id} href="/tin-tuc" className="overflow-hidden rounded-xl border bg-white transition hover:shadow-md">
+                <div className="aspect-[16/9] w-full bg-gray-100">
+                  {n.anh_bia ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={t.anh_bia} alt={t.tieu_de ?? ""} className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-gray-400">
-                      Không có ảnh
-                    </div>
-                  )}
+                    <img src={n.anh_bia} alt={n.tieu_de ?? ""} className="h-full w-full object-cover" />
+                  ) : null}
                 </div>
                 <div className="p-4">
-                  <h3 className="line-clamp-2 font-semibold">{t.tieu_de}</h3>
-                  <p className="mt-1 line-clamp-2 text-sm text-gray-500">{t.mo_ta}</p>
+                  {n.loai === "video" ? <span className="mb-1 inline-block rounded bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand">Video</span> : null}
+                  <h3 className="line-clamp-2 font-semibold text-gray-900">{n.tieu_de}</h3>
+                  {n.mo_ta ? <p className="mt-1 line-clamp-2 text-sm text-gray-500">{n.mo_ta}</p> : null}
                 </div>
               </Link>
             ))}
@@ -233,24 +278,25 @@ export default async function TrangChu() {
         </section>
       ) : null}
 
-      {/* CTA ký gửi */}
-      <section className="bg-gray-100">
-        <div className="mx-auto max-w-6xl px-4 py-12 text-center">
-          <h2 className="text-2xl font-bold text-brand">
-            Anh chị có nhà cần bán hoặc cho thuê?
+      {/* 7. Canh bao rui ro phap ly */}
+      <section className="mx-auto max-w-6xl px-4 py-8">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-6">
+          <h2 className="flex items-center gap-2 text-xl font-bold text-red-700 sm:text-2xl">
+            <span>⚠️</span> Cảnh báo rủi ro & lừa đảo
           </h2>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-gray-600">
-            Ký gửi cho Nguồn Nhà Phố HCM — kiểm tra pháp lý, định giá đúng thị
-            trường và tiếp cận hàng ngàn khách hàng tiềm năng.
-          </p>
-          <div className="mt-5 flex justify-center gap-3">
-            <Link href="/dang-tin" className="rounded-lg bg-brand px-5 py-2.5 font-semibold text-white hover:opacity-90">
-              Đăng tin ngay
-            </Link>
-            <Link href="/gioi-thieu" className="rounded-lg border border-brand px-5 py-2.5 font-semibold text-brand hover:bg-brand hover:text-white">
-              Tìm hiểu quy trình
-            </Link>
+          <p className="mt-1 text-sm text-red-600/80">Kiến thức pháp lý giúp bạn mua nhà an toàn, tránh bẫy lừa đảo</p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {canhBao.map((n) => (
+              <Link key={n.id} href="/tin-tuc" className="flex items-start gap-3 rounded-lg bg-white p-3 transition hover:shadow">
+                <span className="mt-0.5 text-red-500">•</span>
+                <div>
+                  <h3 className="line-clamp-2 text-sm font-semibold text-gray-900">{n.tieu_de}</h3>
+                  {n.mo_ta ? <p className="mt-1 line-clamp-2 text-xs text-gray-500">{n.mo_ta}</p> : null}
+                </div>
+              </Link>
+            ))}
           </div>
+          <Link href="/tin-tuc" className="mt-4 inline-block text-sm font-semibold text-red-700 hover:underline">Xem thêm cảnh báo →</Link>
         </div>
       </section>
     </>
