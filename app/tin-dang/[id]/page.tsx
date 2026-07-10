@@ -45,6 +45,12 @@ function formatTrieuPerM2(giaTy: number | null, dt: number | null): string | nul
   return `${Math.round(trieu).toLocaleString("vi-VN")} tr/m²`;
 }
 
+type PriceHistoryRow = {
+  gia: string | null;
+  gia_tri: number | null;
+  recorded_at: string;
+};
+
 async function getPost(id: string): Promise<Post | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -58,6 +64,16 @@ async function getPost(id: string): Promise<Post | null> {
     return null;
   }
   return (data as Post) ?? null;
+}
+
+async function getPriceHistory(postId: number): Promise<PriceHistoryRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("web_post_price_history")
+    .select("gia, gia_tri, recorded_at")
+    .eq("post_id", postId)
+    .order("recorded_at", { ascending: true });
+  return (data as PriceHistoryRow[]) ?? [];
 }
 
 async function getSimilar(quan: string | null, excludeId: number): Promise<Post[]> {
@@ -112,20 +128,38 @@ export default async function TinChiTietPage({
   const soTang = extractField(searchText, [/(\d+)\s*tầng/i]);
   const ngang = extractField(searchText, [/ngang\s*([\d.,]+)\s*m/i, /([\d.,]+)\s*m\s*ngang/i]);
 
-  const similar = await getSimilar(post.quan, post.id);
+  const [similar, priceRows] = await Promise.all([
+    getSimilar(post.quan, post.id),
+    getPriceHistory(post.id),
+  ]);
 
+  // Lich su gia: dung du lieu that neu co >= 2 diem, nguoc lai fallback minh hoa
+  const realPoints = priceRows.filter((r) => r.gia_tri != null);
+  const usingReal = realPoints.length >= 2;
   const now = new Date();
-  const history = Array.from({ length: 6 }).map((_, i) => {
-    const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
-    const base = giaTy ?? 0;
-    const val = i < 2 && base ? Math.round(base * 1.04) : base;
-    return { label: `T${d.getMonth() + 1}/${String(d.getFullYear()).slice(2)}`, val };
-  });
+  let history: { label: string; val: number }[];
+  if (usingReal) {
+    history = realPoints.map((r) => {
+      const d = new Date(r.recorded_at);
+      return {
+        label: `T${d.getMonth() + 1}/${String(d.getFullYear()).slice(2)}`,
+        val: Math.round(Number(r.gia_tri)),
+      };
+    });
+  } else {
+    history = Array.from({ length: 6 }).map((_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
+      const base = giaTy ?? 0;
+      const val = i < 2 && base ? Math.round(base * 1.04) : base;
+      return { label: `T${d.getMonth() + 1}/${String(d.getFullYear()).slice(2)}`, val };
+    });
+  }
+
   const maxV = Math.max(...history.map((h) => h.val), 1);
   const minV = Math.min(...history.map((h) => h.val));
   const chartW = 600, chartH = 160, pad = 30;
   const points = history.map((h, i) => {
-    const x = pad + (i * (chartW - 2 * pad)) / (history.length - 1);
+    const x = pad + (i * (chartW - 2 * pad)) / Math.max(history.length - 1, 1);
     const range = maxV - minV || 1;
     const y = chartH - pad - ((h.val - minV) / range) * (chartH - 2 * pad);
     return { x, y, ...h };
@@ -188,7 +222,7 @@ export default async function TinChiTietPage({
 
           {giaTy ? (
             <section>
-              <h2 className="mb-3 text-lg font-semibold">Lịch sử giá bán — 6 tháng gần nhất</h2>
+              <h2 className="mb-3 text-lg font-semibold">Lịch sử giá bán</h2>
               <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full">
                 <polyline fill="none" stroke="#dc4633" strokeWidth="2" points={polyline} />
                 {points.map((p, i) => (
@@ -199,7 +233,11 @@ export default async function TinChiTietPage({
                   </g>
                 ))}
               </svg>
-              <p className="text-xs text-gray-500">Đơn vị: tỷ đồng — biểu đồ minh họa dựa trên giá hiện tại, chỉ mang tính tham khảo.</p>
+              <p className="text-xs text-gray-500">
+                {usingReal
+                  ? "Đơn vị: tỷ đồng — dữ liệu ghi nhận theo lịch sử cập nhật giá của tin."
+                  : "Đơn vị: tỷ đồng — biểu đồ minh họa dựa trên giá hiện tại, chỉ mang tính tham khảo."}
+              </p>
             </section>
           ) : null}
 
