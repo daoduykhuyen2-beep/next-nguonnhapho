@@ -135,17 +135,17 @@ export default async function TrangChu() {
   return (
     <>
       {/* Hero + tìm kiếm */}
-      <section className="bg-brand text-white">
+      <section className="border-b border-gray-200 bg-white text-black">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <h1 className="max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
             Nhà phố trung tâm Sài Gòn
           </h1>
-          <p className="mt-3 max-w-2xl text-sm opacity-90 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm text-gray-600 sm:text-base">
             Giá thật · Pháp lý rõ ràng · Uy tín — Kênh đăng tin mua bán, cho thuê
             nhà phố, căn hộ, đất nền tại TP. Hồ Chí Minh.
           </p>
 
-          <form action="/tin-dang" className="mt-6 rounded-xl bg-white p-3 shadow-lg sm:p-4">
+          <form action="/tin-dang" className="mt-6 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
             <div className="grid gap-3 sm:grid-cols-12">
               <input
                 type="text"
