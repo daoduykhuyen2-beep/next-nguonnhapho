@@ -216,6 +216,17 @@ export default async function TinChiTietPage({
           </section>
 
           <section>
+            <h2 className="mb-3 text-lg font-semibold">Địa chỉ cập nhật (đường &amp; phường mới)</h2>
+            <dl className="grid grid-cols-1 gap-y-2 text-sm sm:grid-cols-2 sm:gap-x-6">
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Đường</dt><dd className="font-semibold text-right">{post.duong?.trim() ? post.duong : "Đang cập nhật"}</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Phường mới</dt><dd className="font-semibold text-right">{post.phuong?.trim() ? post.phuong : "Đang cập nhật theo địa giới mới"}</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Quận / Khu vực</dt><dd className="font-semibold text-right">{post.quan?.trim() ? post.quan : "Đang cập nhật"}</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Địa chỉ đầy đủ</dt><dd className="font-semibold text-right">{diaChi || "Đang cập nhật"}</dd></div>
+            </dl>
+            <p className="mt-2 text-xs text-gray-400">Địa chỉ hiển thị theo tên đường &amp; phường mới sau sáp nhập địa giới hành chính. Địa chỉ số nhà chính xác gửi qua Zalo/điện thoại sau khi xác nhận nhu cầu.</p>
+          </section>
+
+          <section>
             <h2 className="mb-2 text-lg font-semibold">Mô tả</h2>
             <p className="whitespace-pre-line text-gray-700">{post.mota ?? "Chưa có mô tả."}</p>
           </section>
