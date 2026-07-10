@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://nguonnhaphohcm.vn"),
   title: {
     default: "Nguồn Nhà Phố HCM - Kênh đăng tin bất động sản",
-    template: "%s | Nguồn Nhà Phố HCM",
+    template: "%s · Nguồn Nhà Phố HCM",
   },
   description:
     "Kênh đăng tin mua bán, cho thuê nhà phố, căn hộ, đất nền tại TP. Hồ Chí Minh.",
@@ -36,12 +36,15 @@ export default async function RootLayout({
             <Link href="/" className="text-lg font-bold">
               Nguồn Nhà Phố HCM
             </Link>
-            <nav className="flex gap-5 text-sm font-medium">
+            <nav className="flex gap-4 text-sm font-medium">
               <Link href="/" className="hover:underline">
                 Trang chủ
               </Link>
               <Link href="/tin-dang" className="hover:underline">
                 Tin đăng
+              </Link>
+              <Link href="/goi-thanh-vien" className="hover:underline">
+                Gói thành viên
               </Link>
               {user ? (
                 <>
