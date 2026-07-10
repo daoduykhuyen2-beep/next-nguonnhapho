@@ -46,6 +46,9 @@ export default async function RootLayout({
               <Link href="/tin-tuc" className="hover:underline">
                 Tin tức
               </Link>
+              <Link href="/tuyen-dung" className="hover:underline">
+                Tuyển dụng
+              </Link>
               <Link href="/goi-thanh-vien" className="hover:underline">
                 Gói thành viên
               </Link>
