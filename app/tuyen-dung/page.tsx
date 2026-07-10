@@ -41,7 +41,7 @@ const viTri = [
 export default function TuyenDungPage() {
   return (
     <div>
-      <section className="bg-slate-800 text-white">
+      <section className="border-b border-gray-200 bg-white text-black">
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-14 sm:py-20 md:grid-cols-[220px_1fr]">
           <div className="flex justify-center">
             <div className="flex h-40 w-40 items-center justify-center rounded-2xl bg-white/5 text-6xl font-black tracking-tight">
@@ -55,11 +55,11 @@ export default function TuyenDungPage() {
             <h1 className="mt-2 text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
               Gia nhập đội ngũ Nguồn Nhà Phố HCM
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">
               Chúng tôi đang tìm những chuyên viên môi giới &amp; cộng tác viên máu
               lửa, muốn làm nghề bài bản và thu nhập xứng đáng. Điểm khác biệt lớn
               nhất: bạn không phải vất vả tự đi tìm hàng — Nguồn Nhà Phố đã có sẵn
-              <strong className="font-semibold text-white"> kho hơn 1.680 căn nhà phố thật</strong>{" "}
+              <strong className="font-semibold text-black"> kho hơn 1.680 căn nhà phố thật</strong>{" "}
               khắp TP.HCM, đã kiểm tra pháp lý, để bạn tập trung vào việc quan trọng
               nhất là phục vụ khách và chốt giao dịch.
             </p>
@@ -204,10 +204,10 @@ export default function TuyenDungPage() {
         </div>
       </section>
 
-      <section className="bg-slate-800 py-14 text-white">
+      <section className="border-t border-gray-200 bg-white py-14 text-black">
         <div className="mx-auto max-w-4xl px-4 text-center">
           <h2 className="text-2xl font-bold sm:text-3xl">Sẵn sàng gia nhập?</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">
             Bấm nút <strong className="font-semibold">Gọi / Zalo</strong> hoặc liên hệ
             trực tiếp <strong className="font-semibold">0987.645.314</strong> (Mr. Duy
             Khuyến) — nhắn “Ứng tuyển môi giới” để được tư vấn về cơ chế và bắt đầu ngay.
@@ -221,7 +221,7 @@ export default function TuyenDungPage() {
             </a>
             <Link
               href="/gioi-thieu"
-              className="rounded-lg border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10"
+              className="rounded-lg border border-gray-300 px-6 py-3 font-semibold text-black hover:bg-gray-50"
             >
               Tìm hiểu về công ty
             </Link>
