@@ -46,7 +46,7 @@ export default function GioiThieuPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-brand text-white">
+      <section className="border-b border-gray-200 bg-white text-black">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
           <p className="text-sm font-semibold uppercase tracking-widest opacity-80">
             Về chúng tôi
@@ -54,7 +54,7 @@ export default function GioiThieuPage() {
           <h1 className="mt-2 max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
             Nguồn Nhà Phố HCM — làm việc chuyên nghiệp, minh bạch từng bước
           </h1>
-          <p className="mt-4 max-w-2xl text-sm opacity-90 sm:text-base">
+          <p className="mt-4 max-w-2xl text-sm text-gray-600 sm:text-base">
             Chuyên nhà phố, shophouse trung tâm TP.HCM. Kho 1.700+ căn được kiểm
             tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch, an toàn.
           </p>
@@ -105,12 +105,12 @@ export default function GioiThieuPage() {
       </section>
 
       {/* Số liệu */}
-      <section className="bg-brand text-white">
+      <section className="bg-brand/5 text-black">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-12 lg:grid-cols-4">
           {SO_LIEU.map((s) => (
             <div key={s.l} className="text-center">
               <div className="text-3xl font-extrabold sm:text-4xl">{s.n}</div>
-              <div className="mt-1 text-sm opacity-90">{s.l}</div>
+              <div className="mt-1 text-sm text-gray-600">{s.l}</div>
             </div>
           ))}
         </div>
