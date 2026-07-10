@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nguonnhaphohcm.vn"),
@@ -17,11 +18,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="vi">
       <body>
@@ -37,9 +43,20 @@ export default function RootLayout({
               <Link href="/tin-dang" className="hover:underline">
                 Tin đăng
               </Link>
-              <Link href="/dang-nhap" className="hover:underline">
-                Đăng nhập
-              </Link>
+              {user ? (
+                <>
+                  <Link href="/dang-tin" className="hover:underline">
+                    Đăng tin
+                  </Link>
+                  <Link href="/tai-khoan" className="hover:underline">
+                    Tài khoản
+                  </Link>
+                </>
+              ) : (
+                <Link href="/dang-nhap" className="hover:underline">
+                  Đăng nhập
+                </Link>
+              )}
             </nav>
           </div>
         </header>
