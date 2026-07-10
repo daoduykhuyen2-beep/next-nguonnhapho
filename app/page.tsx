@@ -86,7 +86,7 @@ function Khoi({
     <section className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-5 flex items-end justify-between">
         <div>
-          <h2 className={\`text-xl font-bold sm:text-2xl \${huy ?? "text-brand"}\`}>{tieuDe}</h2>
+          <h2 className={`text-xl font-bold sm:text-2xl ${huy ?? "text-brand"}`}>{tieuDe}</h2>
           {moTa ? <p className="mt-1 text-sm text-gray-500">{moTa}</p> : null}
         </div>
         {xemThem ? (
@@ -241,7 +241,7 @@ export default async function TrangChu() {
             {xepHang.map((h, i) => (
               <div key={i} className="flex items-center justify-between border-b px-4 py-3 last:border-b-0">
                 <div className="flex items-center gap-3">
-                  <span className={\`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold \${i === 0 ? "bg-yellow-400 text-white" : i === 1 ? "bg-gray-300 text-white" : i === 2 ? "bg-amber-600 text-white" : "bg-gray-100 text-gray-600"}\`}>{i + 1}</span>
+                  <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${i === 0 ? "bg-yellow-400 text-white" : i === 1 ? "bg-gray-300 text-white" : i === 2 ? "bg-amber-600 text-white" : "bg-gray-100 text-gray-600"}`}>{i + 1}</span>
                   <span className="font-medium text-gray-800">{h.ten}</span>
                 </div>
                 <span className="text-sm font-semibold text-brand">{h.so} tin</span>
