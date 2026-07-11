@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import { formatGia } from "@/components/PostCard";
 import LoanCalculator from "@/components/LoanCalculator";
+import LeadForm from "@/components/LeadForm";
 
 export const revalidate = 60;
 
@@ -62,6 +63,12 @@ async function getPost(id: string): Promise<Post | null> {
   if (error) {
     console.error("getPost error:", error.message);
     return null;
+  }
+  if (data) {
+    await supabase.rpc("increment_luot_xem", { p_id: (data as Post).id }).then(
+      () => {},
+      () => {}
+    );
   }
   return (data as Post) ?? null;
 }
@@ -289,6 +296,7 @@ export default async function TinChiTietPage({
               Gọi {post.contact_phone}
             </a>
           ) : null}
+          <LeadForm postId={post.id} />
         </aside>
       </div>
 
