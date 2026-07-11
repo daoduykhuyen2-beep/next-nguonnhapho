@@ -2,9 +2,10 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
-import ProfileForm from "@/components/ProfileForm";
+import AccountTabs from "@/components/AccountTabs";
 
-export const metadata = { title: "Thông tin cá nhân" };
+export const metadata = { title: "Quản lý tài khoản" };
+export const dynamic = "force-dynamic";
 
 export default async function ThongTinPage() {
   const supabase = await createClient();
@@ -20,15 +21,13 @@ export default async function ThongTinPage() {
     .maybeSingle();
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Thông tin cá nhân</h1>
+    <main className="min-h-screen bg-white text-gray-900">
+      <div className="mx-auto max-w-4xl px-4 pt-6">
         <Link href="/tai-khoan" className="text-sm text-brand hover:underline">
-          ← Về tài khoản
+          ← Về tổng quan tài khoản
         </Link>
       </div>
-      <p className="mb-6 text-sm text-gray-500">Email: {user.email}</p>
-      <ProfileForm profile={(profile as Profile) ?? null} />
+      <AccountTabs profile={profile as Profile | null} email={user.email ?? ""} />
     </main>
   );
 }
