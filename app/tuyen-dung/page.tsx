@@ -204,7 +204,7 @@ export default function TuyenDungPage() {
         </div>
       </section>
 
-      <section className="bg-slate-800 py-14 text-white">
+      <section className="bg-white py-14 text-black">
         <div className="mx-auto max-w-4xl px-4 text-center">
           <h2 className="text-2xl font-bold sm:text-3xl">Sẵn sàng gia nhập?</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
