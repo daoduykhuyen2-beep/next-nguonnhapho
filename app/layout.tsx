@@ -9,19 +9,19 @@ import PWARegister from "@/components/PWARegister";
 export const metadata: Metadata = {
   metadataBase: new URL("https://nguonnhaphohcm.vn"),
   title: {
-    default: "Nguá»n NhÃ  Phá» HCM â Mua bÃ¡n, cho thuÃª nhÃ  phá» trung tÃ¢m SÃ i GÃ²n",
-    template: "%s | Nguá»n NhÃ  Phá» HCM",
+    default: "Nguồn Nhà Phố HCM – Mua bán, cho thuê nhà phố trung tâm Sài Gòn",
+    template: "%s | Nguồn Nhà Phố HCM",
   },
   description:
-    "KÃªnh ÄÄng tin mua bÃ¡n, cho thuÃª nhÃ  phá», shophouse, cÄn há», Äáº¥t ná»n trung tÃ¢m TP. Há» ChÃ­ Minh. GiÃ¡ tháº­t, phÃ¡p lÃ½ rÃµ rÃ ng, uy tÃ­n.",
+    "Kênh đăng tin mua bán, cho thuê nhà phố, shophouse, căn hộ, đất nền trung tâm TP. Hồ Chí Minh. Giá thật, pháp lý rõ ràng, uy tín.",
   icons: {
     icon: "/logo-black.png",
     shortcut: "/logo-black.png",
     apple: "/logo-black.png",
   },
   openGraph: {
-    title: "Nguá»n NhÃ  Phá» HCM",
-    description: "Mua bÃ¡n, cho thuÃª nhÃ  phá» trung tÃ¢m SÃ i GÃ²n â phÃ¡p lÃ½ rÃµ rÃ ng.",
+    title: "Nguồn Nhà Phố HCM",
+    description: "Mua bán, cho thuê nhà phố trung tâm Sài Gòn — pháp lý rõ ràng.",
     images: ["/logo.png"],
   },
   manifest: "/manifest.json",
@@ -41,12 +41,12 @@ export const viewport: Viewport = {
 };
 
 const navLinks = [
-  { href: "/tin-dang?loai=ban", label: "NhÃ  bÃ¡n" },
-  { href: "/tin-dang?loai=thue", label: "NhÃ  cho thuÃª" },
-  { href: "/tin-tuc", label: "Tin tá»©c" },
-  { href: "/goi-thanh-vien", label: "Báº£ng giÃ¡" },
-  { href: "/gioi-thieu", label: "Giá»i thiá»u" },
-  { href: "/tuyen-dung", label: "Tuyá»n dá»¥ng" },
+  { href: "/tin-dang?loai=ban", label: "Nhà bán" },
+  { href: "/tin-dang?loai=thue", label: "Nhà cho thuê" },
+  { href: "/tin-tuc", label: "Tin tức" },
+  { href: "/goi-thanh-vien", label: "Bảng giá" },
+  { href: "/gioi-thieu", label: "Giới thiệu" },
+  { href: "/tuyen-dung", label: "Tuyển dụng" },
 ];
 
 export default async function RootLayout({
@@ -89,7 +89,7 @@ export default async function RootLayout({
       notifications = notiRows.map((n) => ({
         id: String(n.id),
         cat: catMap[(n.loai || "").toString()] || "them",
-        title: n.tieu_de || "Thï¿½ng bï¿½o",
+        title: n.tieu_de || "Thông báo",
         body: n.noi_dung || "",
         date: n.created_at
           ? new Date(n.created_at).toLocaleDateString("vi-VN")
@@ -107,15 +107,15 @@ export default async function RootLayout({
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/logo-black.png"
-                alt="Nguá»n NhÃ  Phá» HCM"
+                alt="Nguồn Nhà Phố HCM"
                 width={44}
                 height={44}
                 className="h-11 w-11 object-contain"
                 priority
               />
               <span className="flex flex-col leading-tight">
-                <span className="text-lg font-extrabold">Nguá»n NhÃ  Phá»</span>
-                <span className="text-xs font-semibold uppercase tracking-wide text-[#667082]">Trung tÃ¢m HCM</span>
+                <span className="text-lg font-extrabold">Nguồn Nhà Phố</span>
+                <span className="text-xs font-semibold uppercase tracking-wide text-[#667082]">Trung tâm HCM</span>
               </span>
             </Link>
 
@@ -144,46 +144,46 @@ export default async function RootLayout({
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2">
-                <Image src="/logo.png" alt="Nguá»n NhÃ  Phá» HCM" width={40} height={40} className="h-10 w-10 object-contain" />
-                <span className="text-base font-bold">Nguá»n NhÃ  Phá» HCM</span>
+                <Image src="/logo-white.png" alt="Nguồn Nhà Phố HCM" width={40} height={40} className="h-10 w-10 object-contain" />
+                <span className="text-base font-bold">Nguồn Nhà Phố HCM</span>
               </div>
               <div className="mt-3 text-sm leading-relaxed text-white/70">
-                ChuyÃªn nhÃ  phá», shophouse trung tÃ¢m TP.HCM. Kiá»m tra phÃ¡p lÃ½ trÆ°á»c khi ÄÄng â mua bÃ¡n vÃ  cho thuÃª minh báº¡ch.
+                Chuyên nhà phố, shophouse trung tâm TP.HCM. Kiểm tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch.
               </div>
             </div>
 
             <div>
-              <div className="mb-3 text-sm font-bold uppercase tracking-wide">KhÃ¡m phÃ¡</div>
+              <div className="mb-3 text-sm font-bold uppercase tracking-wide">Khám phá</div>
               <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/tin-dang" className="hover:text-white">NhÃ  bÃ¡n</Link></li>
-                <li><Link href="/tin-dang?loai=thue" className="hover:text-white">NhÃ  cho thuÃª</Link></li>
-                <li><Link href="/tin-tuc" className="hover:text-white">Tin tá»©c</Link></li>
-                <li><Link href="/goi-thanh-vien" className="hover:text-white">Báº£ng giÃ¡ ÄÄng tin</Link></li>
+                <li><Link href="/tin-dang" className="hover:text-white">Nhà bán</Link></li>
+                <li><Link href="/tin-dang?loai=thue" className="hover:text-white">Nhà cho thuê</Link></li>
+                <li><Link href="/tin-tuc" className="hover:text-white">Tin tức</Link></li>
+                <li><Link href="/goi-thanh-vien" className="hover:text-white">Bảng giá đăng tin</Link></li>
               </ul>
             </div>
 
             <div>
-              <div className="mb-3 text-sm font-bold uppercase tracking-wide">Khu vá»±c</div>
+              <div className="mb-3 text-sm font-bold uppercase tracking-wide">Khu vực</div>
               <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/tin-dang?quan=Quáº­n 1" className="hover:text-white">NhÃ  Quáº­n 1</Link></li>
-                <li><Link href="/tin-dang?quan=Quáº­n 3" className="hover:text-white">NhÃ  Quáº­n 3</Link></li>
-                <li><Link href="/tin-dang?quan=BÃ¬nh Tháº¡nh" className="hover:text-white">NhÃ  BÃ¬nh Tháº¡nh</Link></li>
-                <li><Link href="/tin-dang?quan=Quáº­n 4" className="hover:text-white">NhÃ  Quáº­n 4</Link></li>
+                <li><Link href="/tin-dang?quan=Quận 1" className="hover:text-white">Nhà Quận 1</Link></li>
+                <li><Link href="/tin-dang?quan=Quận 3" className="hover:text-white">Nhà Quận 3</Link></li>
+                <li><Link href="/tin-dang?quan=Bình Thạnh" className="hover:text-white">Nhà Bình Thạnh</Link></li>
+                <li><Link href="/tin-dang?quan=Quận 4" className="hover:text-white">Nhà Quận 4</Link></li>
               </ul>
             </div>
 
             <div>
-              <div className="mb-3 text-sm font-bold uppercase tracking-wide">KÃ½ gá»­i & liÃªn há»</div>
+              <div className="mb-3 text-sm font-bold uppercase tracking-wide">Ký gửi & liên hệ</div>
               <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/gioi-thieu" className="hover:text-white">Vá» Nguá»n NhÃ  Phá» & quy trÃ¬nh</Link></li>
-                <li><Link href="/tuyen-dung" className="hover:text-white">Tuyá»n dá»¥ng</Link></li>
-                <li><Link href="/dang-tin" className="hover:text-white">ÄÄng tin kÃ½ gá»­i</Link></li>
+                <li><Link href="/gioi-thieu" className="hover:text-white">Về Nguồn Nhà Phố & quy trình</Link></li>
+                <li><Link href="/tuyen-dung" className="hover:text-white">Tuyển dụng</Link></li>
+                <li><Link href="/dang-tin" className="hover:text-white">Đăng tin ký gửi</Link></li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-white/10 py-4 text-center text-xs text-white/60">
-            Â© {new Date().getFullYear()} Nguá»n NhÃ  Phá» HCM. NhÃ  phá» trung tÃ¢m TP.HCM.
+            © {new Date().getFullYear()} Nguồn Nhà Phố HCM. Nhà phố trung tâm TP.HCM.
           </div>
         </footer>
         <PWARegister />
