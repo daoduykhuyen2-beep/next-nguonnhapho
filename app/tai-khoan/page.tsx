@@ -27,6 +27,8 @@ export default async function TaiKhoanPage() {
     : null;
 
   const avatarUrl = p?.avatar_url || (user.user_metadata?.avatar_url as string) || null;
+  const displayName =
+    p?.full_name || user.email?.split("@")[0] || "Nguoi dung";
   const initials = displayName
     .split(" ")
     .map((w) => w[0])
