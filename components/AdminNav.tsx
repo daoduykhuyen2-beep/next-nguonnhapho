@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Role } from "@/lib/permissions";
+import type { Role } from "@/lib/roles";
 
 type Item = { href: string; label: string; adminOnly?: boolean };
 
@@ -10,6 +10,7 @@ const items: Item[] = [
   { href: "/admin", label: "Tổng quan" },
   { href: "/admin/bai-dang", label: "Bài đăng" },
   { href: "/admin/tin-tuc", label: "Tin tức" },
+  { href: "/admin/banner", label: "Banner trang chủ" },
   { href: "/admin/thong-bao", label: "Thông báo / Khuyến mãi" },
   { href: "/admin/thanh-vien", label: "Thành viên", adminOnly: true },
   { href: "/admin/nap-tien", label: "Nạp tiền & Gói", adminOnly: true },

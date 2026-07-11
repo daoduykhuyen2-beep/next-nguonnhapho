@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { adminSetRole } from "@/app/actions/admin";
-import { ROLE_LABELS, type Role } from "@/lib/permissions";
+import { ROLE_LABELS, type Role } from "@/lib/roles";
 
 const ROLE_OPTIONS: Role[] = ["member", "pho_cong_dong", "admin"];
 
