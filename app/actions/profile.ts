@@ -22,6 +22,8 @@ export async function updateProfile(
     phone: String(formData.get("phone") || "").trim() || null,
     address: String(formData.get("address") || "").trim() || null,
     bio: String(formData.get("bio") || "").trim() || null,
+    avatar_url: String(formData.get("avatar_url") || "").trim() || null,
+    vat_tax_code: String(formData.get("vat_tax_code") || "").trim() || null,
   };
 
   const ageRaw = String(formData.get("age") || "").trim();
@@ -32,7 +34,6 @@ export async function updateProfile(
   const gender = String(formData.get("gender") || "").trim();
   if (gender) payload.gender = gender;
 
-  // upsert để tạo hàng nếu chưa có, hoặc cập nhật nếu đã tồn tại
   const { error } = await supabase.from("profiles").upsert(payload, {
     onConflict: "id",
   });
