@@ -46,7 +46,7 @@ export default function GioiThieuPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-brand text-white">
+      <section className="bg-white text-black">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
           <p className="text-sm font-semibold uppercase tracking-widest opacity-80">
             Về chúng tôi
@@ -105,7 +105,7 @@ export default function GioiThieuPage() {
       </section>
 
       {/* Số liệu */}
-      <section className="bg-brand text-white">
+      <section className="bg-white text-black">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-12 lg:grid-cols-4">
           {SO_LIEU.map((s) => (
             <div key={s.l} className="text-center">
