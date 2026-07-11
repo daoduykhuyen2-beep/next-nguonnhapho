@@ -12,7 +12,11 @@ export const metadata: Metadata = {
   },
   description:
     "Kênh đăng tin mua bán, cho thuê nhà phố, shophouse, căn hộ, đất nền trung tâm TP. Hồ Chí Minh. Giá thật, pháp lý rõ ràng, uy tín.",
-  icons: { icon: "/logo.png", shortcut: "/logo.png", apple: "/logo.png" },
+  icons: {
+    icon: "/logo-black.png",
+    shortcut: "/logo-black.png",
+    apple: "/logo-black.png",
+  },
   openGraph: {
     title: "Nguồn Nhà Phố HCM",
     description: "Mua bán, cho thuê nhà phố trung tâm Sài Gòn — pháp lý rõ ràng.",
@@ -39,20 +43,30 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  let avatarUrl: string | null = null;
+  if (user) {
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user.id)
+      .maybeSingle();
+    avatarUrl = (prof?.avatar_url as string) ?? null;
+  }
+
   return (
     <html lang="vi">
-      <body className="flex min-h-screen flex-col bg-[#F5F6F8] text-[#2C2C2C]">
-        <div className="np-topbar">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-2">
-            <span className="font-medium">Nhà phố trung tâm Sài Gòn — 100% kiểm tra pháp lý trước khi đăng</span>
-            <Link href="/gioi-thieu" className="hidden hover:underline sm:inline">Quy trình làm việc →</Link>
-          </div>
-        </div>
-
-        <header className="sticky top-0 z-40 border-b border-[#E7E9EE] bg-white text-[#2C2C2C] shadow-sm">
+      <body className="flex min-h-screen flex-col bg-white text-black">
+        <header className="sticky top-0 z-40 border-b border-gray-200 bg-white text-black shadow-sm">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
             <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Nguồn Nhà Phố HCM" width={44} height={44} className="h-11 w-11 object-contain" priority />
+              <Image
+                src="/logo-black.png"
+                alt="Nguồn Nhà Phố HCM"
+                width={44}
+                height={44}
+                className="h-11 w-11 object-contain"
+                priority
+              />
               <span className="flex flex-col leading-tight">
                 <span className="text-lg font-extrabold">Nguồn Nhà Phố</span>
                 <span className="text-xs font-semibold uppercase tracking-wide text-[#667082]">Trung tâm HCM</span>
@@ -70,22 +84,47 @@ export default async function RootLayout({
             <div className="flex items-center gap-3 text-sm font-semibold">
               {user ? (
                 <>
-                  <Link href="/dang-tin" className="hidden hover:text-brand sm:inline">Đăng tin</Link>
-                  <Link href="/tai-khoan" className="np-btn px-4 py-2">Quản trị</Link>
+                  <Link href="/dang-tin" className="hover:underline">
+                    Đăng tin
+                  </Link>
+                  <Link
+                    href="/tai-khoan"
+                    className="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 hover:bg-gray-100"
+                  >
+                    {avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={avatarUrl}
+                        alt="Tài khoản"
+                        className="h-8 w-8 rounded-full border object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
+                        {(user.email ?? "U").charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                    <span className="hidden sm:inline">Tài khoản</span>
+                  </Link>
                 </>
               ) : (
                 <>
-                  <Link href="/dang-tin" className="hidden hover:text-brand sm:inline">Đăng tin</Link>
-                  <Link href="/dang-nhap" className="np-btn px-4 py-2">Đăng nhập</Link>
+                  <Link href="/dang-tin" className="hidden hover:underline sm:inline">
+                    Đăng tin
+                  </Link>
+                  <Link
+                    href="/dang-nhap"
+                    className="rounded-md bg-brand px-3 py-1.5 text-white hover:opacity-90"
+                  >
+                    Đăng nhập
+                  </Link>
                 </>
               )}
             </div>
           </div>
-
-          <nav className="flex gap-4 overflow-x-auto border-t border-[#E7E9EE] px-4 py-2 text-sm font-semibold lg:hidden">
-            {navLinks.map((link) => (
-              <Link key={link.label} href={link.href} className="whitespace-nowrap hover:text-brand">
-                {link.label}
+          <nav className="flex gap-4 overflow-x-auto border-t border-gray-200 px-4 py-2 text-sm font-medium md:hidden">
+            {navLinks.map((l) => (
+              <Link key={l.label} href={l.href} className="whitespace-nowrap hover:underline">
+                {l.label}
               </Link>
             ))}
           </nav>
@@ -93,18 +132,8 @@ export default async function RootLayout({
 
         <main className="flex-1">{children}</main>
 
-        <section className="mx-auto mt-12 max-w-6xl px-4">
-          <div className="flex flex-col items-start justify-between gap-4 rounded-xl bg-brand px-6 py-7 text-white sm:flex-row sm:items-center">
-            <div>
-              <div className="text-xl font-extrabold">Anh chị có nhà cần bán hoặc cho thuê?</div>
-              <div className="mt-1 text-sm text-white/90">Ký gửi miễn phí — chụp ảnh chuyên nghiệp, đăng tin đa kênh, báo cáo khách quan tâm mỗi tuần.</div>
-            </div>
-            <Link href="/dang-tin" className="whitespace-nowrap rounded-lg bg-white px-5 py-3 font-bold text-brand hover:bg-white/90">Ký gửi ngay</Link>
-          </div>
-        </section>
-
-        <footer className="mt-12 bg-[#171A22] text-white">
-          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
+        <footer className="mt-12 border-t border-gray-200 bg-neutral-900 text-white">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2">
                 <Image src="/logo.png" alt="Nguồn Nhà Phố HCM" width={40} height={40} className="h-10 w-10 object-contain" />

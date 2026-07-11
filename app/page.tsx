@@ -135,25 +135,17 @@ export default async function TrangChu() {
   return (
     <>
       {/* Hero + tìm kiếm */}
-      <section className="np-hero">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <section className="border-b border-gray-200 bg-white text-black">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <h1 className="max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
             Nhà phố trung tâm Sài Gòn
           </h1>
-          <h2 className="mt-1 text-3xl font-extrabold leading-tight np-accent sm:text-4xl md:text-5xl">
-            Giá thật · Pháp lý rõ · Xem nhà nhanh
-          </h2>
-          <p className="mt-4 max-w-2xl text-sm text-white/85 sm:text-base">
-            Kho nhà phố, shophouse thật đang chào bán khắp Hồ Chí Minh — cập nhật
-            liên tục theo tình trạng chủ nhà, kiểm tra pháp lý trước khi đăng.
+          <p className="mt-3 max-w-2xl text-sm text-gray-600 sm:text-base">
+            Giá thật · Pháp lý rõ ràng · Uy tín — Kênh đăng tin mua bán, cho thuê
+            nhà phố, căn hộ, đất nền tại TP. Hồ Chí Minh.
           </p>
 
-          <div className="mt-6 flex gap-1">
-            <span className="rounded-t-lg np-tab-active px-5 py-2 text-sm">Nhà bán</span>
-            <Link href="/tin-dang?loai=thue" className="rounded-t-lg bg-white/20 px-5 py-2 text-sm font-semibold text-white hover:bg-white/30">Nhà cho thuê</Link>
-          </div>
-
-          <form action="/tin-dang" className="rounded-b-xl rounded-tr-xl bg-white p-3 shadow-lg sm:p-4">
+          <form action="/tin-dang" className="mt-6 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
             <div className="grid gap-3 sm:grid-cols-12">
               <input
                 type="text"

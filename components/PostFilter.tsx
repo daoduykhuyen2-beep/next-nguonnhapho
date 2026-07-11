@@ -2,10 +2,11 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import type { QuanStat } from "@/lib/stats";
 
 const LOAI_OPTIONS = ["Bán nhà", "Cho thuê", "Đất nền", "Căn hộ"];
 
-export default function PostFilter() {
+export default function PostFilter({ quanOptions = [] }: { quanOptions?: QuanStat[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -52,17 +53,18 @@ export default function PostFilter() {
           </option>
         ))}
       </select>
-      <input
-        type="text"
-        defaultValue={quan}
-        placeholder="Quận/Huyện"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            update("quan", (e.target as HTMLInputElement).value.trim());
-          }
-        }}
-        className="w-[160px] rounded-md border px-3 py-2 text-sm"
-      />
+      <select
+        value={quan}
+        onChange={(e) => update("quan", e.target.value)}
+        className="w-[200px] rounded-md border px-3 py-2 text-sm"
+      >
+        <option value="">Tất cả quận/huyện</option>
+        {quanOptions.map((o) => (
+          <option key={o.quan} value={o.quan}>
+            {o.quan} ({o.so_can})
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

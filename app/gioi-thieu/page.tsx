@@ -8,10 +8,36 @@ export const metadata: Metadata = {
 };
 
 const QUY_TRINH = [
-  { b: "01", t: "Đội tìm nguồn", d: "Săn nhà thật từ chủ nhà, xác minh sổ và hiện trạng trước khi nhận đăng." },
-  { b: "02", t: "Đội thẩm định pháp lý", d: "Kiểm tra sổ hồng, quy hoạch, tranh chấp, thế chấp — loại tin ảo, giá ảo." },
-  { b: "03", t: "Đội tư vấn khách hàng", d: "Lắng nghe nhu cầu, chọn lọc căn phù hợp và dẫn xem nhà đúng như đăng." },
-  { b: "04", t: "Đội hỗ trợ giao dịch", d: "Đồng hành công chứng, sang tên, hỗ trợ vay ngân hàng đến khi bàn giao." },
+  {
+    b: "01",
+    t: "Đội tìm nguồn",
+    d: "Đội khảo sát đi thực tế từng căn, làm việc trực tiếp với chủ nhà để lấy nguồn tận gốc — không mua tin trung gian. Mỗi căn đều được chụp ảnh thật, ghi nhận hiện trạng, diện tích, số tầng và tình trạng sử dụng trước khi nhận đăng.",
+  },
+  {
+    b: "02",
+    t: "Đội thẩm định pháp lý",
+    d: "Kiểm tra sổ hồng, quy hoạch, lộ giới, tranh chấp và tình trạng thế chấp tại phường/quận. Căn nào vướng pháp lý, giá ảo hoặc tin trùng đều bị loại ngay — chỉ giữ lại tin sạch, có hồ sơ rõ ràng để đăng lên hệ thống.",
+  },
+  {
+    b: "03",
+    t: "Đội định giá thị trường",
+    d: "So sánh với giao dịch thật cùng tuyến đường, cùng khu vực trong 3–6 tháng gần nhất để đưa ra khoảng giá hợp lý. Chủ nhà được tư vấn mức giá bán nhanh và mức giá kỳ vọng, tránh treo giá quá cao gây mất thời gian đôi bên.",
+  },
+  {
+    b: "04",
+    t: "Đội tư vấn khách hàng",
+    d: "Lắng nghe kỹ nhu cầu, ngân sách và mục đích mua (ở, đầu tư, cho thuê) rồi chọn lọc 3–5 căn phù hợp nhất. Dẫn khách đi xem thực tế đúng như tin đăng, phân tích ưu — nhược điểm từng căn một cách khách quan.",
+  },
+  {
+    b: "05",
+    t: "Đội đàm phán & chốt giá",
+    d: "Đại diện thương lượng giữa bên mua và bên bán để đạt mức giá tốt nhất, giữ cọc an toàn và làm rõ mọi điều khoản trước khi ký. Khách được giải thích minh bạch từng khoản chi phí — không phí ẩn, không ép cọc.",
+  },
+  {
+    b: "06",
+    t: "Đội hỗ trợ giao dịch",
+    d: "Đồng hành công chứng, sang tên, nộp thuế và kết nối ngân hàng hỗ trợ vay khi cần. Theo sát đến lúc bàn giao nhà và hoàn tất thủ tục, đảm bảo khách nhận sổ, nhận nhà đúng cam kết ban đầu.",
+  },
 ];
 
 const GIA_TRI = [
@@ -46,7 +72,7 @@ export default function GioiThieuPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-white text-black">
+      <section className="border-b border-gray-200 bg-white text-black">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
           <p className="text-sm font-semibold uppercase tracking-widest opacity-80">
             Về chúng tôi
@@ -54,7 +80,7 @@ export default function GioiThieuPage() {
           <h1 className="mt-2 max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
             Nguồn Nhà Phố HCM — làm việc chuyên nghiệp, minh bạch từng bước
           </h1>
-          <p className="mt-4 max-w-2xl text-sm opacity-90 sm:text-base">
+          <p className="mt-4 max-w-2xl text-sm text-gray-600 sm:text-base">
             Chuyên nhà phố, shophouse trung tâm TP.HCM. Kho 1.700+ căn được kiểm
             tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch, an toàn.
           </p>
@@ -80,17 +106,17 @@ export default function GioiThieuPage() {
         </p>
       </section>
 
-      {/* Quy trình 4 bước */}
+      {/* Quy trình 6 bước */}
       <section className="bg-white py-12">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl font-bold text-brand">
             Quy trình làm việc của Nguồn Nhà Phố
           </h2>
           <p className="mt-1 text-gray-500">
-            Bốn đội chuyên trách — mỗi căn nhà đi qua đủ 4 bước trước khi đến tay
-            khách hàng.
+            Sáu đội chuyên trách — mỗi căn nhà đi qua đủ 6 bước khép kín trước khi
+            đến tay khách hàng, minh bạch và có kiểm soát ở từng khâu.
           </p>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {QUY_TRINH.map((s) => (
               <div key={s.b} className="rounded-2xl border p-6 shadow-sm">
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-brand text-lg font-bold text-white">
@@ -105,12 +131,12 @@ export default function GioiThieuPage() {
       </section>
 
       {/* Số liệu */}
-      <section className="bg-white text-black">
+      <section className="bg-brand/5 text-black">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-12 lg:grid-cols-4">
           {SO_LIEU.map((s) => (
             <div key={s.l} className="text-center">
               <div className="text-3xl font-extrabold sm:text-4xl">{s.n}</div>
-              <div className="mt-1 text-sm opacity-90">{s.l}</div>
+              <div className="mt-1 text-sm text-gray-600">{s.l}</div>
             </div>
           ))}
         </div>
