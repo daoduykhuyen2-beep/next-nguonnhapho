@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
 import PostFilter from "@/components/PostFilter";
+import { getDanhSachQuan } from "@/lib/stats";
 
 export const revalidate = 60;
 
@@ -110,14 +111,42 @@ export default async function TinDangPage({
 }) {
   const sp = await searchParams;
   const { posts, total, page } = await getPosts(sp);
+  const quanOptions = await getDanhSachQuan();
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const isChoThueSapRaMat = sp.loai === "thue" && total === 0;
 
   return (
     <div>
-      <h1 className="mb-4 text-xl font-bold">Tin đăng bất động sản</h1>
+      <h1 className="mb-4 text-xl font-bold">
+        {sp.loai === "thue" ? "Nhà cho thuê" : sp.loai === "ban" ? "Nhà bán" : "Tin đăng bất động sản"}
+      </h1>
 
+      {isChoThueSapRaMat ? (
+        <div className="rounded-2xl border bg-white p-10 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand/10 text-3xl">
+            🏠
+          </div>
+          <h2 className="mb-2 text-2xl font-bold text-brand">Sắp ra mắt</h2>
+          <p className="mx-auto max-w-xl text-gray-600">
+            Chuyên mục <b>Nhà cho thuê</b> đang được hoàn thiện. Ngay khi có tin
+            đăng cho thuê đầu tiên, các tin sẽ tự động hiển thị công khai tại đây.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link href="/dang-tin" className="np-btn px-5 py-2 text-sm">
+              Đăng tin cho thuê
+            </Link>
+            <Link
+              href="/tin-dang?loai=ban"
+              className="rounded-lg border px-5 py-2 text-sm font-semibold hover:text-brand"
+            >
+              Xem nhà bán
+            </Link>
+          </div>
+        </div>
+      ) : (
+      <>
       <Suspense fallback={null}>
-        <PostFilter />
+        <PostFilter quanOptions={quanOptions} />
       </Suspense>
 
       <p className="mb-4 text-sm text-gray-500">Tìm thấy {total} tin đăng.</p>
@@ -157,6 +186,8 @@ export default async function TinDangPage({
           ) : null}
         </div>
       ) : null}
+      </>
+      )}
     </div>
   );
 }
