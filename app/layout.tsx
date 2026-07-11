@@ -25,13 +25,12 @@ export const metadata: Metadata = {
 };
 
 const navLinks = [
-  { href: "/", label: "Trang chủ" },
   { href: "/tin-dang", label: "Nhà bán" },
   { href: "/tin-dang?loai=thue", label: "Nhà cho thuê" },
   { href: "/tin-tuc", label: "Tin tức" },
-  { href: "/tuyen-dung", label: "Tuyển dụng" },
-  { href: "/gioi-thieu", label: "Giới thiệu" },
   { href: "/goi-thanh-vien", label: "Bảng giá" },
+  { href: "/gioi-thieu", label: "Giới thiệu" },
+  { href: "/tuyen-dung", label: "Tuyển dụng" },
 ];
 
 export default async function RootLayout({
@@ -69,22 +68,20 @@ export default async function RootLayout({
                 priority
               />
               <span className="flex flex-col leading-tight">
-                <span className="text-base font-bold">Nguồn Nhà Phố</span>
-                <span className="text-[11px] font-medium opacity-70">
-                  Trung tâm HCM
-                </span>
+                <span className="text-lg font-extrabold">Nguồn Nhà Phố</span>
+                <span className="text-xs font-semibold uppercase tracking-wide text-[#667082]">Trung tâm HCM</span>
               </span>
             </Link>
 
-            <nav className="hidden flex-wrap items-center gap-4 text-sm font-medium md:flex">
+            <nav className="hidden flex-wrap items-center gap-6 text-sm font-semibold lg:flex">
               {navLinks.map((link) => (
-                <Link key={link.label} href={link.href} className="hover:underline">
+                <Link key={link.label} href={link.href} className="hover:text-brand">
                   {link.label}
                 </Link>
               ))}
             </nav>
 
-            <div className="flex items-center gap-3 text-sm font-medium">
+            <div className="flex items-center gap-3 text-sm font-semibold">
               {user ? (
                 <>
                   <Link href="/dang-tin" className="hover:underline">
@@ -139,74 +136,45 @@ export default async function RootLayout({
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2">
-                <Image
-                  src="/logo.png"
-                  alt="Nguồn Nhà Phố HCM"
-                  width={40}
-                  height={40}
-                  className="h-10 w-10 object-contain"
-                />
+                <Image src="/logo.png" alt="Nguồn Nhà Phố HCM" width={40} height={40} className="h-10 w-10 object-contain" />
                 <span className="text-base font-bold">Nguồn Nhà Phố HCM</span>
               </div>
-              <div className="mt-3 text-sm leading-relaxed opacity-70">
-                Chuyên nhà phố, shophouse trung tâm TP.HCM. Kho 1.700+ căn kiểm
-                tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch.
+              <div className="mt-3 text-sm leading-relaxed text-white/70">
+                Chuyên nhà phố, shophouse trung tâm TP.HCM. Kiểm tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch.
               </div>
             </div>
 
             <div>
               <div className="mb-3 text-sm font-bold uppercase tracking-wide">Khám phá</div>
-              <ul className="space-y-2 text-sm opacity-70">
-                <li>
-                  <Link href="/tin-dang" className="hover:underline">Nhà bán</Link>
-                </li>
-                <li>
-                  <Link href="/tin-dang?loai=thue" className="hover:underline">Nhà cho thuê</Link>
-                </li>
-                <li>
-                  <Link href="/tin-tuc" className="hover:underline">Tin tức & cảnh báo rủi ro</Link>
-                </li>
-                <li>
-                  <Link href="/goi-thanh-vien" className="hover:underline">Bảng giá đăng tin</Link>
-                </li>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li><Link href="/tin-dang" className="hover:text-white">Nhà bán</Link></li>
+                <li><Link href="/tin-dang?loai=thue" className="hover:text-white">Nhà cho thuê</Link></li>
+                <li><Link href="/tin-tuc" className="hover:text-white">Tin tức</Link></li>
+                <li><Link href="/goi-thanh-vien" className="hover:text-white">Bảng giá đăng tin</Link></li>
               </ul>
             </div>
 
             <div>
               <div className="mb-3 text-sm font-bold uppercase tracking-wide">Khu vực</div>
-              <ul className="space-y-2 text-sm opacity-70">
-                <li>
-                  <Link href="/tin-dang?quan=Quận 1" className="hover:underline">Nhà Quận 1</Link>
-                </li>
-                <li>
-                  <Link href="/tin-dang?quan=Quận 3" className="hover:underline">Nhà Quận 3</Link>
-                </li>
-                <li>
-                  <Link href="/tin-dang?quan=Bình Thạnh" className="hover:underline">Nhà Bình Thạnh</Link>
-                </li>
-                <li>
-                  <Link href="/tin-dang?quan=Quận 4" className="hover:underline">Nhà Quận 4</Link>
-                </li>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li><Link href="/tin-dang?quan=Quận 1" className="hover:text-white">Nhà Quận 1</Link></li>
+                <li><Link href="/tin-dang?quan=Quận 3" className="hover:text-white">Nhà Quận 3</Link></li>
+                <li><Link href="/tin-dang?quan=Bình Thạnh" className="hover:text-white">Nhà Bình Thạnh</Link></li>
+                <li><Link href="/tin-dang?quan=Quận 4" className="hover:text-white">Nhà Quận 4</Link></li>
               </ul>
             </div>
 
             <div>
               <div className="mb-3 text-sm font-bold uppercase tracking-wide">Ký gửi & liên hệ</div>
-              <ul className="space-y-2 text-sm opacity-70">
-                <li>
-                  <Link href="/gioi-thieu" className="hover:underline">Về Nguồn Nhà Phố & quy trình</Link>
-                </li>
-                <li>
-                  <Link href="/tuyen-dung" className="hover:underline">Tuyển dụng</Link>
-                </li>
-                <li>
-                  <Link href="/dang-tin" className="hover:underline">Đăng tin ký gửi</Link>
-                </li>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li><Link href="/gioi-thieu" className="hover:text-white">Về Nguồn Nhà Phố & quy trình</Link></li>
+                <li><Link href="/tuyen-dung" className="hover:text-white">Tuyển dụng</Link></li>
+                <li><Link href="/dang-tin" className="hover:text-white">Đăng tin ký gửi</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 py-4 text-center text-xs opacity-70">
+          <div className="border-t border-white/10 py-4 text-center text-xs text-white/60">
             © {new Date().getFullYear()} Nguồn Nhà Phố HCM. Nhà phố trung tâm TP.HCM.
           </div>
         </footer>

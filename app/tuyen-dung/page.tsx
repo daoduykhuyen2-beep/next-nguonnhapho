@@ -95,7 +95,7 @@ export default function TuyenDungPage() {
         </div>
       </section>
 
-      <section className="bg-brand-light py-14">
+      <section className="bg-white py-14">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl font-bold text-slate-800">
             Cơ chế <span className="text-brand">hoa hồng</span>
@@ -134,7 +134,7 @@ export default function TuyenDungPage() {
           {quyenLoi.map((item) => (
             <div
               key={item.ten}
-              className="rounded-2xl border border-brand/15 bg-brand-light p-6"
+              className="rounded-2xl border border-brand/15 bg-white p-6"
             >
               <h3 className="font-bold text-brand-dark">✓ {item.ten}</h3>
               <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.mo}</p>
@@ -155,7 +155,7 @@ export default function TuyenDungPage() {
             {viTri.map((v) => (
               <div
                 key={v.ten}
-                className="rounded-2xl border border-brand/15 bg-brand-light p-6"
+                className="rounded-2xl border border-brand/15 bg-white p-6"
               >
                 <h3 className="flex flex-wrap items-center gap-2 font-bold text-brand-dark">
                   <span className="text-xl">{v.icon}</span>
@@ -176,7 +176,7 @@ export default function TuyenDungPage() {
           Công việc &amp; <span className="text-brand">yêu cầu</span>
         </h2>
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
-          <div className="rounded-2xl border border-brand/15 bg-brand-light p-6">
+          <div className="rounded-2xl border border-brand/15 bg-white p-6">
             <h3 className="font-bold text-brand-dark">📋 Mô tả công việc</h3>
             <p className="mt-2 text-sm leading-relaxed text-gray-600">
               Tiếp nhận nguồn khách, tư vấn và dẫn khách đi xem nhà trong kho, phối
@@ -184,7 +184,7 @@ export default function TuyenDungPage() {
               khách sau bán.
             </p>
           </div>
-          <div className="rounded-2xl border border-brand/15 bg-brand-light p-6">
+          <div className="rounded-2xl border border-brand/15 bg-white p-6">
             <h3 className="font-bold text-brand-dark">🎯 Yêu cầu</h3>
             <p className="mt-2 text-sm leading-relaxed text-gray-600">
               Giao tiếp tốt, chăm chỉ, trung thực, có tinh thần cầu tiến. Ưu tiên
@@ -192,14 +192,14 @@ export default function TuyenDungPage() {
               nhưng người mới nhiệt huyết vẫn được đào tạo từ đầu.
             </p>
           </div>
-          <div className="rounded-2xl border border-brand/15 bg-brand-light p-6">
+          <div className="rounded-2xl border border-brand/15 bg-white p-6">
             <h3 className="font-bold text-brand-dark">🕐 Hình thức</h3>
             <p className="mt-2 text-sm leading-relaxed text-gray-600">
               Nhận cả toàn thời gian và cộng tác viên bán thời gian. Chủ động thời
               gian, thu nhập theo năng lực.
             </p>
           </div>
-          <div className="rounded-2xl border border-brand/15 bg-brand-light p-6">
+          <div className="rounded-2xl border border-brand/15 bg-white p-6">
             <h3 className="font-bold text-brand-dark">📍 Khu vực</h3>
             <p className="mt-2 text-sm leading-relaxed text-gray-600">
               Quận 1, Quận 3, Bình Thạnh, Quận 4 và các quận trung tâm TP.HCM.

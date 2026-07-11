@@ -165,23 +165,20 @@ export default async function TrangChu() {
               </select>
               <button
                 type="submit"
-                className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:opacity-90 sm:col-span-2"
+                className="np-btn px-4 py-2 text-sm sm:col-span-2"
               >
-                Tìm nhà
+                Tìm kiếm
               </button>
             </div>
           </form>
 
-          <div className="mt-4 flex flex-wrap gap-2 text-sm">
-            <Link href="/tin-dang" className="rounded-full bg-white/15 px-3 py-1 hover:bg-white/25">
-              Xem tất cả tin đăng
-            </Link>
-            <Link href="/dang-tin" className="rounded-full bg-white px-3 py-1 font-semibold text-brand hover:bg-gray-100">
-              Đăng tin miễn phí
-            </Link>
-            <Link href="/gioi-thieu" className="rounded-full bg-white/15 px-3 py-1 hover:bg-white/25">
-              Quy trình làm việc →
-            </Link>
+          <div className="mt-5 flex flex-wrap gap-2 text-sm">
+            <Link href="/tin-dang?quan=Quận 1" className="np-chip">Nhà Quận 1</Link>
+            <Link href="/tin-dang?quan=Quận 3" className="np-chip">Nhà Quận 3</Link>
+            <Link href="/tin-dang" className="np-chip">Nhà mặt tiền</Link>
+            <Link href="/tin-dang" className="np-chip">Dưới 10 tỷ</Link>
+            <Link href="/tin-dang" className="np-chip">Hẻm xe hơi</Link>
+            <Link href="/tin-dang?loai=thue" className="np-chip">Thuê mặt bằng kinh doanh</Link>
           </div>
         </div>
       </section>
