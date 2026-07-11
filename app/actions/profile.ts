@@ -46,3 +46,29 @@ export async function updateProfile(
   revalidatePath("/tai-khoan/thong-tin");
   return { success: true };
 }
+
+// Luu URL anh dai dien sau khi da upload len storage bucket "avatars"
+export async function updateAvatar(avatarUrl: string): Promise<ProfileState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Bạn cần đăng nhập." };
+
+  const clean = String(avatarUrl || "").trim();
+  if (!clean) return { error: "Thiếu ảnh đại diện." };
+
+  const { error } = await supabase.from("profiles").upsert(
+    { id: user.id, email: user.email, avatar_url: clean },
+    { onConflict: "id" }
+  );
+
+  if (error) {
+    console.error("updateAvatar error:", error.message);
+    return { error: "Không thể cập nhật ảnh đại diện." };
+  }
+
+  revalidatePath("/tai-khoan");
+  revalidatePath("/tai-khoan/thong-tin");
+  return { success: true };
+}
