@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
+import { getTongSoCan } from "@/lib/stats";
 
 export const revalidate = 60;
 
@@ -18,15 +19,6 @@ async function layTin(opts: { status?: string; limit?: number; hotToday?: boolea
   const { data, error } = await q;
   if (error) return [];
   return (data as Post[]) ?? [];
-}
-
-async function demKhoNha(): Promise<number> {
-  const supabase = await createClient();
-  const { count } = await supabase
-    .from("web_posts")
-    .select("id", { count: "exact", head: true })
-    .eq("trang_thai", "duyet");
-  return count ?? 0;
 }
 
 type XepHang = { ten: string; so: number };
@@ -128,9 +120,8 @@ export default async function TrangChu() {
       layTinTuc({ limit: 3 }),
       layTinTuc({ loai: "video", limit: 3 }),
       layTinTuc({ loai: "tin_tuc", limit: 4 }),
-      demKhoNha(),
+      getTongSoCan(),
     ]);
-
 
   return (
     <>
