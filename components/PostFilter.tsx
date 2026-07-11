@@ -4,7 +4,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import type { QuanStat } from "@/lib/stats";
 
-const LOAI_OPTIONS = ["Bán nhà", "Cho thuê", "Đất nền", "Căn hộ"];
+const LOAI_OPTIONS = [
+  { value: "ban", label: "Nhà bán" },
+  { value: "thue", label: "Cho thuê" },
+  { value: "dat", label: "Đất nền" },
+  { value: "can_ho", label: "Căn hộ" },
+];
 
 const GIA_OPTIONS = [
   { label: "Dưới 5 tỷ", min: "", max: "5" },
@@ -83,8 +88,8 @@ export default function PostFilter({ quanOptions }: { quanOptions: QuanStat[] })
       >
         <option value="">Loại nhà</option>
         {LOAI_OPTIONS.map((o) => (
-          <option key={o} value={o}>
-            {o}
+          <option key={o.value} value={o.value}>
+            {o.label}
           </option>
         ))}
       </select>
