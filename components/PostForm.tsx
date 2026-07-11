@@ -6,7 +6,13 @@ import { createPost } from "@/app/actions/posts";
 import { uploadPostImages } from "@/lib/upload";
 import type { Post } from "@/lib/types";
 
-const LOAI_OPTIONS = ["Bán nhà", "Bán đất", "Cho thuê", "Căn hộ", "Khác"];
+const LOAI_OPTIONS = [
+  { value: "ban", label: "Nhà bán" },
+  { value: "thue", label: "Cho thuê" },
+  { value: "dat", label: "Đất nền" },
+  { value: "can_ho", label: "Căn hộ" },
+  { value: "khac", label: "Khác" },
+];
 
 function SubmitButton({ uploading }: { uploading: boolean }) {
   const { pending } = useFormStatus();
@@ -69,11 +75,11 @@ export default function PostForm({ post }: { post?: Post }) {
           <label className="mb-1 block text-sm font-medium">Loại tin</label>
           <select
             name="loai"
-            defaultValue={post?.loai || LOAI_OPTIONS[0]}
+            defaultValue={post?.loai || LOAI_OPTIONS[0].value}
             className="w-full rounded-lg border border-gray-300 px-3 py-2"
           >
             {LOAI_OPTIONS.map((l) => (
-              <option key={l} value={l}>{l}</option>
+              <option key={l.value} value={l.value}>{l.label}</option>
             ))}
           </select>
         </div>
