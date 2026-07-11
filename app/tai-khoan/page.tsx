@@ -2,14 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
-import AccountSidebar from "@/components/AccountSidebar";
+import LogoutButton from "@/components/LogoutButton";
 
 export const metadata = { title: "Tài khoản của tôi" };
 export const dynamic = "force-dynamic";
-
-function vnd(n: number) {
-  return Number(n || 0).toLocaleString("vi-VN") + "đ";
-}
 
 export default async function TaiKhoanPage() {
   const supabase = await createClient();
