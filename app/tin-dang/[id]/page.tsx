@@ -125,8 +125,8 @@ export default async function TinChiTietPage({
   const giaTy = parseGiaTy(post.gia);
   const dt = parseDienTich(post.dien_tich);
   const donGia = formatTrieuPerM2(giaTy, dt);
-  const soTang = extractField(searchText, [/(\d+)\s*tầng/i]);
-  const ngang = extractField(searchText, [/ngang\s*([\d.,]+)\s*m/i, /([\d.,]+)\s*m\s*ngang/i]);
+  const soTang = extractField(searchText, [/Số tầng:\s*(\d+)/i, /(\d+)\s*tầng/i]);
+  const ngang = extractField(searchText, [/Mặt tiền:\s*([\d.,]+)\s*m/i, /ngang\s*([\d.,]+)\s*m/i, /([\d.,]+)\s*m\s*ngang/i]);
 
   const [similar, priceRows] = await Promise.all([
     getSimilar(post.quan, post.id),
@@ -210,7 +210,7 @@ export default async function TinChiTietPage({
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Số tầng</dt><dd className="font-semibold">{soTang ?? "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Loại</dt><dd className="font-semibold">{post.loai ?? "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Khu vực</dt><dd className="font-semibold">{post.quan ?? "Đang cập nhật"}</dd></div>
-              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Pháp lý</dt><dd className="font-semibold">Đang cập nhật</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Pháp lý</dt><dd className="font-semibold">Liên hệ xem sổ trực tiếp</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Hướng</dt><dd className="font-semibold">Đang cập nhật</dd></div>
             </dl>
           </section>
