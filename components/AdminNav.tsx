@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { Role } from "@/lib/permissions";
+import type { Role } from "@/lib/roles";
 
 type Item = { href: string; label: string; adminOnly?: boolean };
 
