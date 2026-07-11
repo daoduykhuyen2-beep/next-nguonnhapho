@@ -160,8 +160,11 @@ export default async function TrangChu() {
                 ))}
               </select>
               <select name="loai" className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 sm:col-span-2">
-                <option value="">Mua bán</option>
+                <option value="">Tất cả</option>
+                <option value="ban">Nhà bán</option>
                 <option value="thue">Cho thuê</option>
+                <option value="dat">Đất nền</option>
+                <option value="can_ho">Căn hộ</option>
               </select>
               <button
                 type="submit"
