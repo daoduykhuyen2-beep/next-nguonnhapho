@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import { formatGia } from "@/components/PostCard";
 import LoanCalculator from "@/components/LoanCalculator";
+import LeadForm from "@/components/LeadForm";
 
 export const revalidate = 60;
 
@@ -289,6 +290,9 @@ export default async function TinChiTietPage({
               Gọi {post.contact_phone}
             </a>
           ) : null}
+          <div className="mt-4 border-t pt-4">
+            <LeadForm postId={post.id} />
+          </div>
         </aside>
       </div>
 
