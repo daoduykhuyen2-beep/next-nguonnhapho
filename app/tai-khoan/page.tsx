@@ -15,6 +15,18 @@ export default async function TaiKhoanPage() {
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
   const p = profile as Profile | null;
 
+  // Thong ke tong quan cho dashboard
+  const [{ count: soTin }, { count: soHienThi }, { count: soKhach }] = await Promise.all([
+    supabase.from("web_posts").select("*", { count: "exact", head: true }).eq("owner", user.id),
+    supabase
+      .from("web_posts")
+      .select("*", { count: "exact", head: true })
+      .eq("owner", user.id)
+      .eq("trang_thai", "duyet"),
+    supabase.from("web_post_leads").select("*", { count: "exact", head: true }).eq("owner", user.id),
+  ]);
+  const soDu = p?.so_du ?? 0;
+
   const roleLabel = p?.is_admin
     ? "Quản trị viên"
     : p?.membership_tier && p.membership_tier !== "Miễn phí"
@@ -128,6 +140,28 @@ export default async function TaiKhoanPage() {
               </div>
             ))}
           </dl>
+        </div>
+
+        {/* Bảng thống kê tổng quan */}
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-2xl bg-white p-4 text-center ring-1 ring-gray-200">
+            <div className="text-2xl font-extrabold text-emerald-600">{soTin ?? 0}</div>
+            <div className="mt-1 text-xs text-gray-500">Tin đã đăng</div>
+          </div>
+          <div className="rounded-2xl bg-white p-4 text-center ring-1 ring-gray-200">
+            <div className="text-2xl font-extrabold text-blue-600">{soHienThi ?? 0}</div>
+            <div className="mt-1 text-xs text-gray-500">Đang hiển thị</div>
+          </div>
+          <div className="rounded-2xl bg-white p-4 text-center ring-1 ring-gray-200">
+            <div className="text-2xl font-extrabold text-orange-500">{soKhach ?? 0}</div>
+            <div className="mt-1 text-xs text-gray-500">Khách quan tâm</div>
+          </div>
+          <div className="rounded-2xl bg-white p-4 text-center ring-1 ring-gray-200">
+            <div className="text-2xl font-extrabold text-brand">
+              {soDu.toLocaleString("vi-VN")}đ
+            </div>
+            <div className="mt-1 text-xs text-gray-500">Số dư ví</div>
+          </div>
         </div>
 
         {/* Menu điều hướng */}
