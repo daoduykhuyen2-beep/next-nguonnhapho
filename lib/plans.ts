@@ -16,6 +16,10 @@ export type Plan = {
   badge?: string;       // nhãn "Được chọn nhiều" / "Tiết kiệm nhất"
   unit?: string;        // ví dụ "/tháng"
   features: string[];
+  // --- Điều chỉnh giá / chương trình giảm giá trong tháng ---
+  promoPrice?: number;   // giá khuyến mãi (VND) – nếu có sẽ ưu tiên hiển thị
+  promoLabel?: string;   // nhãn chương trình, ví dụ "Ưu đãi tháng 7"
+  promoUntil?: string;   // ISO date (YYYY-MM-DD) – hết hạn khuyến mãi
 };
 
 export const PLANS: Plan[] = [
@@ -177,4 +181,23 @@ export function formatVND(n: number): string {
 export function buildTransferContent(planCode: string, userId: string): string {
   const short = userId.replace(/-/g, "").slice(0, 8).toUpperCase();
   return "NNP " + planCode.toUpperCase() + " " + short;
+}
+
+// --- Giá hiệu lực sau điều chỉnh / khuyến mãi ---
+export function isPromoActive(plan: Plan): boolean {
+  if (plan.promoPrice == null) return false;
+  if (!plan.promoUntil) return true;
+  const until = new Date(plan.promoUntil + "T23:59:59");
+  return !Number.isNaN(until.getTime()) && until.getTime() >= Date.now();
+}
+
+export function getEffectivePrice(plan: Plan): number {
+  return isPromoActive(plan) ? (plan.promoPrice as number) : plan.price;
+}
+
+export function getDiscountPercent(plan: Plan): number {
+  const base = plan.marketPrice && plan.marketPrice > plan.price ? plan.marketPrice : plan.price;
+  const eff = getEffectivePrice(plan);
+  if (!base || base <= 0 || eff >= base) return 0;
+  return Math.round(((base - eff) / base) * 100);
 }
