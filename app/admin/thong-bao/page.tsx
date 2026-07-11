@@ -21,7 +21,7 @@ export default async function Page() {
   return (
     <div>
       <h1 className="mb-4 text-2xl font-bold">Thông báo / Khuyến mãi</h1>
-      <AdminNav />
+      <AdminNav role={(prof?.role as "admin" | "pho_cong_dong" | "member") ?? (prof?.is_admin ? "admin" : "member")} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div>
           <h2 className="mb-3 text-lg font-bold">Gửi thông báo mới</h2>
