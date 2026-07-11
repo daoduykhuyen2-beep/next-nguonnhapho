@@ -135,17 +135,25 @@ export default async function TrangChu() {
   return (
     <>
       {/* Hero + tìm kiếm */}
-      <section className="bg-white text-black">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <section className="np-hero">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
           <h1 className="max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
             Nhà phố trung tâm Sài Gòn
           </h1>
-          <p className="mt-3 max-w-2xl text-sm opacity-90 sm:text-base">
-            Giá thật · Pháp lý rõ ràng · Uy tín — Kênh đăng tin mua bán, cho thuê
-            nhà phố, căn hộ, đất nền tại TP. Hồ Chí Minh.
+          <h2 className="mt-1 text-3xl font-extrabold leading-tight np-accent sm:text-4xl md:text-5xl">
+            Giá thật · Pháp lý rõ · Xem nhà nhanh
+          </h2>
+          <p className="mt-4 max-w-2xl text-sm text-white/85 sm:text-base">
+            Kho nhà phố, shophouse thật đang chào bán khắp Hồ Chí Minh — cập nhật
+            liên tục theo tình trạng chủ nhà, kiểm tra pháp lý trước khi đăng.
           </p>
 
-          <form action="/tin-dang" className="mt-6 rounded-xl bg-white p-3 shadow-lg sm:p-4">
+          <div className="mt-6 flex gap-1">
+            <span className="rounded-t-lg np-tab-active px-5 py-2 text-sm">Nhà bán</span>
+            <Link href="/tin-dang?loai=thue" className="rounded-t-lg bg-white/20 px-5 py-2 text-sm font-semibold text-white hover:bg-white/30">Nhà cho thuê</Link>
+          </div>
+
+          <form action="/tin-dang" className="rounded-b-xl rounded-tr-xl bg-white p-3 shadow-lg sm:p-4">
             <div className="grid gap-3 sm:grid-cols-12">
               <input
                 type="text"
@@ -165,23 +173,20 @@ export default async function TrangChu() {
               </select>
               <button
                 type="submit"
-                className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:opacity-90 sm:col-span-2"
+                className="np-btn px-4 py-2 text-sm sm:col-span-2"
               >
-                Tìm nhà
+                Tìm kiếm
               </button>
             </div>
           </form>
 
-          <div className="mt-4 flex flex-wrap gap-2 text-sm">
-            <Link href="/tin-dang" className="rounded-full bg-white/15 px-3 py-1 hover:bg-white/25">
-              Xem tất cả tin đăng
-            </Link>
-            <Link href="/dang-tin" className="rounded-full bg-white px-3 py-1 font-semibold text-brand hover:bg-gray-100">
-              Đăng tin miễn phí
-            </Link>
-            <Link href="/gioi-thieu" className="rounded-full bg-white/15 px-3 py-1 hover:bg-white/25">
-              Quy trình làm việc →
-            </Link>
+          <div className="mt-5 flex flex-wrap gap-2 text-sm">
+            <Link href="/tin-dang?quan=Quận 1" className="np-chip">Nhà Quận 1</Link>
+            <Link href="/tin-dang?quan=Quận 3" className="np-chip">Nhà Quận 3</Link>
+            <Link href="/tin-dang" className="np-chip">Nhà mặt tiền</Link>
+            <Link href="/tin-dang" className="np-chip">Dưới 10 tỷ</Link>
+            <Link href="/tin-dang" className="np-chip">Hẻm xe hơi</Link>
+            <Link href="/tin-dang?loai=thue" className="np-chip">Thuê mặt bằng kinh doanh</Link>
           </div>
         </div>
       </section>
