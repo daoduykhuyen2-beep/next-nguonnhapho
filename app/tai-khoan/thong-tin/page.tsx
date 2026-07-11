@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
 import ProfileForm from "@/components/ProfileForm";
+import AvatarUpload from "@/components/AvatarUpload";
 
 export const metadata = { title: "Thông tin cá nhân" };
 
@@ -28,6 +29,9 @@ export default async function ThongTinPage() {
         </Link>
       </div>
       <p className="mb-6 text-sm text-gray-500">Email: {user.email}</p>
+      <div className="mb-6">
+        <AvatarUpload userId={user.id} initialUrl={profile?.avatar_url ?? null} name={profile?.full_name ?? null} />
+      </div>
       <ProfileForm profile={(profile as Profile) ?? null} />
     </main>
   );
