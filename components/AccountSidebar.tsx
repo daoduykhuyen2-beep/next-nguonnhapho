@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 const items = [
   { href: "/tai-khoan", label: "Thông tin tài khoản", icon: "👤" },
   { href: "/tai-khoan/tin-cua-toi", label: "Tin của tôi", icon: "🏠" },
+  { href: "/tai-khoan/tin-yeu-thich", label: "Tin yêu thích", icon: "❤️" },
   { href: "/tai-khoan/bien-dong", label: "Nạp tiền & biến động số dư", icon: "💳" },
   { href: "/tai-khoan/nhat-ky", label: "Nhật ký hoạt động", icon: "🕒" },
   { href: "/tai-khoan/bao-mat", label: "Bảo mật", icon: "🛡️" },
