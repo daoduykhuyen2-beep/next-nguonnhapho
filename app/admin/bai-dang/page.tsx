@@ -32,7 +32,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
   return (
     <div>
       <h1 className="mb-4 text-2xl font-bold">Quản lý bài đăng</h1>
-      <AdminNav />
+      <AdminNav role={(prof?.role as "admin" | "pho_cong_dong" | "member") ?? (prof?.is_admin ? "admin" : "member")} />
       <form className="mb-4 flex gap-2">
         <input name="q" defaultValue={q} placeholder="Tìm theo tiêu đề..." className="w-full max-w-md rounded-lg border px-4 py-2" />
         <button className="rounded-lg bg-brand px-5 py-2 font-semibold text-white">Tìm</button>
