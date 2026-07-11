@@ -14,11 +14,28 @@ async function requireAdmin() {
   return { ok: isAdmin, supabase, user };
 }
 
+async function requireStaff() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Chưa đăng nhập.");
+  const { data: prof } = await supabase
+    .from("profiles")
+    .select("role, is_admin")
+    .eq("id", user.id)
+    .maybeSingle();
+  const role = prof?.role;
+  const ok = role === "admin" || role === "pho_cong_dong" || prof?.is_admin === true;
+  if (!ok) throw new Error("Chỉ nhân sự quản trị mới được thao tác.");
+  return { ok: true as const, supabase, user, role: role ?? (prof?.is_admin ? "admin" : "member") };
+}
+
 export type AdminState = { error?: string; success?: boolean };
 
 // ----- Bai dang -----
 export async function adminUpdatePost(_prev: AdminState, formData: FormData): Promise<AdminState> {
-  const { ok, supabase } = await requireAdmin();
+  const { ok, supabase } = await requireStaff();
   if (!ok) return { error: "Không có quyền." };
   const id = Number(formData.get("id"));
   const payload: Record<string, unknown> = {
@@ -37,7 +54,7 @@ export async function adminUpdatePost(_prev: AdminState, formData: FormData): Pr
 }
 
 export async function adminSetPostState(id: number, trang_thai: string) {
-  const { ok, supabase } = await requireAdmin();
+  const { ok, supabase } = await requireStaff();
   if (!ok) return;
   await supabase.from("web_posts").update({ trang_thai }).eq("id", id);
   revalidatePath("/admin/bai-dang");
@@ -62,7 +79,7 @@ export async function adminUpdateMember(_prev: AdminState, formData: FormData): 
 
 // ----- Tin tuc -----
 export async function adminSaveNews(_prev: AdminState, formData: FormData): Promise<AdminState> {
-  const { ok, supabase } = await requireAdmin();
+  const { ok, supabase } = await requireStaff();
   if (!ok) return { error: "Không có quyền." };
   const idRaw = String(formData.get("id") || "").trim();
   const payload: Record<string, unknown> = {
@@ -86,7 +103,7 @@ export async function adminSaveNews(_prev: AdminState, formData: FormData): Prom
 
 // ----- Thong bao / khuyen mai -----
 export async function adminSendNotification(_prev: AdminState, formData: FormData): Promise<AdminState> {
-  const { ok, supabase } = await requireAdmin();
+  const { ok, supabase } = await requireStaff();
   if (!ok) return { error: "Không có quyền." };
   const payload = {
     tieu_de: String(formData.get("tieu_de") || "").trim(),
@@ -97,5 +114,23 @@ export async function adminSendNotification(_prev: AdminState, formData: FormDat
   const { error } = await supabase.from("notifications").insert(payload);
   if (error) return { error: error.message };
   revalidatePath("/admin/thong-bao");
+  return { success: true };
+}
+
+
+// Gán vai trò cho một thành viên (CHỈ ADMIN).
+// role hợp lệ: 'admin' | 'pho_cong_dong' | 'member'
+export async function adminSetRole(userId: string, role: string) {
+  await requireAdmin();
+  if (!["admin", "pho_cong_dong", "member"].includes(role)) {
+    return { error: "Vai trò không hợp lệ." };
+  }
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ role, is_admin: role === "admin" })
+    .eq("id", userId);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/phan-quyen");
   return { success: true };
 }
