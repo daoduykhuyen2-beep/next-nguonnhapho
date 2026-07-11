@@ -44,9 +44,13 @@ export default function TuyenDungPage() {
       <section className="border-b border-gray-200 bg-white text-black">
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-14 sm:py-20 md:grid-cols-[220px_1fr]">
           <div className="flex justify-center">
-            <div className="flex h-40 w-40 items-center justify-center rounded-2xl bg-white/5 text-6xl font-black tracking-tight">
-              NNP
-            </div>
+            <img
+              src="/logo-black.png"
+              alt="Nguồn Nhà Phố HCM"
+              width={160}
+              height={160}
+              className="h-40 w-40 object-contain"
+            />
           </div>
           <div>
             <p className="text-sm font-semibold uppercase tracking-widest text-brand">
