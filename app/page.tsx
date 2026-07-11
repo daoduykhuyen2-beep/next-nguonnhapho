@@ -135,7 +135,7 @@ export default async function TrangChu() {
   return (
     <>
       {/* Hero + tìm kiếm */}
-      <section className="bg-brand text-white">
+      <section className="bg-white text-black">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <h1 className="max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
             Nhà phố trung tâm Sài Gòn
