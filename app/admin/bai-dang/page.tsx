@@ -15,8 +15,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/dang-nhap?next=/admin");
-  const { data: prof } = await supabase.from("profiles").select("is_admin").eq("id", user.id).maybeSingle();
-  const isAdmin = user.email === "daoduykhuyen2@gmail.com" || prof?.is_admin === true;
+  const { data: prof } = await supabase.from("profiles").select("is_admin, role").eq("id", user.id).maybeSingle();
+  const isAdmin =
+    user.email === "daoduykhuyen2@gmail.com" || prof?.is_admin === true ||
+    prof?.role === "admin" ||
+    prof?.role === "pho_cong_dong";
   if (!isAdmin) return <div className="p-8 text-center text-gray-500">Không có quyền.</div>;
 
   let query = supabase.from("web_posts").select("id, title, gia, dien_tich, quan, mota, status, trang_thai", { count: "exact" }).order("created_at", { ascending: false });
