@@ -2,28 +2,22 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
-import LogoutButton from "@/components/LogoutButton";
+import AccountSidebar from "@/components/AccountSidebar";
 
 export const metadata = { title: "Tài khoản của tôi" };
+export const dynamic = "force-dynamic";
+
+function vnd(n: number) {
+  return Number(n || 0).toLocaleString("vi-VN") + "đ";
+}
 
 export default async function TaiKhoanPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/dang-nhap");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
-
+  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
   const p = profile as Profile | null;
-  const displayName =
-    p?.full_name ||
-    (user.user_metadata?.full_name as string) ||
-    "Thành viên";
 
   const roleLabel = p?.is_admin
     ? "Quản trị viên"

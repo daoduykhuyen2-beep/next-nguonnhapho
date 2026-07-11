@@ -39,5 +39,13 @@ export type Profile = {
   gender: string | null;
   address: string | null;
   bio: string | null;
+  so_du: number | null;
+  tong_nap: number | null;
+  da_su_dung: number | null;
+  giam_gia: number | null;
+  vat_company: string | null;
+  vat_tax_code: string | null;
+  vat_address: string | null;
+  vat_email: string | null;
   created_at: string | null;
 };
