@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import "./globals.css";
 import { createClient } from "@/lib/supabase/server";
+import HeaderActions from "@/components/HeaderActions";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nguonnhaphohcm.vn"),
@@ -81,45 +82,7 @@ export default async function RootLayout({
               ))}
             </nav>
 
-            <div className="flex items-center gap-3 text-sm font-semibold">
-              {user ? (
-                <>
-                  <Link href="/dang-tin" className="hover:underline">
-                    Đăng tin
-                  </Link>
-                  <Link
-                    href="/tai-khoan"
-                    className="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 hover:bg-gray-100"
-                  >
-                    {avatarUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={avatarUrl}
-                        alt="Tài khoản"
-                        className="h-8 w-8 rounded-full border object-cover"
-                      />
-                    ) : (
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
-                        {(user.email ?? "U").charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                    <span className="hidden sm:inline">Tài khoản</span>
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/dang-tin" className="hidden hover:underline sm:inline">
-                    Đăng tin
-                  </Link>
-                  <Link
-                    href="/dang-nhap"
-                    className="rounded-md bg-brand px-3 py-1.5 text-white hover:opacity-90"
-                  >
-                    Đăng nhập
-                  </Link>
-                </>
-              )}
-            </div>
+            <HeaderActions user={user} avatarUrl={avatarUrl} />
           </div>
           <nav className="flex gap-4 overflow-x-auto border-t border-gray-200 px-4 py-2 text-sm font-medium md:hidden">
             {navLinks.map((l) => (
