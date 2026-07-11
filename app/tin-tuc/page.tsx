@@ -88,7 +88,7 @@ export default async function TinTucPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-brand text-white">
+      <section className="bg-white text-black">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
           <p className="text-sm font-semibold uppercase tracking-widest opacity-80">
             Tin tức & kiến thức
