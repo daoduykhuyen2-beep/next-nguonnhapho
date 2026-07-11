@@ -1,5 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
-import { PLANS, formatVND, type Plan } from "@/lib/plans";
+import {
+  PLANS,
+  formatVND,
+  getEffectivePrice,
+  getDiscountPercent,
+  isPromoActive,
+  type Plan,
+} from "@/lib/plans";
 import { createOrder } from "@/app/actions/payment";
 
 export const metadata = { title: "Bảng giá đăng tin & đẩy tin" };
@@ -43,7 +50,11 @@ function discountPct(price: number, market?: number) {
 }
 
 function PlanCard({ plan, disabled }: { plan: Plan; disabled: boolean }) {
-  const pct = discountPct(plan.price, plan.marketPrice);
+  const effPrice = getEffectivePrice(plan);
+  const promoOn = isPromoActive(plan);
+  const pct = promoOn
+    ? getDiscountPercent(plan)
+    : discountPct(plan.price, plan.marketPrice);
   return (
     <div
       className={
@@ -62,11 +73,19 @@ function PlanCard({ plan, disabled }: { plan: Plan; disabled: boolean }) {
         {plan.name}
       </h3>
       <div className="mt-3 text-3xl font-extrabold text-gray-900">
-        {formatVND(plan.price)}
+        {formatVND(effPrice)}
         {plan.unit && (
           <span className="text-base font-medium text-gray-400"> {plan.unit}</span>
         )}
       </div>
+      {promoOn && plan.promoLabel && (
+        <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-600">
+          🔥 {plan.promoLabel}
+          {plan.promoUntil && (
+            <span className="font-normal text-red-400">– đến {plan.promoUntil}</span>
+          )}
+        </div>
+      )}
       {plan.marketPrice && (
         <div className="mt-1 text-sm text-gray-400">
           <span className="line-through">
