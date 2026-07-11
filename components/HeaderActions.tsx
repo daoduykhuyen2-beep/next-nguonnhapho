@@ -11,6 +11,7 @@ type Props = {
   displayName?: string | null;
   soDu?: number | null;
   membershipTier?: string | null;
+  notifications?: Noti[];
 };
 
 type Noti = {
@@ -22,33 +23,33 @@ type Noti = {
   read: boolean;
 };
 
-// Dữ liệu thông báo mẫu — sau này thay bằng dữ liệu thật từ Supabase (bảng notifications)
+// Dá»¯ liá»u thÃ´ng bÃ¡o máº«u â sau nÃ y thay báº±ng dá»¯ liá»u tháº­t tá»« Supabase (báº£ng notifications)
 const DEMO_NOTIS: Noti[] = [
-  { id: "n1", cat: "khuyenmai", title: "Gói tin Sài Gòn 1K+", body: "Chỉ 625K có ngay 25 tin thường hiển thị 15 ngày. Áp dụng cho BĐS tại TP.HCM.", date: "08/07/2026", read: false },
-  { id: "n2", cat: "khuyenmai", title: "Gói tin Hà Nội 1K+", body: "30 tin chỉ với 1K/ngày, tiết kiệm hơn 2 triệu.", date: "07/07/2026", read: false },
-  { id: "n3", cat: "tin", title: "Tin đăng đã được duyệt", body: "Tin “Bán nhà phố Quận 1” của bạn đã hiển thị công khai.", date: "06/07/2026", read: false },
-  { id: "n4", cat: "taichinh", title: "Nạp tiền thành công", body: "Bạn đã nạp 500.000đ vào tài khoản. Số dư khả dụng đã được cập nhật.", date: "05/07/2026", read: true },
-  { id: "n5", cat: "them", title: "Cập nhật chính sách", body: "Điều khoản sử dụng dịch vụ vừa được cập nhật. Bấm để xem chi tiết.", date: "01/07/2026", read: true },
+  { id: "n1", cat: "khuyenmai", title: "GÃ³i tin SÃ i GÃ²n 1K+", body: "Chá» 625K cÃ³ ngay 25 tin thÆ°á»ng hiá»n thá» 15 ngÃ y. Ãp dá»¥ng cho BÄS táº¡i TP.HCM.", date: "08/07/2026", read: false },
+  { id: "n2", cat: "khuyenmai", title: "GÃ³i tin HÃ  Ná»i 1K+", body: "30 tin chá» vá»i 1K/ngÃ y, tiáº¿t kiá»m hÆ¡n 2 triá»u.", date: "07/07/2026", read: false },
+  { id: "n3", cat: "tin", title: "Tin ÄÄng ÄÃ£ ÄÆ°á»£c duyá»t", body: "Tin âBÃ¡n nhÃ  phá» Quáº­n 1â cá»§a báº¡n ÄÃ£ hiá»n thá» cÃ´ng khai.", date: "06/07/2026", read: false },
+  { id: "n4", cat: "taichinh", title: "Náº¡p tiá»n thÃ nh cÃ´ng", body: "Báº¡n ÄÃ£ náº¡p 500.000Ä vÃ o tÃ i khoáº£n. Sá» dÆ° kháº£ dá»¥ng ÄÃ£ ÄÆ°á»£c cáº­p nháº­t.", date: "05/07/2026", read: true },
+  { id: "n5", cat: "them", title: "Cáº­p nháº­t chÃ­nh sÃ¡ch", body: "Äiá»u khoáº£n sá»­ dá»¥ng dá»ch vá»¥ vá»«a ÄÆ°á»£c cáº­p nháº­t. Báº¥m Äá» xem chi tiáº¿t.", date: "01/07/2026", read: true },
 ];
 
 const NOTI_TABS: { key: string; label: string }[] = [
-  { key: "all", label: "Tất cả" },
-  { key: "tin", label: "Tin đăng" },
-  { key: "taichinh", label: "Tài chính" },
-  { key: "khuyenmai", label: "Khuyến mãi" },
-  { key: "them", label: "Thêm" },
+  { key: "all", label: "Táº¥t cáº£" },
+  { key: "tin", label: "Tin ÄÄng" },
+  { key: "taichinh", label: "TÃ i chÃ­nh" },
+  { key: "khuyenmai", label: "Khuyáº¿n mÃ£i" },
+  { key: "them", label: "ThÃªm" },
 ];
 
-// Các mục trong menu Tài khoản (giống bố cục Batdongsan)
+// CÃ¡c má»¥c trong menu TÃ i khoáº£n (giá»ng bá» cá»¥c Batdongsan)
 const ACCOUNT_MENU: { href: string; label: string; badge?: string }[] = [
-  { href: "/dang-tin", label: "Chuyển sang đăng tin" },
-  { href: "/tai-khoan", label: "Tổng quan" },
-  { href: "/tai-khoan/tin-cua-toi", label: "Quản lý tin đăng" },
-  { href: "/tai-khoan/khach-hang", label: "Quản lý khách hàng" },
-  { href: "/tai-khoan/moi-gioi", label: "Môi giới chuyên nghiệp" },
-  { href: "/goi-thanh-vien", label: "Gói hội viên", badge: "-39%" },
-  { href: "/tai-khoan/thong-tin", label: "Cài đặt tài khoản" },
-  { href: "/tai-khoan/doi-mat-khau", label: "Đổi mật khẩu" },
+  { href: "/dang-tin", label: "Chuyá»n sang ÄÄng tin" },
+  { href: "/tai-khoan", label: "Tá»ng quan" },
+  { href: "/tai-khoan/tin-cua-toi", label: "Quáº£n lÃ½ tin ÄÄng" },
+  { href: "/tai-khoan/khach-hang", label: "Quáº£n lÃ½ khÃ¡ch hÃ ng" },
+  { href: "/tai-khoan/moi-gioi", label: "MÃ´i giá»i chuyÃªn nghiá»p" },
+  { href: "/goi-thanh-vien", label: "GÃ³i há»i viÃªn", badge: "-39%" },
+  { href: "/tai-khoan/thong-tin", label: "CÃ i Äáº·t tÃ i khoáº£n" },
+  { href: "/tai-khoan/doi-mat-khau", label: "Äá»i máº­t kháº©u" },
 ];
 
 function useOutside(onClose: () => void) {
@@ -63,14 +64,14 @@ function useOutside(onClose: () => void) {
   return ref;
 }
 
-export default function HeaderActions({ user, avatarUrl, displayName, soDu, membershipTier }: Props) {
+export default function HeaderActions({ user, avatarUrl, displayName, soDu, membershipTier , notifications }: Props) {
   const [open, setOpen] = useState<"none" | "app" | "fav" | "noti" | "acc">("none");
   const [notiTab, setNotiTab] = useState("all");
   const [onlyUnread, setOnlyUnread] = useState(false);
   const wrapRef = useOutside(() => setOpen("none"));
 
   const unread = DEMO_NOTIS.filter((n) => !n.read).length;
-  const notis = DEMO_NOTIS.filter(
+  const notis = (notifications ?? DEMO_NOTIS).filter(
     (n) => (notiTab === "all" || n.cat === notiTab) && (!onlyUnread || !n.read)
   );
 
@@ -82,10 +83,10 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
     return (
       <div className="flex items-center gap-3 text-sm font-semibold">
         <Link href="/dang-tin" className="hidden hover:underline sm:inline">
-          Đăng tin
+          ÄÄng tin
         </Link>
         <Link href="/dang-nhap" className="rounded-md bg-brand px-3 py-1.5 text-white hover:opacity-90">
-          Đăng nhập
+          ÄÄng nháº­p
         </Link>
       </div>
     );
@@ -93,10 +94,10 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
 
   return (
     <div ref={wrapRef} className="flex items-center gap-1 text-sm font-semibold sm:gap-2">
-      {/* Tải app */}
+      {/* Táº£i app */}
       <div className="relative">
         <button
-          aria-label="Tải ứng dụng"
+          aria-label="Táº£i á»©ng dá»¥ng"
           onClick={() => toggle("app")}
           className="flex h-10 w-10 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100"
         >
@@ -107,9 +108,9 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
         </button>
         {open === "app" && (
           <div className="absolute right-0 z-50 mt-2 w-72 rounded-xl border border-gray-200 bg-white p-4 shadow-xl">
-            <p className="text-base font-bold text-black">Tải ứng dụng Nguồn Nhà Phố</p>
+            <p className="text-base font-bold text-black">Táº£i á»©ng dá»¥ng Nguá»n NhÃ  Phá»</p>
             <p className="mt-1 text-xs font-normal text-gray-500">
-              Quét mã QR hoặc tải app để tìm nhà nhanh hơn, nhận thông báo tin mới ngay trên điện thoại.
+              QuÃ©t mÃ£ QR hoáº·c táº£i app Äá» tÃ¬m nhÃ  nhanh hÆ¡n, nháº­n thÃ´ng bÃ¡o tin má»i ngay trÃªn Äiá»n thoáº¡i.
             </p>
             <div className="mt-3 flex items-center gap-3">
               <div className="flex h-24 w-24 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-[10px] text-gray-400">
@@ -124,10 +125,10 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
         )}
       </div>
 
-      {/* Tin yêu thích */}
+      {/* Tin yÃªu thÃ­ch */}
       <div className="relative">
         <button
-          aria-label="Tin yêu thích"
+          aria-label="Tin yÃªu thÃ­ch"
           onClick={() => toggle("fav")}
           className="flex h-10 w-10 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100"
         >
@@ -138,28 +139,28 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
         {open === "fav" && (
           <div className="absolute right-0 z-50 mt-2 w-80 rounded-xl border border-gray-200 bg-white p-4 shadow-xl">
             <div className="flex items-center justify-between">
-              <p className="text-base font-bold text-black">Tin yêu thích</p>
+              <p className="text-base font-bold text-black">Tin yÃªu thÃ­ch</p>
               <Link href="/tai-khoan/tin-yeu-thich" onClick={() => setOpen("none")} className="text-xs font-semibold text-brand hover:underline">
-                Xem tất cả
+                Xem táº¥t cáº£
               </Link>
             </div>
             <div className="mt-4 flex flex-col items-center justify-center py-6 text-center">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.5">
                 <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
               </svg>
-              <p className="mt-2 text-sm font-normal text-gray-500">Bạn chưa lưu tin nào.</p>
+              <p className="mt-2 text-sm font-normal text-gray-500">Báº¡n chÆ°a lÆ°u tin nÃ o.</p>
               <Link href="/tin-dang" onClick={() => setOpen("none")} className="mt-2 text-xs font-semibold text-brand hover:underline">
-                Khám phá tin đăng
+                KhÃ¡m phÃ¡ tin ÄÄng
               </Link>
             </div>
           </div>
         )}
       </div>
 
-      {/* Thông báo */}
+      {/* ThÃ´ng bÃ¡o */}
       <div className="relative">
         <button
-          aria-label="Thông báo"
+          aria-label="ThÃ´ng bÃ¡o"
           onClick={() => toggle("noti")}
           className="relative flex h-10 w-10 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100"
         >
@@ -176,10 +177,10 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
         {open === "noti" && (
           <div className="absolute right-0 z-50 mt-2 w-[380px] max-w-[92vw] rounded-xl border border-gray-200 bg-white shadow-xl">
             <div className="flex items-center justify-between px-4 pt-4">
-              <p className="text-lg font-bold text-black">Thông báo</p>
+              <p className="text-lg font-bold text-black">ThÃ´ng bÃ¡o</p>
               <label className="flex cursor-pointer items-center gap-2 text-xs font-normal text-gray-500">
                 <input type="checkbox" checked={onlyUnread} onChange={(e) => setOnlyUnread(e.target.checked)} className="accent-brand" />
-                Chưa đọc
+                ChÆ°a Äá»c
               </label>
             </div>
             <div className="mt-2 flex gap-4 overflow-x-auto border-b border-gray-100 px-4 text-sm">
@@ -200,7 +201,7 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
             </div>
             <div className="max-h-96 overflow-y-auto">
               {notis.length === 0 ? (
-                <p className="px-4 py-8 text-center text-sm font-normal text-gray-400">Không có thông báo nào.</p>
+                <p className="px-4 py-8 text-center text-sm font-normal text-gray-400">KhÃ´ng cÃ³ thÃ´ng bÃ¡o nÃ o.</p>
               ) : (
                 notis.map((n) => (
                   <div key={n.id} className={"flex gap-3 border-b border-gray-50 px-4 py-3 hover:bg-gray-50 " + (!n.read ? "bg-red-50/40" : "")}>
@@ -218,7 +219,7 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
         )}
       </div>
 
-      {/* Tài khoản */}
+      {/* TÃ i khoáº£n */}
       <div className="relative">
         <button
           onClick={() => toggle("acc")}
@@ -226,7 +227,7 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
         >
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarUrl} alt="Tài khoản" className="h-9 w-9 rounded-full border object-cover" />
+            <img src={avatarUrl} alt="TÃ i khoáº£n" className="h-9 w-9 rounded-full border object-cover" />
           ) : (
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
               {(displayName || user.email || "U").charAt(0).toUpperCase()}
@@ -241,8 +242,8 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L12 14.3 7.2 16.8l.9-5.3L4.2 7.7l5.4-.8z"/></svg>
                 </span>
                 <div>
-                  <p className="text-sm font-bold text-black">Gói voucher tin VIP</p>
-                  <p className="text-[11px] font-normal text-gray-500">Tiết kiệm chi phí, nâng tầm tin đăng</p>
+                  <p className="text-sm font-bold text-black">GÃ³i voucher tin VIP</p>
+                  <p className="text-[11px] font-normal text-gray-500">Tiáº¿t kiá»m chi phÃ­, nÃ¢ng táº§m tin ÄÄng</p>
                 </div>
               </div>
               <Link href="/goi-thanh-vien" onClick={() => setOpen("none")} className="mt-2 block rounded-md bg-brand py-1.5 text-center text-xs font-bold text-white hover:opacity-90">
@@ -253,8 +254,8 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
             <div className="border-b border-gray-100 px-4 pb-2">
               <p className="text-sm font-bold text-black">{displayName || user.email}</p>
               <p className="text-xs font-normal text-gray-500">
-                {membershipTier ? "Gói: " + membershipTier : "Tài khoản thành viên"}
-                {typeof soDu === "number" ? " · Số dư: " + soDu.toLocaleString("vi-VN") + "đ" : ""}
+                {membershipTier ? "GÃ³i: " + membershipTier : "TÃ i khoáº£n thÃ nh viÃªn"}
+                {typeof soDu === "number" ? " Â· Sá» dÆ°: " + soDu.toLocaleString("vi-VN") + "Ä" : ""}
               </p>
             </div>
 
@@ -274,7 +275,7 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
 
             <div className="border-t border-gray-100 pt-1">
               <Link href="/dang-xuat" onClick={() => setOpen("none")} className="block px-4 py-2 text-sm font-normal text-gray-700 hover:bg-gray-50">
-                Đăng xuất
+                ÄÄng xuáº¥t
               </Link>
             </div>
           </div>
