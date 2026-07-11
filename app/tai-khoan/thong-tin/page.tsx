@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
 import ProfileForm from "@/components/ProfileForm";
+import AvatarUpload from "@/components/AvatarUpload";
 
 export const metadata = { title: "Thông tin cá nhân" };
 
@@ -19,6 +20,8 @@ export default async function ThongTinPage() {
     .eq("id", user.id)
     .maybeSingle();
 
+  const p = (profile as Profile) || null;
+
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
@@ -27,8 +30,18 @@ export default async function ThongTinPage() {
           ← Về tài khoản
         </Link>
       </div>
+
+      <div className="mb-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+        <p className="mb-3 text-sm font-semibold text-gray-800">Ảnh đại diện</p>
+        <AvatarUpload
+          userId={user.id}
+          currentUrl={p?.avatar_url ?? null}
+          fullName={p?.full_name ?? null}
+        />
+      </div>
+
       <p className="mb-6 text-sm text-gray-500">Email: {user.email}</p>
-      <ProfileForm profile={(profile as Profile) ?? null} />
+      <ProfileForm profile={p} />
     </main>
   );
 }
