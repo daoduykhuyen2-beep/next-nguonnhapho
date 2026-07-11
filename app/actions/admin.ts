@@ -99,3 +99,43 @@ export async function adminSendNotification(_prev: AdminState, formData: FormDat
   revalidatePath("/admin/thong-bao");
   return { success: true };
 }
+
+// ----- Banner trang chu -----
+export async function adminSaveBanner(_prev: AdminState, formData: FormData): Promise<AdminState> {
+  const { ok, supabase } = await requireAdmin();
+  if (!ok) return { error: "Không có quyền." };
+
+  const id = formData.get("id") ? Number(formData.get("id")) : null;
+  const payload = {
+    image_url: String(formData.get("image_url") || "").trim(),
+    title: String(formData.get("title") || "").trim(),
+    subtitle: String(formData.get("subtitle") || "").trim(),
+    link: String(formData.get("link") || "").trim(),
+    sort: Number(formData.get("sort") || 0),
+    active: formData.get("active") === "on" || formData.get("active") === "true",
+  };
+
+  if (id) {
+    const { error } = await supabase.from("banners").update(payload).eq("id", id);
+    if (error) return { error: error.message };
+  } else {
+    const { error } = await supabase.from("banners").insert(payload);
+    if (error) return { error: error.message };
+  }
+
+  revalidatePath("/admin/banner");
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function adminDeleteBanner(_prev: AdminState, formData: FormData): Promise<AdminState> {
+  const { ok, supabase } = await requireAdmin();
+  if (!ok) return { error: "Không có quyền." };
+  const id = Number(formData.get("id"));
+  if (!id) return { error: "Thiếu mã banner." };
+  const { error } = await supabase.from("banners").delete().eq("id", id);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/banner");
+  revalidatePath("/");
+  return { success: true };
+}
