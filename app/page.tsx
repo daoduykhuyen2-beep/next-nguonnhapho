@@ -2,6 +2,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
+import BannerCarousel, { type Banner } from "@/components/BannerCarousel";
+import HeroSearch from "@/components/HeroSearch";
 
 export const revalidate = 60;
 
@@ -27,6 +29,16 @@ async function demKhoNha(): Promise<number> {
     .select("id", { count: "exact", head: true })
     .eq("trang_thai", "duyet");
   return count ?? 0;
+}
+
+async function layBanner(): Promise<Banner[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("banners")
+    .select("id, image_url, title, subtitle, link")
+    .eq("active", true)
+    .order("sort", { ascending: true });
+  return (data as Banner[]) ?? [];
 }
 
 type XepHang = { ten: string; so: number };
@@ -104,21 +116,9 @@ function Khoi({
   );
 }
 
-const KHU_VUC = [
-  "Quận 1",
-  "Quận 3",
-  "Quận 4",
-  "Quận 5",
-  "Quận 10",
-  "Bình Thạnh",
-  "Phú Nhuận",
-  "Tân Bình",
-  "Gò Vấp",
-  "Bình Chánh",
-];
 
 export default async function TrangChu() {
-    const [hotHomNay, kimCuong, vang, tinMoi, xepHang, tinTuc, video, canhBao, khoNha] =
+    const [hotHomNay, kimCuong, vang, tinMoi, xepHang, tinTuc, video, canhBao, khoNha, banners] =
     await Promise.all([
       layTin({ hotToday: true, limit: 8 }),
       layTin({ status: "kim_cuong", limit: 8 }),
@@ -129,54 +129,36 @@ export default async function TrangChu() {
       layTinTuc({ loai: "video", limit: 3 }),
       layTinTuc({ loai: "tin_tuc", limit: 4 }),
       demKhoNha(),
+      layBanner(),
     ]);
 
 
   return (
     <>
-      {/* Hero + tìm kiếm */}
+      {/* Hero: banner slider + thanh tim kiem */}
       <section className="border-b border-gray-200 bg-white text-black">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <h1 className="max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
-            Nhà phố trung tâm Sài Gòn
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm text-gray-600 sm:text-base">
-            Giá thật · Pháp lý rõ ràng · Uy tín — Kênh đăng tin mua bán, cho thuê
-            nhà phố, căn hộ, đất nền tại TP. Hồ Chí Minh.
-          </p>
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
+          <BannerCarousel banners={banners} />
 
-          <form action="/tin-dang" className="mt-6 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
-            <div className="grid gap-3 sm:grid-cols-12">
-              <input
-                type="text"
-                name="q"
-                placeholder="Nhập tên đường, phường, từ khóa… VD: Nguyễn Đình Chiểu"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 sm:col-span-5"
-              />
-              <select name="quan" className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 sm:col-span-3">
-                <option value="">Tất cả khu vực</option>
-                {KHU_VUC.map((kv) => (
-                  <option key={kv} value={kv}>{kv}</option>
-                ))}
-              </select>
-              <select name="loai" className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 sm:col-span-2">
-                <option value="">Mua bán</option>
-                <option value="thue">Cho thuê</option>
-              </select>
-              <button
-                type="submit"
-                className="np-btn px-4 py-2 text-sm sm:col-span-2"
-              >
-                Tìm kiếm
-              </button>
-            </div>
-          </form>
+          <div className="mt-6">
+            <h1 className="max-w-3xl text-2xl font-extrabold leading-tight sm:text-4xl">
+              Nhà phố trung tâm Sài Gòn
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-gray-600 sm:text-base">
+              Giá thật · Pháp lý rõ ràng · Uy tín · Kênh đăng tin mua bán, cho thuê
+              nhà phố, căn hộ, đất nền tại TP. Hồ Chí Minh.
+            </p>
+          </div>
+
+          <div className="mt-4">
+            <HeroSearch />
+          </div>
 
           <div className="mt-5 flex flex-wrap gap-2 text-sm">
-            <Link href="/tin-dang?quan=Quận 1" className="np-chip">Nhà Quận 1</Link>
-            <Link href="/tin-dang?quan=Quận 3" className="np-chip">Nhà Quận 3</Link>
+            <Link href="/tin-dang?quan=Qu%E1%BA%ADn%201" className="np-chip">Nhà Quận 1</Link>
+            <Link href="/tin-dang?quan=Qu%E1%BA%ADn%203" className="np-chip">Nhà Quận 3</Link>
             <Link href="/tin-dang" className="np-chip">Nhà mặt tiền</Link>
-            <Link href="/tin-dang" className="np-chip">Dưới 10 tỷ</Link>
+            <Link href="/tin-dang?giaMax=10" className="np-chip">Dưới 10 tỷ</Link>
             <Link href="/tin-dang" className="np-chip">Hẻm xe hơi</Link>
             <Link href="/tin-dang?loai=thue" className="np-chip">Thuê mặt bằng kinh doanh</Link>
           </div>
