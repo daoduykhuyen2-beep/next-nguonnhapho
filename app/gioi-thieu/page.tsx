@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTongSoCan, formatSoCan } from "@/lib/stats";
 
 export const metadata: Metadata = {
   title: "Giới thiệu",
@@ -68,7 +69,14 @@ const CAM_KET = [
   "Đồng hành đến khi hoàn tất sang tên, bàn giao.",
 ];
 
-export default function GioiThieuPage() {
+export default async function GioiThieuPage() {
+  const soCan = await getTongSoCan();
+  const soLieu =
+    soCan > 0
+      ? SO_LIEU.map((s) =>
+          s.l.includes("trong kho") ? { ...s, n: formatSoCan(soCan) + "+" } : s
+        )
+      : SO_LIEU;
   return (
     <>
       {/* Hero */}
@@ -81,7 +89,7 @@ export default function GioiThieuPage() {
             Nguồn Nhà Phố HCM — làm việc chuyên nghiệp, minh bạch từng bước
           </h1>
           <p className="mt-4 max-w-2xl text-sm text-gray-600 sm:text-base">
-            Chuyên nhà phố, shophouse trung tâm TP.HCM. Kho 1.700+ căn được kiểm
+            Chuyên nhà phố, shophouse trung tâm TP.HCM. Kho {soCan > 0 ? formatSoCan(soCan) + "+" : "1.700+"} căn được kiểm
             tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch, an toàn.
           </p>
           <Link
@@ -133,7 +141,7 @@ export default function GioiThieuPage() {
       {/* Số liệu */}
       <section className="bg-brand/5 text-black">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-12 lg:grid-cols-4">
-          {SO_LIEU.map((s) => (
+          {soLieu.map((s) => (
             <div key={s.l} className="text-center">
               <div className="text-3xl font-extrabold sm:text-4xl">{s.n}</div>
               <div className="mt-1 text-sm text-gray-600">{s.l}</div>
