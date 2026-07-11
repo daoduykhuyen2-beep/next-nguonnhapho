@@ -7,6 +7,7 @@ const items = [
   { href: "/admin/bai-dang", label: "Bài đăng" },
   { href: "/admin/thanh-vien", label: "Thành viên" },
   { href: "/admin/tin-tuc", label: "Tin tức" },
+  { href: "/admin/banner", label: "Banner trang chủ" },
   { href: "/admin/thong-bao", label: "Thông báo / Khuyến mãi" },
   { href: "/admin/nap-tien", label: "Nạp tiền & Gói" },
 ];
