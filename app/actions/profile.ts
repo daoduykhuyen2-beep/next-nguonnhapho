@@ -46,3 +46,23 @@ export async function updateProfile(
   revalidatePath("/tai-khoan/thong-tin");
   return { success: true };
 }
+
+export async function updateAvatar(avatarUrl: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Ban can dang nhap." };
+
+  const { error } = await supabase
+    .from("profiles")
+    .upsert({ id: user.id, email: user.email, avatar_url: avatarUrl || null }, { onConflict: "id" });
+
+  if (error) {
+    console.error("updateAvatar error:", error.message);
+    return { error: "Khong the cap nhat anh dai dien." };
+  }
+  revalidatePath("/tai-khoan");
+  revalidatePath("/tai-khoan/thong-tin");
+  return { success: true };
+}
