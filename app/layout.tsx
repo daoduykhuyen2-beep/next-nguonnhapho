@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 const navLinks = [
-  { href: "/tin-dang", label: "NhÃ  bÃ¡n" },
+  { href: "/tin-dang?loai=ban", label: "NhÃ  bÃ¡n" },
   { href: "/tin-dang?loai=thue", label: "NhÃ  cho thuÃª" },
   { href: "/tin-tuc", label: "Tin tá»©c" },
   { href: "/goi-thanh-vien", label: "Báº£ng giÃ¡" },
