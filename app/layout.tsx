@@ -44,6 +44,16 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  let avatarUrl: string | null = null;
+  if (user) {
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user.id)
+      .maybeSingle();
+    avatarUrl = (prof?.avatar_url as string) ?? null;
+  }
+
   return (
     <html lang="vi">
       <body className="flex min-h-screen flex-col bg-white text-black">
@@ -80,9 +90,21 @@ export default async function RootLayout({
                   </Link>
                   <Link
                     href="/tai-khoan"
-                    className="rounded-md bg-brand px-3 py-1.5 text-white hover:opacity-90"
+                    className="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 hover:bg-gray-100"
                   >
-                    Tài khoản
+                    {avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={avatarUrl}
+                        alt="Tài khoản"
+                        className="h-8 w-8 rounded-full border object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
+                        {(user.email ?? "U").charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                    <span className="hidden sm:inline">Tài khoản</span>
                   </Link>
                 </>
               ) : (
