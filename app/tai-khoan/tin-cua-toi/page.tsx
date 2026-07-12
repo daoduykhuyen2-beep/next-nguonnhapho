@@ -54,8 +54,25 @@ export default async function TinCuaToiPage() {
                   {p.title ?? "(Không có tiêu đề)"}
                 </Link>
                 <p className="text-sm text-brand">{formatGia(p.gia)}</p>
+                <p className="mt-0.5 text-xs">
+                  {p.status === "kim_cuong" ? (
+                    <span className="font-semibold text-indigo-600">💎 VIP Kim Cương</span>
+                  ) : p.status === "vang" ? (
+                    <span className="font-semibold text-amber-600">🏅 VIP Vàng</span>
+                  ) : (
+                    <span className="text-gray-400">Tin thường</span>
+                  )}
+                </p>
               </div>
-              <DeletePostButton id={p.id} />
+              <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  href={`/goi-thanh-vien?post=${p.id}`}
+                  className="rounded-lg border border-brand px-3 py-1.5 text-xs font-semibold text-brand hover:bg-brand hover:text-white"
+                >
+                  Nâng cấp / Đẩy tin
+                </Link>
+                <DeletePostButton id={p.id} />
+              </div>
             </div>
           ))}
         </div>
