@@ -7,7 +7,12 @@ import LogoutButton from "@/components/LogoutButton";
 export const metadata = { title: "Tài khoản của tôi" };
 export const dynamic = "force-dynamic";
 
-export default async function TaiKhoanPage() {
+export default async function TaiKhoanPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ paid?: string }>;
+}) {
+  const { paid } = await searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/dang-nhap");
@@ -76,6 +81,7 @@ export default async function TaiKhoanPage() {
     { href: "/tai-khoan/khach-hang", label: "Quản lý khách hàng", icon: "☺" },
     { href: "/tai-khoan/moi-gioi", label: "Môi giới chuyên nghiệp", icon: "▣" },
     { href: "/goi-thanh-vien", label: "Gói hội viên", icon: "♛", badge: "Tiết kiệm đến -39%" },
+    { href: "/tai-khoan/nap-tien", label: "Nạp tiền vào ví", icon: "₫" },
     { href: "/tai-khoan/thong-tin", label: "Cài đặt tài khoản", icon: "⚙" },
     { href: "/tai-khoan/doi-mat-khau", label: "Đổi mật khẩu", icon: "🔒" },
   ];
@@ -83,6 +89,11 @@ export default async function TaiKhoanPage() {
   return (
     <main className="min-h-screen bg-white text-gray-900">
       <div className="mx-auto max-w-3xl px-4 py-8">
+        {paid === "1" && (
+          <div className="mb-6 rounded-2xl bg-green-50 p-4 text-center font-semibold text-green-700 ring-1 ring-green-200">
+            ✓ Giao dịch thành công! Số dư và gói dịch vụ của bạn đã được cập nhật.
+          </div>
+        )}
         {/* Banner voucher VIP */}
         <div className="mb-6 flex items-center gap-4 rounded-2xl bg-red-50 p-5 ring-1 ring-red-100">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-red-100 text-2xl">
