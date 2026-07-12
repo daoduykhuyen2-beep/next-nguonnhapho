@@ -3,16 +3,19 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient as createServerClient } from "@/lib/supabase/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
-import { getPlanMerged } from "@/lib/plans-server";
-import { getEffectivePrice } from "@/lib/plans";
 
-function adminDb() {
-  return createAdminClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { persistSession: false } }
-  );
+// Kiem tra user hien tai co phai admin khong.
+async function isCurrentUserAdmin(
+  supabase: Awaited<ReturnType<typeof createServerClient>>,
+  user: { id: string; email?: string | null },
+): Promise<boolean> {
+  if (user.email === "daoduykhuyen2@gmail.com") return true;
+  const { data: prof } = await supabase
+    .from("profiles")
+    .select("is_admin, role")
+    .eq("id", user.id)
+    .maybeSingle();
+  return prof?.is_admin === true || prof?.role === "admin";
 }
 
 // Nội dung chuyển khoản riêng cho lệnh nạp tiền.
@@ -38,12 +41,11 @@ export async function createTopupOrder(formData: FormData): Promise<void> {
   } = await supabase.auth.getUser();
   if (!user) redirect("/dang-nhap?next=/tai-khoan/nap-tien");
 
-  const content = buildTopupContent(user!.id);
-
+  const content = buildTopupContent(user.id);
   const { data, error } = await supabase
     .from("payments")
     .insert({
-      user_id: user!.id,
+      user_id: user.id,
       plan_code: "NAPTIEN",
       amount,
       transfer_content: content,
@@ -51,15 +53,13 @@ export async function createTopupOrder(formData: FormData): Promise<void> {
     })
     .select("id")
     .single();
+  if (error || !data) redirect("/tai-khoan/nap-tien?error=order");
 
-  if (error || !data) {
-    redirect("/tai-khoan/nap-tien?error=order");
-  }
-
-  redirect("/nang-cap/" + data!.id);
+  redirect(`/nang-cap/${data.id}`);
 }
 
-// 2) Thanh toán 1 gói bằng số dư ví (trừ tiền tự động).
+// 2) "Thanh toán bằng số dư" -> KHÔNG tự trừ tiền / tự nâng cấp nữa.
+//    Chỉ đánh dấu đơn chờ admin duyệt tay (giống nút "Tôi đã chuyển khoản").
 export async function payPackageWithBalance(formData: FormData): Promise<void> {
   const orderId = Number(formData.get("order_id"));
   if (!Number.isFinite(orderId)) redirect("/goi-thanh-vien?error=order");
@@ -74,54 +74,26 @@ export async function payPackageWithBalance(formData: FormData): Promise<void> {
     .from("payments")
     .select("*")
     .eq("id", orderId)
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .maybeSingle();
   if (!order) redirect("/goi-thanh-vien?error=order");
   if (order.status === "paid") redirect("/tai-khoan?paid=1");
 
-  const { data: prof } = await supabase
-    .from("profiles")
-    .select("so_du")
-    .eq("id", user!.id)
-    .maybeSingle();
-  const soDu = Number(prof?.so_du || 0);
-  if (soDu < Number(order.amount)) {
-    redirect("/nang-cap/" + orderId + "?error=nsf");
+  // Đánh dấu đơn chờ admin duyệt (thay vì tự trừ số dư qua RPC pay_with_balance).
+  await supabase
+    .from("payments")
+    .update({ cho_duyet: true })
+    .eq("id", orderId)
+    .eq("user_id", user.id)
+    .neq("status", "paid");
+
+  revalidatePath(`/nang-cap/${orderId}`);
+
+  // Admin -> nhảy thẳng tới mục "Đơn chờ duyệt" để duyệt tay.
+  if (await isCurrentUserAdmin(supabase, user)) {
+    redirect("/admin/nap-tien#cho-duyet");
   }
 
-  const db = adminDb();
-  const plan = await getPlanMerged(order.plan_code);
-  const days = plan?.days || 30;
-
-  // Trừ số dư + cộng gói NGUYÊN TỬ (atomic) qua RPC pay_with_balance.
-  // RPC khoá dòng (FOR UPDATE), kiểm tra đủ số dư, chống trừ trùng & race.
-  const { data: payResult, error: payErr } = await db.rpc("pay_with_balance", {
-    p_payment_id: orderId,
-    p_days: days,
-  });
-  if (payErr) {
-    console.error("payPackageWithBalance error:", payErr.message);
-    redirect("/tai-khoan?error=paybalance&order=" + orderId);
-  }
-  if (payResult === "insufficient") {
-    redirect("/tai-khoan/nap-tien?thieu=1&order=" + orderId);
-  }
-  if (payResult === "not_found") {
-    redirect("/tai-khoan?error=order");
-  }
-  // 'ok' hoặc 'already_paid' -> coi như thành công, tiếp tục gửi thông báo.
-
-  await db.from("notifications").insert({
-    tieu_de: "Đăng ký gói thành công",
-    noi_dung:
-      "Bạn đã thanh toán gói " +
-      (plan?.name || order.plan_code) +
-      " bằng số dư ví thành công. Gói đã được kích hoạt.",
-    loai: "tai_chinh",
-    target_user: user!.id,
-    da_doc: false,
-  });
-
-  revalidatePath("/tai-khoan");
-  redirect("/tai-khoan?paid=1");
+  // Khách thường -> quay lại trang thanh toán, hiển thị trạng thái chờ duyệt.
+  redirect(`/nang-cap/${orderId}`);
 }
