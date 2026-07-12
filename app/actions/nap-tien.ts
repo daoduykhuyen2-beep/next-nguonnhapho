@@ -89,31 +89,23 @@ export async function payPackageWithBalance(formData: FormData): Promise<void> {
   const plan = await getPlanMerged(order.plan_code);
   const days = plan?.days || 30;
 
-  // Trừ số dư + cộng vào phần đã sử dụng
-  const { data: profUse } = await db
-    .from("profiles")
-    .select("da_su_dung")
-    .eq("id", user!.id)
-    .maybeSingle();
-  await db
-    .from("profiles")
-    .update({
-      so_du: soDu - Number(order.amount),
-      da_su_dung: Number(profUse?.da_su_dung || 0) + Number(order.amount),
-    })
-    .eq("id", user!.id);
-  await db.rpc("apply_membership", {
-    p_user_id: user!.id,
-    p_plan_code: order.plan_code,
+  // Trừ số dư + cộng gói NGUYÊN TỬ (atomic) qua RPC pay_with_balance.
+  // RPC khoá dòng (FOR UPDATE), kiểm tra đủ số dư, chống trừ trùng & race.
+  const { data: payResult, error: payErr } = await db.rpc("pay_with_balance", {
+    p_payment_id: orderId,
     p_days: days,
   });
-  await db
-    .from("payments")
-    .update({ status: "paid", paid_at: new Date().toISOString() })
-    .eq("id", orderId);
-  if (order.post_id) {
-    await db.rpc("apply_post_plan", { p_payment_id: orderId });
+  if (payErr) {
+    console.error("payPackageWithBalance error:", payErr.message);
+    redirect("/tai-khoan?error=paybalance&order=" + orderId);
   }
+  if (payResult === "insufficient") {
+    redirect("/tai-khoan/nap-tien?thieu=1&order=" + orderId);
+  }
+  if (payResult === "not_found") {
+    redirect("/tai-khoan?error=order");
+  }
+  // 'ok' hoặc 'already_paid' -> coi như thành công, tiếp tục gửi thông báo.
 
   await db.from("notifications").insert({
     tieu_de: "Đăng ký gói thành công",
