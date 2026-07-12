@@ -133,8 +133,9 @@ export default async function TinChiTietPage({
   const giaTy = parseGiaTy(post.gia);
   const dt = parseDienTich(post.dien_tich);
   const donGia = formatTrieuPerM2(giaTy, dt);
-  const soTang = extractField(searchText, [/Số tầng:\s*(\d+)/i, /(\d+)\s*tầng/i]);
-  const ngang = extractField(searchText, [/Mặt tiền:\s*([\d.,]+)\s*m/i, /ngang\s*([\d.,]+)\s*m/i, /([\d.,]+)\s*m\s*ngang/i]);
+  const soTang = (post.so_tang && post.so_tang.trim()) || extractField(searchText, [/Số tầng:\s*(\d+)/i, /(\d+)\s*tầng/i]);
+  const ngang = (post.chieu_ngang && post.chieu_ngang.trim()) || extractField(searchText, [/Mặt tiền:\s*([\d.,]+)\s*m/i, /ngang\s*([\d.,]+)\s*m/i, /([\d.,]+)\s*m\s*ngang/i]);
+  const dai = post.chieu_dai && post.chieu_dai.trim() ? post.chieu_dai.trim() : null;
 
   const [similar, priceRows] = await Promise.all([
     getSimilar(post.quan, post.id),
@@ -217,7 +218,7 @@ export default async function TinChiTietPage({
           <section>
             <h2 className="mb-3 text-lg font-semibold">Thông số chi tiết</h2>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều ngang</dt><dd className="font-semibold">{ngang ? `${ngang} m` : "Đang cập nhật"}</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều ngang</dt><dd className="font-semibold">{ngang ? `${ngang} m` : "Đang cập nhật"}</dd></div><div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều dài</dt><dd className="font-semibold">{dai ? `${dai} m` : "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Số tầng</dt><dd className="font-semibold">{soTang ?? "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Loại</dt><dd className="font-semibold">{post.loai ?? "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Khu vực</dt><dd className="font-semibold">{post.quan ?? "Đang cập nhật"}</dd></div>
