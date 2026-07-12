@@ -98,7 +98,9 @@ export default function PostCard({ post }: { post: Post }) {
           </p>
         ) : null}
         <p className="mt-1 line-clamp-1 text-sm text-gray-500">{diaChi}</p>
-                <div className="mt-2 flex items-center gap-3 text-xs text-gray-500"><span>👁 {stats.views.toLocaleString("vi-VN")} lượt xem</span><span>❤️ {stats.interested.toLocaleString("vi-VN")} quan tâm</span></div>
+                {stats.views > 0 && (
+                  <div className="mt-2 flex items-center gap-3 text-xs text-gray-500"><span>👁 {stats.views.toLocaleString("vi-VN")} lượt xem</span><span>❤️ {stats.interested.toLocaleString("vi-VN")} quan tâm</span></div>
+                )}
       </div>
     </Link>
   );
