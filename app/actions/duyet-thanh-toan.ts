@@ -62,6 +62,23 @@ export async function adminDuyetThanhToan(
     .eq("id", id);
   if (upErr) return { error: "Lỗi cập nhật đơn: " + upErr.message };
 
+  if (order.plan_code === "NAPTIEN") {
+    // Nạp tiền vào ví
+    await db.rpc("apply_topup", { p_payment_id: order.id });
+    await db.from("notifications").insert({
+      tieu_de: "Nạp tiền thành công",
+      noi_dung:
+        "Bạn đã nạp thành công " +
+        Number(order.amount).toLocaleString("vi-VN") +
+        "đ vào ví. Số dư đã được cập nhật.",
+      loai: "tai_chinh",
+      target_user: order.user_id,
+      da_doc: false,
+    });
+    revalidatePath("/admin/nap-tien");
+    return { success: true, message: "Đã duyệt lệnh nạp tiền thành công." };
+  }
+
   // 2) Nâng cấp gói / hạng thành viên
   await db.rpc("apply_membership", {
     p_user_id: order.user_id,
