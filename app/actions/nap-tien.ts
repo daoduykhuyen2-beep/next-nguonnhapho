@@ -17,7 +17,11 @@ function adminDb() {
 
 // Nội dung chuyển khoản riêng cho lệnh nạp tiền.
 function buildTopupContent(userId: string) {
-  return "NAPTIEN" + userId.replace(/-/g, "").slice(0, 12).toUpperCase();
+  // Mã thanh toán: tiền tố NNP + 8 chữ số tự động (duy nhất mỗi lệnh).
+  // Khớp với cấu hình mã thanh toán SePay: Tiền tố = NNP, Hậu tố = số.
+  void userId;
+  const so = String(Date.now()).slice(-8);
+  return "NNP" + so;
 }
 
 // 1) Tạo lệnh nạp tiền (pending) -> chuyển tới trang thanh toán chuyển khoản.
