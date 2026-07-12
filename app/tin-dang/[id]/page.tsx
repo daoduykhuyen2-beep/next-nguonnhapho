@@ -273,7 +273,55 @@ export default async function TinChiTietPage({
             <p className="mt-2 text-xs text-gray-400">Địa chỉ hiển thị theo tên đường &amp; phường mới sau sáp nhập địa giới hành chính. Địa chỉ số nhà chính xác gửi qua Zalo/điện thoại sau khi xác nhận nhu cầu.</p>
           </section>
 
-          <section>
+          {post.video ? (
+        <section className="mb-8">
+          <h2 className="mb-3 text-lg font-semibold">Video giới thiệu</h2>
+          {(() => {
+            const raw = (post.video || "").trim();
+            const m =
+              raw.match(/tiktok\.com\/[^\s]*?\/video\/(\d+)/) ||
+              raw.match(/tiktok\.com\/[^\s]*?\/(\d{6,})/);
+            const vid = m ? m[1] : null;
+            if (vid) {
+              return (
+                <div className="mx-auto max-w-[340px]">
+                  <iframe
+                    title="Video TikTok"
+                    className="h-[600px] w-full rounded-lg border"
+                    src={`https://www.tiktok.com/embed/v2/${vid}`}
+                    allow="encrypted-media;"
+                    loading="lazy"
+                  />
+                  <p className="mt-2 text-center text-xs text-gray-500">
+                    Nếu video không hiển thị,{" "}
+                    <a
+                      href={raw}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand underline"
+                    >
+                      xem trực tiếp trên TikTok
+                    </a>
+                    .
+                  </p>
+                </div>
+              );
+            }
+            return (
+              <a
+                href={raw}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand underline"
+              >
+                Xem video trên TikTok
+              </a>
+            );
+          })()}
+        </section>
+
+        ) : null}
+        <section>
             <h2 className="mb-3 text-lg font-semibold">Vị trí & tiện ích xung quanh</h2>
             <iframe
               title="Bản đồ vị trí"

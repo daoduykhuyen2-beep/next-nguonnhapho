@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
 import PostFilter from "@/components/PostFilter";
+import BannerCarousel from "@/components/BannerCarousel";
 import { getDanhSachQuan } from "@/lib/stats";
 
 export const revalidate = 60;
@@ -38,6 +39,18 @@ type SearchParams = {
   tang?: string;
   page?: string;
 };
+
+async function getBanners() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("banners")
+    .select("id, title, image_url, link_url, sort_order, active")
+    .eq("active", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(5);
+  return data || [];
+}
 
 async function getPosts(sp: SearchParams) {
   const supabase = await createClient();
@@ -151,6 +164,7 @@ export default async function TinDangPage({
   const sp = await searchParams;
   const { posts, total, page } = await getPosts(sp);
   const quanOptions = await getDanhSachQuan();
+  const banners = await getBanners();
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const isChoThueSapRaMat = sp.loai === "thue" && total === 0;
 
@@ -187,6 +201,9 @@ export default async function TinDangPage({
       <Suspense fallback={null}>
         <PostFilter quanOptions={quanOptions} />
       </Suspense>
+
+      {/* Banner quảng cáo tự động chạy vòng (tối đa 5 ảnh) — quản lý tại /admin/banner */}
+      <BannerCarousel banners={banners} />
 
       {/* Goi y cac quan trung tam */}
       <div className="mb-4">
