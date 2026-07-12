@@ -10,6 +10,19 @@ import FavoriteButton from "@/components/FavoriteButton";
 
 export const revalidate = 60;
 
+// Normalize `anh` field (array of urls, {imgs,tin} object, or JSON string) -> string[]
+function normAnh(a: unknown): string[] {
+  if (!a) return [];
+  let v: any = a;
+  if (typeof v === "string") { try { v = JSON.parse(v); } catch { return v ? [v] : []; } }
+  if (Array.isArray(v)) return v.filter(Boolean);
+  if (typeof v === "object") {
+    if (Array.isArray(v.imgs)) return v.imgs.filter(Boolean);
+    if (v.tin) return [v.tin];
+  }
+  return [];
+}
+
 // ----- Helpers: parse so tu cac truong string -----
 function parseNumber(s?: string | null): number | null {
   if (!s) return null;
@@ -105,17 +118,6 @@ export async function generateMetadata({
   const { id } = await params;
   const post = await getPost(id);
   if (!post) return { title: "Không tìm thấy tin" };
-  const normAnh = (a: any): string[] => {
-    if (!a) return [];
-    let v: any = a;
-    if (typeof v === "string") { try { v = JSON.parse(v); } catch { return v ? [v] : []; } }
-    if (Array.isArray(v)) return v.filter(Boolean);
-    if (typeof v === "object") {
-      if (Array.isArray(v.imgs)) return v.imgs.filter(Boolean);
-      if (v.tin) return [v.tin];
-    }
-    return [];
-  };
   const _imgsMeta = normAnh(post.anh);
   const cover = _imgsMeta[0] ?? undefined;
   return {
