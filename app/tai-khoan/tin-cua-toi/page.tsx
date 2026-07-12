@@ -4,17 +4,33 @@ import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import { formatGia } from "@/components/PostCard";
 import DeletePostButton from "@/components/DeletePostButton";
-import { createOrder } from "@/app/actions/payment";
+import { usePerk } from "@/app/actions/perks";
 
 export const metadata = { title: "Tin của tôi" };
 
-export default async function TinCuaToiPage() {
+function fmtVND(n: number) {
+  return Number(n || 0).toLocaleString("vi-VN") + "đ";
+}
+
+export default async function TinCuaToiPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
+  const sp = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/dang-nhap?next=/tai-khoan/tin-cua-toi");
+
+  const { data: prof } = await supabase
+    .from("profiles")
+    .select("so_du")
+    .eq("id", user.id)
+    .single();
+  const soDu = Number(prof?.so_du ?? 0);
 
   const { data } = await supabase
     .from("web_posts")
@@ -23,6 +39,9 @@ export default async function TinCuaToiPage() {
     .order("created_at", { ascending: false });
 
   const posts = (data as Post[]) ?? [];
+
+  const perk = sp.perk;
+  const need = Number(sp.need ?? 0);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -36,6 +55,58 @@ export default async function TinCuaToiPage() {
         </Link>
       </div>
 
+      {/* Số dư ví: dùng để nâng cấp / đẩy tin */}
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-white p-4">
+        <div>
+          <p className="text-xs text-gray-500">Số dư của bạn</p>
+          <p className="text-lg font-bold text-brand">{fmtVND(soDu)}</p>
+        </div>
+        <div className="flex gap-2">
+          <Link
+            href="/tai-khoan/nap-tien"
+            className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white"
+          >
+            + Nạp tiền
+          </Link>
+          <Link
+            href="/goi-thanh-vien"
+            className="rounded-lg border border-brand px-3 py-1.5 text-xs font-semibold text-brand hover:bg-brand hover:text-white"
+          >
+            Mua gói
+          </Link>
+        </div>
+      </div>
+
+      {/* Thông báo kết quả sau khi bấm nâng cấp / đẩy tin */}
+      {perk === "ok" ? (
+        <p className="mb-4 rounded-lg border border-green-300 bg-green-50 p-3 text-sm text-green-700">
+          ✅ Thành công! Đã trừ vào số dư và áp dụng cho tin của bạn.
+        </p>
+      ) : perk === "nofunds" ? (
+        <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
+          ⚠️ Số dư không đủ{need > 0 ? ` (cần ${fmtVND(need)})` : ""}. Vui lòng nạp
+          thêm tiền hoặc mua gói để tiếp tục.
+          <div className="mt-2 flex gap-2">
+            <Link
+              href="/tai-khoan/nap-tien"
+              className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white"
+            >
+              Nạp tiền ngay
+            </Link>
+            <Link
+              href="/goi-thanh-vien"
+              className="rounded-lg border border-brand px-3 py-1.5 text-xs font-semibold text-brand hover:bg-brand hover:text-white"
+            >
+              Xem các gói
+            </Link>
+          </div>
+        </div>
+      ) : perk === "loi" ? (
+        <p className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+          Có lỗi xảy ra, vui lòng thử lại.
+        </p>
+      ) : null}
+
       {posts.length === 0 ? (
         <p className="rounded-lg border bg-white p-6 text-gray-500">
           Bạn chưa đăng tin nào.
@@ -43,10 +114,7 @@ export default async function TinCuaToiPage() {
       ) : (
         <div className="space-y-3">
           {posts.map((p) => (
-            <div
-              key={p.id}
-              className="rounded-lg border bg-white p-4"
-            >
+            <div key={p.id} className="rounded-lg border bg-white p-4">
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <Link
@@ -77,17 +145,18 @@ export default async function TinCuaToiPage() {
                 </div>
               </div>
 
-              {/* Nâng cấp & Đẩy tin cho ĐÚNG tin này */}
+              {/* Nâng cấp & Đẩy tin cho ĐÚNG tin này (trừ vào số dư) */}
               <details className="mt-3 rounded-lg bg-gray-50 p-3">
                 <summary className="cursor-pointer select-none text-sm font-semibold text-brand">
                   ⚡ Nâng cấp / Đẩy tin này
                 </summary>
 
                 <p className="mt-2 text-xs text-gray-500">
-                  Bạn đang thao tác với tin:{" "}
+                  Tin: {" "}
                   <span className="font-semibold text-gray-700">
                     {p.title ?? "(Không có tiêu đề)"}
                   </span>
+                  . Hệ thống sẽ trừ vào số dư nếu còn đủ.
                 </p>
 
                 {/* 1) Nâng cấp hạng tin */}
@@ -96,7 +165,7 @@ export default async function TinCuaToiPage() {
                     1) Nâng cấp hạng tin
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    <form action={createOrder}>
+                    <form action={usePerk}>
                       <input type="hidden" name="plan" value="VIP_VANG_7" />
                       <input type="hidden" name="post_id" value={p.id} />
                       <button
@@ -106,7 +175,7 @@ export default async function TinCuaToiPage() {
                         🏅 Lên VIP Vàng
                       </button>
                     </form>
-                    <form action={createOrder}>
+                    <form action={usePerk}>
                       <input type="hidden" name="plan" value="VIP_KC_7" />
                       <input type="hidden" name="post_id" value={p.id} />
                       <button
@@ -125,7 +194,7 @@ export default async function TinCuaToiPage() {
                     2) Đẩy tin lên đầu (lượt đẩy)
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    <form action={createOrder}>
+                    <form action={usePerk}>
                       <input type="hidden" name="plan" value="DAY_1" />
                       <input type="hidden" name="post_id" value={p.id} />
                       <button
@@ -135,7 +204,7 @@ export default async function TinCuaToiPage() {
                         🚀 Đẩy 1 lượt
                       </button>
                     </form>
-                    <form action={createOrder}>
+                    <form action={usePerk}>
                       <input type="hidden" name="plan" value="DAY_3" />
                       <input type="hidden" name="post_id" value={p.id} />
                       <button
@@ -145,7 +214,7 @@ export default async function TinCuaToiPage() {
                         🚀 Đẩy 3 lượt
                       </button>
                     </form>
-                    <form action={createOrder}>
+                    <form action={usePerk}>
                       <input type="hidden" name="plan" value="DAY_6" />
                       <input type="hidden" name="post_id" value={p.id} />
                       <button
