@@ -79,14 +79,30 @@ export async function POST(req: NextRequest) {
   const plan = getPlan(order.plan_code);
   const days = plan?.days || 30;
 
-  await supabase
+  // Đánh dấu paid CÓ ĐIỀU KIỆN status='pending' để chống cộng trùng (idempotency).
+  // Nếu 2 webhook tới cùng lúc, chỉ 1 request cập nhật được -> chỉ 1 lần cộng gói.
+  const { data: paidRows, error: paidErr } = await supabase
     .from("payments")
     .update({ status: "paid", sepay_ref: sepayRef, paid_at: new Date().toISOString() })
-    .eq("id", order.id);
+    .eq("id", order.id)
+    .eq("status", "pending")
+    .select("id");
+  if (paidErr) {
+    console.error("SePay webhook: update paid failed", paidErr.message);
+    return NextResponse.json({ success: false, error: "db update failed" }, { status: 500 });
+  }
+  if (!paidRows || paidRows.length === 0) {
+    // Đơn đã được xử lý trước đó (webhook gửi lại) -> bỏ qua, không cộng lần 2.
+    return NextResponse.json({ success: true, matched: true, alreadyProcessed: true });
+  }
 
   if (order.plan_code === "NAPTIEN") {
     // Nạp tiền vào ví: cộng số dư + gửi thông báo "nạp tiền thành công".
-    await supabase.rpc("apply_topup", { p_payment_id: order.id });
+    const { error: topupErr } = await supabase.rpc("apply_topup", { p_payment_id: order.id });
+    if (topupErr) {
+      console.error("SePay webhook: apply_topup failed", topupErr.message);
+      return NextResponse.json({ success: false, error: "topup failed" }, { status: 500 });
+    }
     await supabase.from("notifications").insert({
       tieu_de: "Nạp tiền thành công",
       noi_dung:
@@ -100,15 +116,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, matched: true, paid: true });
   }
 
-  await supabase.rpc("apply_membership", {
+  const { error: memErr } = await supabase.rpc("apply_membership", {
     p_user_id: order.user_id,
     p_plan_code: order.plan_code,
     p_days: days,
   });
+  if (memErr) {
+    console.error("SePay webhook: apply_membership failed", memErr.message);
+    return NextResponse.json({ success: false, error: "membership failed" }, { status: 500 });
+  }
 
   // Áp dụng gói cho tin cụ thể (VIP Kim Cương/Vàng hoặc đẩy tin) nếu đơn gắn với 1 tin.
   if (order.post_id) {
-    await supabase.rpc("apply_post_plan", { p_payment_id: order.id });
+    const { error: postErr } = await supabase.rpc("apply_post_plan", { p_payment_id: order.id });
+    if (postErr) {
+      console.error("SePay webhook: apply_post_plan failed", postErr.message);
+      return NextResponse.json({ success: false, error: "post plan failed" }, { status: 500 });
+    }
   }
 
   // Gửi thông báo đăng ký gói thành công.
