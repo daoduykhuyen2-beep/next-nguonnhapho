@@ -28,6 +28,8 @@ async function layBanner(): Promise<Banner[]> {
     .from("banners")
     .select("id, title, image_url, link_url")
     .eq("active", true)
+    .not("image_url", "is", null)
+    .neq("image_url", "")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false })
     .limit(8);
