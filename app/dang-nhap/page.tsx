@@ -12,6 +12,7 @@ export default function DangNhapPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,14 +56,31 @@ export default function DangNhapPage() {
         </div>
         <div>
           <label className="mb-1 block text-sm font-medium">Mật khẩu</label>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-md border px-3 py-2"
-            placeholder="••••••••"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-md border px-3 py-2 pr-16"
+              placeholder="••••••••"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute inset-y-0 right-0 px-3 text-sm font-medium text-brand"
+            >
+              {showPassword ? "Ẩn" : "Hiện"}
+            </button>
+          </div>
+          <div className="mt-1 text-right">
+            <Link
+              href="/quen-mat-khau"
+              className="text-sm font-semibold text-brand"
+            >
+              Quên mật khẩu?
+            </Link>
+          </div>
         </div>
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
