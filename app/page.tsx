@@ -158,32 +158,41 @@ export default async function TrangChu() {
             nhà phố, căn hộ, đất nền tại TP. Hồ Chí Minh.
           </p>
 
-          <form action="/tin-dang" className="mt-6 rounded-xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
-            <div className="grid gap-3 sm:grid-cols-12">
+          <form action="/tin-dang" className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md">
+            {/* Tabs Mua ban / Cho thue / Du an */}
+            <div className="flex bg-gray-50">
+              <label className="flex-1">
+                <input type="radio" name="loai" value="ban" defaultChecked className="peer sr-only" />
+                <span className="block cursor-pointer border-b-[3px] border-transparent px-4 py-3 text-center text-sm font-semibold text-gray-500 transition peer-checked:border-[color:var(--np-do)] peer-checked:bg-white peer-checked:text-[color:var(--np-do)]">Mua bán</span>
+              </label>
+              <label className="flex-1">
+                <input type="radio" name="loai" value="thue" className="peer sr-only" />
+                <span className="block cursor-pointer border-b-[3px] border-transparent px-4 py-3 text-center text-sm font-semibold text-gray-500 transition peer-checked:border-[color:var(--np-do)] peer-checked:bg-white peer-checked:text-[color:var(--np-do)]">Cho thuê</span>
+              </label>
+              <label className="flex-1">
+                <input type="radio" name="loai" value="dat" className="peer sr-only" />
+                <span className="block cursor-pointer border-b-[3px] border-transparent px-4 py-3 text-center text-sm font-semibold text-gray-500 transition peer-checked:border-[color:var(--np-do)] peer-checked:bg-white peer-checked:text-[color:var(--np-do)]">Dự án / Đất nền</span>
+              </label>
+            </div>
+            {/* Thanh tim kiem */}
+            <div className="grid gap-3 border-t border-gray-200 p-3 sm:grid-cols-12 sm:p-4">
               <input
                 type="text"
                 name="q"
                 placeholder="Nhập tên đường, phường, từ khóa… VD: Nguyễn Đình Chiểu"
-                className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 sm:col-span-5"
+                className="rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-gray-900 focus:outline-none sm:col-span-6"
               />
-              <select name="quan" className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 sm:col-span-3">
+              <select name="quan" className="rounded-lg border border-gray-300 px-3 py-3 text-sm text-gray-900 focus:border-gray-900 focus:outline-none sm:col-span-3">
                 <option value="">Tất cả khu vực</option>
                 {KHU_VUC.map((kv) => (
                   <option key={kv} value={kv}>{kv}</option>
                 ))}
               </select>
-              <select name="loai" className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 sm:col-span-2">
-                <option value="">Tất cả</option>
-                <option value="ban">Nhà bán</option>
-                <option value="thue">Cho thuê</option>
-                <option value="dat">Đất nền</option>
-                <option value="can_ho">Căn hộ</option>
-              </select>
               <button
                 type="submit"
-                className="np-btn px-4 py-2 text-sm sm:col-span-2"
+                className="np-btn rounded-lg px-5 py-3 text-sm font-semibold sm:col-span-3"
               >
-                Tìm kiếm
+                🔍 Tìm kiếm
               </button>
             </div>
           </form>
