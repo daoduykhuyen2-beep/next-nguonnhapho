@@ -18,6 +18,7 @@ const DON_VI_OPTIONS = [
   { value: "ty", label: "Tỷ" },
   { value: "trieu", label: "Triệu" },
   { value: "trieu_thang", label: "Triệu/tháng" },
+  { value: "vnd", label: "VNĐ" },
   { value: "thoathuan", label: "Thỏa thuận" },
 ];
 
@@ -57,7 +58,7 @@ export default function PostForm({ post }: { post?: Post }) {
   );
   const [loai, setLoai] = useState<string>(post?.loai || LOAI_OPTIONS[0].value);
   const [donVi, setDonVi] = useState<string>(
-    post?.loai === "thue" ? "trieu_thang" : "ty"
+    post?.loai === "thue" ? "vnd" : "ty"
   );
 
   function onPick(e: React.ChangeEvent<HTMLInputElement>) {
@@ -103,7 +104,7 @@ export default function PostForm({ post }: { post?: Post }) {
               onChange={(e) => {
                 const v = e.target.value;
                 setLoai(v);
-                setDonVi(v === "thue" ? "trieu_thang" : "ty");
+                setDonVi(v === "thue" ? "vnd" : "ty");
               }}
               className="w-full rounded-lg border border-gray-300 px-3 py-2"
             >
@@ -118,7 +119,7 @@ export default function PostForm({ post }: { post?: Post }) {
               <input
                 name="gia"
                 defaultValue={post?.gia ?? ""}
-                placeholder={loai === "thue" ? "VD: 55" : "VD: 27"}
+                placeholder={loai === "thue" ? "VD: 8.000.000" : "VD: 27"}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2"
               />
               <select
