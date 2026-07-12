@@ -16,7 +16,15 @@ const LOAI_LABEL: Record<string, string> = {
 
 export default function PostCard({ post }: { post: Post }) {
   const loaiLabel = post.loai ? LOAI_LABEL[post.loai] || post.loai : null;
-  const cover = post.anh?.imgs?.[0] ?? post.anh?.tin ?? null;
+  const _pickCover = (x: any): string | null => {
+    if (!x) return null;
+    let v: any = x;
+    if (typeof v === "string") { try { v = JSON.parse(v); } catch { return v || null; } }
+    if (Array.isArray(v)) return v[0] ?? null;
+    if (typeof v === "object") { if (Array.isArray(v.imgs)) return v.imgs[0] ?? null; if (v.tin) return v.tin; }
+    return null;
+  };
+  const cover = _pickCover(post.anh);
   const diaChi = [post.duong, post.phuong, post.quan]
     .filter(Boolean)
     .join(", ");
