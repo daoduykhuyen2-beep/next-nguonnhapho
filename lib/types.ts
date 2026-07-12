@@ -26,6 +26,8 @@ export type Post = {
   video: string | null;
   anh: PostImages | null;
   created_at: string | null;
+  boosted_at: string | null;
+  promoted_at: string | null;
 };
 
 export type Profile = {
