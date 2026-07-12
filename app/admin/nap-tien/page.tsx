@@ -33,16 +33,8 @@ export default async function Page() {
         <div className="rounded-xl border bg-white p-4"><p className="text-sm text-gray-500">Doanh thu</p><p className="text-xl font-bold text-brand">{vnd(doanhThu)}</p></div>
       </div>
 
-      <section className="mb-8 rounded-2xl border border-gray-200 bg-gray-50 p-5">
-        <h2 className="mb-1 text-xl font-bold">Điều chỉnh giá & thông tin các gói</h2>
-        <p className="mb-5 text-sm text-gray-500">
-          Sửa giá bán, giá thị trường, chương trình khuyến mãi cho từng gói. Thay đổi áp dụng ngay trên trang Bảng giá — không cần sửa code.
-        </p>
-        <PlanEditor plans={plans} />
-      </section>
-
-      <h2 className="mb-3 text-xl font-bold">Đơn chờ duyệt ({choDuyet.length})</h2>
-      <div className="mb-6 overflow-x-auto rounded-xl border-2 border-amber-300 bg-amber-50">
+      <h2 id="cho-duyet" className="mb-3 scroll-mt-24 text-xl font-bold">Đơn chờ duyệt ({choDuyet.length})</h2>
+      <div className="mb-8 overflow-x-auto rounded-xl border-2 border-amber-300 bg-amber-50">
         {choDuyet.length === 0 ? (
           <p className="p-4 text-sm text-gray-500">Chưa có đơn nào chờ duyệt. Khi khách bấm &quot;Tôi đã chuyển khoản&quot;, đơn sẽ hiện ở đây để bạn duyệt tay.</p>
         ) : (
@@ -63,6 +55,14 @@ export default async function Page() {
           </table>
         )}
       </div>
+
+      <section className="mb-8 rounded-2xl border border-gray-200 bg-gray-50 p-5">
+        <h2 className="mb-1 text-xl font-bold">Điều chỉnh giá & thông tin các gói</h2>
+        <p className="mb-5 text-sm text-gray-500">
+          Sửa giá bán, giá thị trường, chương trình khuyến mãi cho từng gói. Thay đổi áp dụng ngay trên trang Bảng giá — không cần sửa code.
+        </p>
+        <PlanEditor plans={plans} />
+      </section>
 
       <h2 className="mb-3 text-xl font-bold">Lịch sử giao dịch</h2>
       <div className="overflow-x-auto rounded-xl border bg-white">
