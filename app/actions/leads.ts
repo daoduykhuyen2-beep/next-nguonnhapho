@@ -31,7 +31,19 @@ export async function createLead(
     .eq("id", postId)
     .maybeSingle();
 
-  const owner = (post as { owner: string | null } | null)?.owner ?? null;
+  let owner = (post as { owner: string | null } | null)?.owner ?? null;
+
+  // Neu tin khong co chu (tin seed/nhap khau) -> chuyen lead ve admin de khong that lac
+  if (!owner) {
+    const { data: admin } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("is_admin", true)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    owner = (admin as { id: string } | null)?.id ?? null;
+  }
 
   const { error } = await supabase.from("web_post_leads").insert({
     post_id: postId,
