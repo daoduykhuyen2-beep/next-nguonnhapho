@@ -11,6 +11,22 @@ export function formatGia(gia: string | null): string {
   return s;
 }
 
+export function formatDienTich(dt: string | number | null): string {
+  if (dt === null || dt === undefined) return "";
+  const s = String(dt).trim();
+  if (!s) return "";
+  if (/[a-zA-ZÀ-ỹ]/.test(s)) return s;
+  return s + " m²";
+}
+
+export function formatSoTang(st: string | number | null): string {
+  if (st === null || st === undefined) return "";
+  const s = String(st).trim();
+  if (!s) return "";
+  if (/[a-zA-ZÀ-ỹ]/.test(s)) return s;
+  return s + " tầng";
+}
+
 const LOAI_LABEL: Record<string, string> = {
   ban: "Nhà bán",
   thue: "Cho thuê",
@@ -76,7 +92,7 @@ export default function PostCard({ post }: { post: Post }) {
         <p className="mt-1 font-bold text-brand">{formatGia(post.gia)}</p>
         {post.dien_tich ? (
           <p className="mt-0.5 text-sm text-gray-600">
-            Diện tích: {post.dien_tich}
+              Diện tích: {formatDienTich(post.dien_tich)}
           </p>
         ) : null}
         <p className="mt-1 line-clamp-1 text-sm text-gray-500">{diaChi}</p>
