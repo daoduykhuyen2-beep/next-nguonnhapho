@@ -54,7 +54,7 @@ async function getPosts(sp: SearchParams) {
       .select("*", hasJsFilter ? {} : { count: "exact" })
       .eq("trang_thai", "duyet");
     if (sp.loai) q = q.eq("loai", sp.loai);
-    if (sp.quan) q = q.ilike("quan", `%${sp.quan}%`);
+    if (sp.quan) q = q.eq("quan", sp.quan);
     if (sp.duong) q = q.ilike("duong", `%${sp.duong}%`);
     if (sp.q) q = q.ilike("title", `%${sp.q}%`);
     return q;
