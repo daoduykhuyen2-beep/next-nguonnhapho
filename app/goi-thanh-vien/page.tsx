@@ -12,13 +12,19 @@ import { createOrder } from "@/app/actions/payment";
 export const metadata = { title: "Bảng giá đăng tin & đẩy tin" };
 export const dynamic = "force-dynamic";
 
-const GROUPS: { key: Plan["group"]; title: string; icon: string }[] = [
-  { key: "LE", title: "Mua lẻ theo tin", icon: "🛒" },
+const GROUPS: { key: Plan["group"]; title: string; icon: string; note?: string }[] = [
+  {
+    key: "LE",
+    title: "Mua lẻ theo tin",
+    icon: "🛒",
+    note: "Dành cho khách hàng có nhu cầu bán nhà",
+  },
   { key: "DAY", title: "Đẩy tin — làm mới tin lên đầu danh sách", icon: "🚀" },
   {
     key: "COMBO",
     title: "Gói combo tháng — tiết kiệm cho người đăng nhiều",
     icon: "📦",
+    note: "Dành cho nhà môi giới",
   },
 ];
 
@@ -195,9 +201,14 @@ export default async function GoiThanhVienPage({
         if (!list.length) return null;
         return (
           <section key={g.key} className="mb-12">
-            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold">
+            <h2 className="mb-2 flex items-center gap-2 text-xl font-bold">
               <span>{g.icon}</span> {g.title}
             </h2>
+            {g.note ? (
+              <p className="mb-6 text-sm font-medium text-brand">{g.note}</p>
+            ) : (
+              <div className="mb-6" />
+            )}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {list.map((plan) => (
                 <PlanCard
