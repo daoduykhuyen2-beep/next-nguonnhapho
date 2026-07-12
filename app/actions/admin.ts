@@ -111,7 +111,16 @@ export async function adminSendNotification(_prev: AdminState, formData: FormDat
     loai: String(formData.get("loai") || "thong_bao").trim(),
   };
   if (!payload.tieu_de) return { error: "Nhập tiêu đề thông báo." };
-  const { error } = await supabase.from("notifications").insert(payload);
+  // Neu admin nhap email nguoi nhan -> gui rieng cho nguoi do; de trong -> gui chung
+    const __email = String(formData.get("email_nguoi_nhan") ?? "").trim().toLowerCase();
+    let __target: string | null = null;
+    if (__email) {
+      const { data: __u } = await supabase.from("profiles").select("id").eq("email", __email).maybeSingle();
+      if (!__u) return { error: "Khong tim thay tai khoan voi email nay." };
+      __target = __u.id;
+    }
+    const __payload = { ...payload, target_user: __target, da_doc: false };
+    const { error } = await supabase.from("notifications").insert(__payload);
   if (error) return { error: error.message };
   revalidatePath("/admin/thong-bao");
   return { success: true };
