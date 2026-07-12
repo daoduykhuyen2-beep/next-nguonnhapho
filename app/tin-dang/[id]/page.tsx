@@ -242,6 +242,11 @@ export default async function TinChiTietPage({
           </section>
 
           <section>
+            <h2 className="mb-2 text-lg font-semibold">Mô tả</h2>
+            <p className="whitespace-pre-line text-gray-700">{post.mota ?? "Chưa có mô tả."}</p>
+          </section>
+
+          <section>
             <h2 className="mb-3 text-lg font-semibold">Địa chỉ cập nhật (đường &amp; phường mới)</h2>
             <dl className="grid grid-cols-1 gap-y-2 text-sm sm:grid-cols-2 sm:gap-x-6">
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Đường</dt><dd className="font-semibold text-right">{post.duong?.trim() ? post.duong : "Đang cập nhật"}</dd></div>
@@ -253,8 +258,17 @@ export default async function TinChiTietPage({
           </section>
 
           <section>
-            <h2 className="mb-2 text-lg font-semibold">Mô tả</h2>
-            <p className="whitespace-pre-line text-gray-700">{post.mota ?? "Chưa có mô tả."}</p>
+            <h2 className="mb-3 text-lg font-semibold">Vị trí & tiện ích xung quanh</h2>
+            <iframe
+              title="Bản đồ vị trí"
+              className="w-full rounded-lg border"
+              height="320"
+              loading="lazy"
+              src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+            />
+            <p className="mt-2 text-xs text-gray-500">
+              Bản đồ hiển thị theo tên đường để bảo mật cho chủ nhà — vị trí chính xác gửi qua Zalo sau khi xác nhận nhu cầu.
+            </p>
           </section>
 
           {giaTy ? (
@@ -277,20 +291,6 @@ export default async function TinChiTietPage({
               </p>
             </section>
           ) : null}
-
-          <section>
-            <h2 className="mb-3 text-lg font-semibold">Vị trí & tiện ích xung quanh</h2>
-            <iframe
-              title="Bản đồ vị trí"
-              className="w-full rounded-lg border"
-              height="320"
-              loading="lazy"
-              src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-            />
-            <p className="mt-2 text-xs text-gray-500">
-              Bản đồ hiển thị theo tên đường để bảo mật cho chủ nhà — vị trí chính xác gửi qua Zalo sau khi xác nhận nhu cầu.
-            </p>
-          </section>
 
           {giaTy ? (
             <section>
