@@ -1,15 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
 import {
-  PLANS,
   formatVND,
   getEffectivePrice,
   getDiscountPercent,
   isPromoActive,
   type Plan,
 } from "@/lib/plans";
+import { getPlansMerged } from "@/lib/plans-server";
 import { createOrder } from "@/app/actions/payment";
 
 export const metadata = { title: "Bảng giá đăng tin & đẩy tin" };
+export const dynamic = "force-dynamic";
 
 const GROUPS: { key: Plan["group"]; title: string; icon: string }[] = [
   { key: "LE", title: "Mua lẻ theo tin", icon: "🛒" },
@@ -137,6 +138,8 @@ export default async function GoiThanhVienPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const plans = await getPlansMerged();
+
   let currentTier = "FREE";
   if (user) {
     const { data: profile } = await supabase
@@ -175,15 +178,15 @@ export default async function GoiThanhVienPage() {
       </div>
 
       {GROUPS.map((g) => {
-        const plans = PLANS.filter((p) => p.group === g.key);
-        if (!plans.length) return null;
+        const list = plans.filter((p) => p.group === g.key);
+        if (!list.length) return null;
         return (
           <section key={g.key} className="mb-12">
             <h2 className="mb-6 flex items-center gap-2 text-xl font-bold">
               <span>{g.icon}</span> {g.title}
             </h2>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {plans.map((plan) => (
+              {list.map((plan) => (
                 <PlanCard
                   key={plan.code}
                   plan={plan}
