@@ -105,7 +105,19 @@ export async function generateMetadata({
   const { id } = await params;
   const post = await getPost(id);
   if (!post) return { title: "Không tìm thấy tin" };
-  const cover = post.anh?.imgs?.[0] ?? post.anh?.tin ?? undefined;
+  const normAnh = (a: any): string[] => {
+    if (!a) return [];
+    let v: any = a;
+    if (typeof v === "string") { try { v = JSON.parse(v); } catch { return v ? [v] : []; } }
+    if (Array.isArray(v)) return v.filter(Boolean);
+    if (typeof v === "object") {
+      if (Array.isArray(v.imgs)) return v.imgs.filter(Boolean);
+      if (v.tin) return [v.tin];
+    }
+    return [];
+  };
+  const _imgsMeta = normAnh(post.anh);
+  const cover = _imgsMeta[0] ?? undefined;
   return {
     title: post.title ?? "Tin đăng",
     description: (post.mota ?? "").slice(0, 160),
@@ -126,7 +138,7 @@ export default async function TinChiTietPage({
   const post = await getPost(id);
   if (!post) notFound();
 
-  const imgs = post.anh?.imgs ?? (post.anh?.tin ? [post.anh.tin] : []);
+  const imgs = normAnh(post.anh);
   const diaChi = [post.duong, post.phuong, post.quan].filter(Boolean).join(", ");
   const searchText = `${post.title ?? ""} ${post.mota ?? ""}`;
 
