@@ -56,7 +56,11 @@ export default function PostCard({ post }: { post: Post }) {
       : post.status === "vang"
       ? { label: "🏅 VIP Vàng", cls: "bg-gradient-to-r from-amber-400 to-yellow-500" }
       : null;
-  const stats = getFakeStats(post.id, post.created_at);
+  const stats = getFakeStats(post.id, post.created_at, {
+    status: post.status,
+    boostedAt: post.boosted_at,
+    promotedAt: post.promoted_at,
+  });
 
   return (
     <Link
