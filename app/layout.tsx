@@ -89,7 +89,7 @@ export default async function RootLayout({
       notifications = notiRows.map((n) => ({
         id: String(n.id),
         cat: catMap[(n.loai || "").toString()] || "them",
-        title: n.tieu_de || "Thông báo",
+        title: n.tieu_de || "Th�ng b�o",
         body: n.noi_dung || "",
         date: n.created_at
           ? new Date(n.created_at).toLocaleDateString("vi-VN")
