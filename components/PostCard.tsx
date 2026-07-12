@@ -20,6 +20,12 @@ export default function PostCard({ post }: { post: Post }) {
   const diaChi = [post.duong, post.phuong, post.quan]
     .filter(Boolean)
     .join(", ");
+  const vip =
+    post.status === "kim_cuong"
+      ? { label: "💎 VIP Kim Cương", cls: "bg-gradient-to-r from-sky-500 to-indigo-600" }
+      : post.status === "vang"
+      ? { label: "🏅 VIP Vàng", cls: "bg-gradient-to-r from-amber-400 to-yellow-500" }
+      : null;
 
   return (
     <Link
@@ -30,6 +36,11 @@ export default function PostCard({ post }: { post: Post }) {
         {loaiLabel ? (
           <span className="absolute left-2 top-2 z-10 rounded-md bg-brand px-2 py-0.5 text-xs font-semibold text-white shadow">
             {loaiLabel}
+          </span>
+        ) : null}
+        {vip ? (
+          <span className={`absolute right-2 top-2 z-10 rounded-md px-2 py-0.5 text-xs font-bold text-white shadow ${vip.cls}`}>
+            {vip.label}
           </span>
         ) : null}
         {cover ? (
