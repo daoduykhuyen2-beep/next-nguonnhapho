@@ -91,6 +91,12 @@ export default function PostForm({ post }: { post?: Post }) {
         <Field name="quan" label="Quận/Huyện" defaultValue={post?.quan} />
       </div>
 
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Field name="chieu_ngang" label="Chiều ngang (m)" defaultValue={post?.chieu_ngang} />
+        <Field name="chieu_dai" label="Chiều dài (m)" defaultValue={post?.chieu_dai} />
+        <Field name="so_tang" label="Số tầng" defaultValue={post?.so_tang} />
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field name="phuong" label="Phường/Xã" defaultValue={post?.phuong} />
         <Field name="duong" label="Đường" defaultValue={post?.duong} />
