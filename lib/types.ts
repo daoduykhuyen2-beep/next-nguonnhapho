@@ -15,6 +15,9 @@ export type Post = {
   duong: string | null;
   gia: string | null;
   dien_tich: string | null;
+  chieu_ngang: string | null;
+  chieu_dai: string | null;
+  so_tang: string | null;
   contact_name: string | null;
   contact_phone: string | null;
   mota: string | null;
