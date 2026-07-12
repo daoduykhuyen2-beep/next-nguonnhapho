@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
   // 3) Tìm đơn pending có nội dung khớp (so khớp không phân biệt hoa thường,
   //    bỏ khoảng trắng để chịu được việc ngân hàng chèn thêm ký tự).
-  const norm = (s: string) => s.replace(/\s+/g, "").toUpperCase();
+  const norm = (s: string) => s.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
   const contentNorm = norm(content);
 
   const { data: pendings } = await supabase
