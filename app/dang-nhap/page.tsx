@@ -36,6 +36,22 @@ export default function DangNhapPage() {
     router.refresh();
   }
 
+  async function handleGoogleLogin() {
+    setError(null);
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(
+          nextUrl
+        )}`,
+      },
+    });
+    if (error) {
+      setError("Không thể đăng nhập bằng Google. Vui lòng thử lại.");
+    }
+  }
+
   return (
     <div className="mx-auto max-w-md">
       <h1 className="mb-6 text-2xl font-bold">Đăng nhập</h1>
@@ -91,6 +107,24 @@ export default function DangNhapPage() {
           className="w-full rounded-lg bg-brand px-4 py-2 font-semibold text-white disabled:opacity-60"
         >
           {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+        </button>
+
+        <div className="relative py-2 text-center">
+          <span className="relative z-10 bg-white px-3 text-xs text-gray-400">
+            hoặc
+          </span>
+          <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-gray-200" />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50"
+        >
+          <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.66 4.1-5.5 4.1-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.9 3 14.7 2 12 2 6.9 2 2.8 6.1 2.8 11.2S6.9 20.4 12 20.4c5.9 0 9.8-4.1 9.8-9.9 0-.7-.1-1.2-.2-1.7H12z" />
+          </svg>
+          Đăng nhập bằng Google
         </button>
       </form>
 
