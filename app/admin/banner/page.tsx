@@ -34,7 +34,7 @@ export default async function Page() {
     <div>
       <h1 className="mb-2 text-2xl font-bold">Quản lý banner trang chủ</h1>
       <p className="mb-4 text-gray-500">
-        Banner hiển thị ngay dưới ô tìm kiếm ở trang chủ. Thêm, bật/tắt hoặc xóa banner tại đây.
+        Banner hiển thị dạng carousel tự động chạy vòng (tối đa 5 ảnh) ngay dưới bộ lọc ở trang danh sách tin. Thêm, bật/tắt hoặc xóa banner tại đây; đặt &quot;Thứ tự hiển thị&quot; nhỏ hơn để ảnh lên trước.
       </p>
       <AdminNav />
 
