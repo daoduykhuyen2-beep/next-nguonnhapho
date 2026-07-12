@@ -6,6 +6,7 @@ import type { Post } from "@/lib/types";
 import { formatGia } from "@/components/PostCard";
 import LoanCalculator from "@/components/LoanCalculator";
 import LeadForm from "@/components/LeadForm";
+import FavoriteButton from "@/components/FavoriteButton";
 
 export const revalidate = 60;
 
@@ -63,6 +64,12 @@ async function getPost(id: string): Promise<Post | null> {
   if (error) {
     console.error("getPost error:", error.message);
     return null;
+  }
+  if (data) {
+    await supabase.rpc("increment_luot_xem", { p_id: (data as Post).id }).then(
+      () => {},
+      () => {}
+    );
   }
   return (data as Post) ?? null;
 }
@@ -175,7 +182,10 @@ export default async function TinChiTietPage({
         ← Quay lại danh sách
       </Link>
 
-      <h1 className="text-2xl font-bold">{post.title ?? "(Không có tiêu đề)"}</h1>
+      <div className="flex items-start justify-between gap-3">
+        <h1 className="text-2xl font-bold">{post.title ?? "(Không có tiêu đề)"}</h1>
+        <FavoriteButton postId={post.id} />
+      </div>
       <p className="mt-1 text-sm text-gray-500">📍 {diaChi} · Mã tin: NP{String(post.id).padStart(4, "0")}</p>
 
       {imgs.length > 0 ? (
