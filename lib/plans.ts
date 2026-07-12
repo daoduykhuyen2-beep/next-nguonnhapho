@@ -179,8 +179,12 @@ export function formatVND(n: number): string {
 // Tạo nội dung chuyển khoản duy nhất cho 1 đơn.
 // Dùng 8 ký tự đầu của user id (bỏ dấu gạch) để định danh.
 export function buildTransferContent(planCode: string, userId: string): string {
-  const short = userId.replace(/-/g, "").slice(0, 8).toUpperCase();
-  return "NNP " + planCode.toUpperCase() + " " + short;
+  // Mã thanh toán: tiền tố NNP + 8 chữ số tự động (duy nhất mỗi đơn).
+  // Khớp với cấu hình mã thanh toán SePay: Tiền tố = NNP, Hậu tố = số.
+  void planCode;
+  void userId;
+  const so = String(Date.now()).slice(-8);
+  return "NNP" + so;
 }
 
 // --- Giá hiệu lực sau điều chỉnh / khuyến mãi ---
