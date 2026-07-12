@@ -60,14 +60,16 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
 
   let avatarUrl: string | null = null;
+  let displayName: string | null = null;
   let notifications: { id: string; cat: "tin" | "taichinh" | "khuyenmai" | "them"; title: string; body: string; date: string; read: boolean }[] = [];
   if (user) {
     const { data: prof } = await supabase
       .from("profiles")
-      .select("avatar_url")
+      .select("avatar_url, full_name")
       .eq("id", user.id)
       .maybeSingle();
     avatarUrl = (prof?.avatar_url as string) ?? null;
+    displayName = (prof?.full_name as string) ?? null;
 
     const { data: notiRows } = await supabase
       .from("notifications")
@@ -127,7 +129,7 @@ export default async function RootLayout({
               ))}
             </nav>
 
-            <HeaderActions user={user} avatarUrl={avatarUrl} notifications={notifications} />
+            <HeaderActions user={user} avatarUrl={avatarUrl} displayName={displayName} notifications={notifications} />
           </div>
           <nav className="flex gap-4 overflow-x-auto border-t border-gray-200 px-4 py-2 text-sm font-medium md:hidden">
             {navLinks.map((l) => (
