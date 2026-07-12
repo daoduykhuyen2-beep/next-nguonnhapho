@@ -40,11 +40,11 @@ export const PLANS: Plan[] = [
   },
   {
     code: "VIP_VANG_7",
-    name: "1 tin VIP Vàng 7 ngày",
+    name: "1 tin VIP Vàng 15 ngày",
     group: "LE",
     price: 539000,
     marketPrice: 770000,
-    days: 7,
+    days: 15,
     maxPosts: 1,
     highlight: true,
     badge: "Được chọn nhiều",
@@ -57,11 +57,11 @@ export const PLANS: Plan[] = [
   },
   {
     code: "VIP_KC_7",
-    name: "1 tin VIP Kim Cương 7 ngày",
+    name: "1 tin VIP Kim Cương 15 ngày",
     group: "LE",
     price: 1540000,
     marketPrice: 2205000,
-    days: 7,
+    days: 15,
     maxPosts: 1,
     features: [
       "220.000đ/ngày (thị trường ~315.000đ)",
