@@ -3,7 +3,12 @@ import type { Post } from "@/lib/types";
 
 export function formatGia(gia: string | null): string {
   if (!gia) return "Thỏa thuận";
-  return gia;
+  const s = String(gia).trim();
+  if (!s) return "Thỏa thuận";
+  if (/[a-zA-ZÀ-ỹ]/.test(s)) return s;
+  const num = s.replace(/[.,\s]/g, "");
+  if (/^\d+$/.test(num)) return num + " tỷ";
+  return s;
 }
 
 const LOAI_LABEL: Record<string, string> = {
