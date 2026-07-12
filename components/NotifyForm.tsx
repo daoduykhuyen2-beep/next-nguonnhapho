@@ -21,6 +21,10 @@ export default function NotifyForm() {
         <textarea name="noi_dung" rows={4} className="w-full rounded-lg border px-4 py-3" />
       </div>
       <div>
+        <label className="mb-1 block text-sm font-medium">Email người nhận (để trống = gửi tất cả)</label>
+        <input name="email_nguoi_nhan" type="email" className="w-full rounded-lg border px-3 py-2" placeholder="vd: khach@gmail.com" />
+      </div>
+      <div>
         <label className="mb-1 block text-sm font-medium">Loại</label>
         <select name="loai" className="rounded-lg border px-4 py-3">
           <option value="thong_bao">Thông báo</option>
