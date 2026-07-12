@@ -2,14 +2,18 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPlan, formatVND } from "@/lib/plans";
 import PaymentStatus from "@/components/PaymentStatus";
+import { payPackageWithBalance } from "@/app/actions/nap-tien";
 
 export const metadata = { title: "Thanh toán nâng cấp" };
 
 export default async function NangCapPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
+  const { error: payError } = await searchParams;
   const { id } = await params;
   const orderId = parseInt(id, 10);
   if (Number.isNaN(orderId)) notFound();
@@ -30,6 +34,14 @@ export default async function NangCapPage({
   if (!order) notFound();
 
   const plan = getPlan(order.plan_code);
+
+  const { data: profBal } = await supabase
+    .from("profiles")
+    .select("so_du")
+    .eq("id", user.id)
+    .maybeSingle();
+  const soDu = Number(profBal?.so_du || 0);
+  const duSoDu = soDu >= Number(order.amount) && order.status !== "paid" && order.plan_code !== "NAPTIEN";
 
   // Thông tin ngân hàng lấy từ biến môi trường (bạn tự cấu hình trên Vercel).
   const bank = process.env.NEXT_PUBLIC_SEPAY_BANK || "";
@@ -59,6 +71,42 @@ export default async function NangCapPage({
       <div className="mb-4">
         <PaymentStatus orderId={order.id} />
       </div>
+
+      {payError === "nsf" && (
+        <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          Số dư ví không đủ để thanh toán gói này. Vui lòng nạp thêm tiền.
+        </div>
+      )}
+
+      {order.status !== "paid" && order.plan_code !== "NAPTIEN" && (
+        <div className="mb-4 rounded-2xl border border-brand/30 bg-brand/5 p-4">
+          <p className="text-sm text-gray-700">
+            Số dư ví của bạn:{" "}
+            <span className="font-bold text-brand">
+              {soDu.toLocaleString("vi-VN")}đ
+            </span>
+          </p>
+          {duSoDu ? (
+            <form action={payPackageWithBalance} className="mt-3">
+              <input type="hidden" name="order_id" value={order.id} />
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
+              >
+                Thanh toán bằng số dư ({formatVND(order.amount)})
+              </button>
+            </form>
+          ) : (
+            <p className="mt-2 text-xs text-gray-500">
+              Số dư chưa đủ. Bạn có thể chuyển khoản bên dưới hoặc{" "}
+              <a href="/tai-khoan/nap-tien" className="font-semibold text-brand hover:underline">
+                nạp thêm tiền vào ví
+              </a>
+              .
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="rounded-2xl border bg-white p-6">
         {configured ? (
