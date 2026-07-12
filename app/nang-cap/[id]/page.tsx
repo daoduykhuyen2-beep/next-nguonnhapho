@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getPlan, formatVND } from "@/lib/plans";
 import PaymentStatus from "@/components/PaymentStatus";
 import { payPackageWithBalance } from "@/app/actions/nap-tien";
+import { danhDauDaChuyenKhoan } from "@/app/actions/danh-dau-ck";
 
 export const metadata = { title: "Thanh toán nâng cấp" };
 
@@ -140,6 +141,27 @@ export default async function NangCapPage({
           nâng cấp gói. Sai nội dung sẽ phải đối soát thủ công.
         </div>
       </div>
+
+      {order.status !== "paid" && (
+        <form action={danhDauDaChuyenKhoan} className="mt-4">
+          <input type="hidden" name="order_id" value={order.id} />
+          {order.cho_duyet ? (
+            <div className="rounded-lg bg-amber-50 p-3 text-center text-sm font-semibold text-amber-700">
+              Đã ghi nhận. Đơn của bạn đang chờ quản trị viên duyệt.
+            </div>
+          ) : (
+            <button
+              type="submit"
+              className="w-full rounded-lg border border-brand bg-white px-4 py-2.5 text-sm font-bold text-brand transition hover:bg-brand/5"
+            >
+              Tôi đã chuyển khoản
+            </button>
+          )}
+          <p className="mt-2 text-center text-xs text-gray-400">
+            Nếu đã chuyển khoản mà gói chưa tự nâng, bấm nút trên để báo quản trị duyệt thủ công.
+          </p>
+        </form>
+      )}
     </main>
   );
 }
