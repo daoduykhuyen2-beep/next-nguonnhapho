@@ -8,6 +8,8 @@ import { getPlanMerged } from "@/lib/plans-server";
 // Tạo đơn nâng cấp gói (pending) rồi chuyển tới trang thanh toán.
 export async function createOrder(formData: FormData): Promise<void> {
   const planCode = String(formData.get("plan") || "").toUpperCase();
+  const postIdRaw = String(formData.get("post_id") || "").trim();
+  const postId = postIdRaw ? Number(postIdRaw) : null;
   const plan = await getPlanMerged(planCode);
   const price = plan ? getEffectivePrice(plan) : 0;
   if (!plan || price <= 0) {
@@ -32,6 +34,7 @@ export async function createOrder(formData: FormData): Promise<void> {
       amount: price,
       transfer_content: content,
       status: "pending",
+      post_id: postId,
     })
     .select("id")
     .single();

@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import "./globals.css";
 import { createClient } from "@/lib/supabase/server";
 import HeaderActions from "@/components/HeaderActions";
+import PWARegister from "@/components/PWARegister";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nguonnhaphohcm.vn"),
@@ -23,10 +24,24 @@ export const metadata: Metadata = {
     description: "Mua bán, cho thuê nhà phố trung tâm Sài Gòn — pháp lý rõ ràng.",
     images: ["/logo.png"],
   },
+  manifest: "/manifest.json",
+  applicationName: "Nhà Phố HCM",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Nhà Phố HCM",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#c8102e",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 const navLinks = [
-  { href: "/tin-dang", label: "Nhà bán" },
+  { href: "/tin-dang?loai=ban", label: "Nhà bán" },
   { href: "/tin-dang?loai=thue", label: "Nhà cho thuê" },
   { href: "/tin-tuc", label: "Tin tức" },
   { href: "/goi-thanh-vien", label: "Bảng giá" },
@@ -129,7 +144,7 @@ export default async function RootLayout({
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2">
-                <Image src="/logo.png" alt="Nguồn Nhà Phố HCM" width={40} height={40} className="h-10 w-10 object-contain" />
+                <Image src="/logo-white.png" alt="Nguồn Nhà Phố HCM" width={40} height={40} className="h-10 w-10 object-contain" />
                 <span className="text-base font-bold">Nguồn Nhà Phố HCM</span>
               </div>
               <div className="mt-3 text-sm leading-relaxed text-white/70">
@@ -171,6 +186,7 @@ export default async function RootLayout({
             © {new Date().getFullYear()} Nguồn Nhà Phố HCM. Nhà phố trung tâm TP.HCM.
           </div>
         </footer>
+        <PWARegister />
       </body>
     </html>
   );

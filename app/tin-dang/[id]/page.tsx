@@ -300,7 +300,9 @@ export default async function TinChiTietPage({
               Gọi {post.contact_phone}
             </a>
           ) : null}
-          <LeadForm postId={post.id} />
+          <div className="mt-4 border-t pt-4">
+            <LeadForm postId={post.id} />
+          </div>
         </aside>
       </div>
 

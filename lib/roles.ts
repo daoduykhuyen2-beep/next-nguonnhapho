@@ -1,3 +1,5 @@
+// Client-safe roles & permissions constants (no server-only imports)
+
 // ------------------------------------------------------------
 // Hệ thống phân quyền (RBAC) — dùng ở phía server.
 // Vai trò:
@@ -5,7 +7,6 @@
 //   - pho_cong_dong : chỉnh sửa bài viết, duyệt tin, đăng thông báo, quản lý tin tức
 //   - member        : người dùng thường
 // ------------------------------------------------------------
-
 
 export type Role = "admin" | "pho_cong_dong" | "member";
 
@@ -20,7 +21,7 @@ export type Capability =
   | "payment.manage"   // duyệt nạp tiền
   | "role.assign";     // phân quyền nhân sự
 
-export const ROLE_CAPABILITIES: Record<Role, Capability[]> = {
+const ROLE_CAPABILITIES: Record<Role, Capability[]> = {
   admin: [
     "post.edit",
     "post.approve",

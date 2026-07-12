@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
+import { getTongSoCan } from "@/lib/stats";
 
 export const revalidate = 60;
 
@@ -10,23 +11,29 @@ async function layTin(opts: { status?: string; limit?: number; hotToday?: boolea
   let q = supabase.from("web_posts").select("*").eq("trang_thai", "duyet");
   if (opts.status) q = q.eq("status", opts.status);
   if (opts.hotToday) {
-    const start = new Date();
-    start.setHours(0, 0, 0, 0);
-    q = q.gte("created_at", start.toISOString());
+    q = q.order("luot_xem", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }).limit(opts.limit ?? 8);
+  } else {
+    q = q.order("created_at", { ascending: false }).limit(opts.limit ?? 8);
   }
-  q = q.order("created_at", { ascending: false }).limit(opts.limit ?? 8);
   const { data, error } = await q;
   if (error) return [];
   return (data as Post[]) ?? [];
 }
 
-async function demKhoNha(): Promise<number> {
+type Banner = { id: number; title: string | null; image_url: string; link_url: string | null };
+
+async function layBanner(): Promise<Banner[]> {
   const supabase = await createClient();
-  const { count } = await supabase
-    .from("web_posts")
-    .select("id", { count: "exact", head: true })
-    .eq("trang_thai", "duyet");
-  return count ?? 0;
+  const { data } = await supabase
+    .from("banners")
+    .select("id, title, image_url, link_url")
+    .eq("active", true)
+    .not("image_url", "is", null)
+    .neq("image_url", "")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(8);
+  return (data as Banner[]) ?? [];
 }
 
 type XepHang = { ten: string; so: number };
@@ -118,8 +125,15 @@ const KHU_VUC = [
 ];
 
 export default async function TrangChu() {
-    const [hotHomNay, kimCuong, vang, tinMoi, xepHang, tinTuc, video, canhBao, khoNha] =
+    // Tự động hạ cấp tin VIP đã hết hạn về tin thường trước khi hiển thị
+  try {
+    const sb = await createClient();
+    await sb.rpc("expire_vip_posts");
+  } catch {}
+
+  const [banners, hotHomNay, kimCuong, vang, tinMoi, xepHang, tinTuc, video, canhBao, khoNha] =
     await Promise.all([
+      layBanner(),
       layTin({ hotToday: true, limit: 8 }),
       layTin({ status: "kim_cuong", limit: 8 }),
       layTin({ status: "vang", limit: 8 }),
@@ -128,9 +142,8 @@ export default async function TrangChu() {
       layTinTuc({ limit: 3 }),
       layTinTuc({ loai: "video", limit: 3 }),
       layTinTuc({ loai: "tin_tuc", limit: 4 }),
-      demKhoNha(),
+      getTongSoCan(),
     ]);
-
 
   return (
     <>
@@ -160,8 +173,11 @@ export default async function TrangChu() {
                 ))}
               </select>
               <select name="loai" className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 sm:col-span-2">
-                <option value="">Mua bán</option>
+                <option value="">Tất cả</option>
+                <option value="ban">Nhà bán</option>
                 <option value="thue">Cho thuê</option>
+                <option value="dat">Đất nền</option>
+                <option value="can_ho">Căn hộ</option>
               </select>
               <button
                 type="submit"
@@ -182,6 +198,30 @@ export default async function TrangChu() {
           </div>
         </div>
       </section>
+
+      {/* Banner quang cao (quan ly tai /admin/banner) */}
+      {banners.length ? (
+        <section className="mx-auto max-w-6xl px-4 pt-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {banners.map((b) => {
+              const img = (
+                <img
+                  src={b.image_url}
+                  alt={b.title ?? "Banner"}
+                  className="h-40 w-full rounded-xl object-cover shadow-sm sm:h-44"
+                />
+              );
+              return b.link_url ? (
+                <a key={b.id} href={b.link_url} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-xl transition hover:opacity-95">
+                  {img}
+                </a>
+              ) : (
+                <div key={b.id} className="overflow-hidden rounded-xl">{img}</div>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       {/* Bang thong ke kho nha cong khai */}
       <section className="mx-auto max-w-6xl px-4 pt-8">
@@ -208,7 +248,7 @@ export default async function TrangChu() {
               <h2 className="flex items-center gap-2 text-xl font-bold text-brand sm:text-2xl">
                 <span>🔥</span> Tin HÓT trong ngày
               </h2>
-              <p className="mt-1 text-sm text-gray-500">Những tin đăng mới nhất hôm nay, cập nhật liên tục</p>
+              <p className="mt-1 text-sm text-gray-500">Những tin được xem nhiều &amp; nổi bật nhất, cập nhật liên tục</p>
             </div>
             <Link href="/tin-dang" className="shrink-0 text-sm font-semibold text-brand hover:underline">Xem tất cả →</Link>
           </div>

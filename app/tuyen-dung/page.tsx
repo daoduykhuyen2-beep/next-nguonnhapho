@@ -1,27 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTongSoCan, formatSoCan } from "@/lib/stats";
 
 export const metadata: Metadata = {
   title: "Tuyển dụng — Nguồn Nhà Phố HCM",
   description:
-    "Tuyển chuyên viên môi giới, cộng tác viên, marketing, pháp lý BĐS tại Nguồn Nhà Phố HCM. Kho hơn 1.680 căn nhà phố thật, hoa hồng 1,5–3%, đào tạo bài bản.",
+    "Tuyển chuyên viên môi giới, cộng tác viên, marketing, pháp lý BĐS tại Nguồn Nhà Phố HCM. Kho hơn 3.500 căn nhà phố thật, hoa hồng 1,5–3%, đào tạo bài bản.",
 };
-
-const lyDoChon = [
-  { so: "1,5–3%", mo: "Hoa hồng trên giá trị giao dịch — theo mặt bằng thị trường." },
-  { so: "1.680+", mo: "Căn nhà phố có sẵn trong kho — không phải tự đi kiếm hàng." },
-  { so: "Nhanh", mo: "Chi trả hoa hồng gọn gàng, rõ ràng ngay sau khi giao dịch hoàn tất." },
-  { so: "0đ", mo: "Không thu phí đầu vào — hỗ trợ marketing & đào tạo miễn phí." },
-];
-
-const quyenLoi = [
-  { ten: "Kho hàng sẵn 1.680+ căn", mo: "Không phải tốn tiền chạy quảng cáo tìm hàng — nguồn nhà thật, pháp lý rõ, sẵn sàng dẫn khách." },
-  { ten: "Hỗ trợ marketing & data khách", mo: "Được cung cấp công cụ đăng tin đa kênh, hỗ trợ chạy quảng cáo và chia sẻ nguồn khách quan tâm." },
-  { ten: "Đào tạo bài bản, đặc biệt pháp lý", mo: "Học cách kiểm tra sổ, quy hoạch, tranh chấp — kỹ năng giúp bạn tư vấn uy tín và chốt deal an toàn." },
-  { ten: "Lộ trình thăng tiến rõ ràng", mo: "Từ cộng tác viên → chuyên viên → trưởng nhóm. Năng lực tới đâu, vị trí & thu nhập tới đó." },
-  { ten: "Chi trả hoa hồng nhanh, minh bạch", mo: "Có bảng tính trước mỗi thương vụ, thanh toán gọn gàng sau khi giao dịch hoàn tất." },
-  { ten: "Môi trường làm nghề tử tế", mo: "Làm thật, nói thật, không tin ảo giá ảo — xây sự nghiệp lâu dài bằng uy tín." },
-];
 
 const viTri = [
   { icon: "🏠", ten: "Chuyên viên môi giới nhà phố", loai: "Toàn thời gian", mo: "Tư vấn, dẫn khách, chốt giao dịch trên kho hàng có sẵn. Hoa hồng 1,5–3%, thu nhập không giới hạn. Ưu tiên có kinh nghiệm BĐS." },
@@ -38,7 +23,24 @@ const viTri = [
   { icon: "🏆", ten: "Quản lý sàn / Giám đốc kinh doanh", loai: "Toàn thời gian", mo: "Xây dựng và điều hành đội ngũ, đặt mục tiêu doanh số, phát triển thị trường khu vực. Dành cho người có kinh nghiệm quản lý BĐS." },
 ];
 
-export default function TuyenDungPage() {
+export default async function TuyenDungPage() {
+  const soCan = await getTongSoCan();
+  const khoNum = soCan > 0 ? formatSoCan(soCan) : "3.500";
+  const khoStr = soCan > 0 ? formatSoCan(soCan) + "+" : "3.500+";
+  const lyDoChon = [
+  { so: "1,5–3%", mo: "Hoa hồng trên giá trị giao dịch — theo mặt bằng thị trường." },
+  { so: khoStr, mo: "Căn nhà phố có sẵn trong kho — không phải tự đi kiếm hàng." },
+  { so: "Nhanh", mo: "Chi trả hoa hồng gọn gàng, rõ ràng ngay sau khi giao dịch hoàn tất." },
+  { so: "0đ", mo: "Không thu phí đầu vào — hỗ trợ marketing & đào tạo miễn phí." },
+];
+  const quyenLoi = [
+  { ten: `Kho hàng sẵn ${khoStr} căn`, mo: "Không phải tốn tiền chạy quảng cáo tìm hàng — nguồn nhà thật, pháp lý rõ, sẵn sàng dẫn khách." },
+  { ten: "Hỗ trợ marketing & data khách", mo: "Được cung cấp công cụ đăng tin đa kênh, hỗ trợ chạy quảng cáo và chia sẻ nguồn khách quan tâm." },
+  { ten: "Đào tạo bài bản, đặc biệt pháp lý", mo: "Học cách kiểm tra sổ, quy hoạch, tranh chấp — kỹ năng giúp bạn tư vấn uy tín và chốt deal an toàn." },
+  { ten: "Lộ trình thăng tiến rõ ràng", mo: "Từ cộng tác viên → chuyên viên → trưởng nhóm. Năng lực tới đâu, vị trí & thu nhập tới đó." },
+  { ten: "Chi trả hoa hồng nhanh, minh bạch", mo: "Có bảng tính trước mỗi thương vụ, thanh toán gọn gàng sau khi giao dịch hoàn tất." },
+  { ten: "Môi trường làm nghề tử tế", mo: "Làm thật, nói thật, không tin ảo giá ảo — xây sự nghiệp lâu dài bằng uy tín." },
+];
   return (
     <div>
       <section className="border-b border-gray-200 bg-white text-black">
@@ -63,7 +65,7 @@ export default function TuyenDungPage() {
               Chúng tôi đang tìm những chuyên viên môi giới &amp; cộng tác viên máu
               lửa, muốn làm nghề bài bản và thu nhập xứng đáng. Điểm khác biệt lớn
               nhất: bạn không phải vất vả tự đi tìm hàng — Nguồn Nhà Phố đã có sẵn
-              <strong className="font-semibold text-black"> kho hơn 1.680 căn nhà phố thật</strong>{" "}
+              <strong className="font-semibold text-black"> kho hơn {khoNum} căn nhà phố thật</strong>{" "}
               khắp TP.HCM, đã kiểm tra pháp lý, để bạn tập trung vào việc quan trọng
               nhất là phục vụ khách và chốt giao dịch.
             </p>

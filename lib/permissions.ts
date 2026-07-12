@@ -1,19 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { roleCan, isStaffRole, resolveRole } from "./roles";
-import type { Role, Capability } from "./roles";
-
-export {
-  ROLE_CAPABILITIES,
-  ROLE_LABELS,
-  roleCan,
-  isStaffRole,
-  resolveRole,
-} from "./roles";
-export type { Role, Capability } from "./roles";
-
-// Cac helper thuan (khong phu thuoc server) da chuyen sang ./roles.
-// Cac ham duoi day chay o phia server (dung next/headers qua createClient).
-
+export * from "@/lib/roles";
+import { resolveRole, isStaffRole, roleCan, type Role, type Capability } from "@/lib/roles";
 
 export type CurrentUser = {
   id: string;

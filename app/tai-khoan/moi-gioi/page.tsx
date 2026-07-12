@@ -1,184 +1,184 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import type { Profile } from "@/lib/types";
+import { PLANS, formatVND, getEffectivePrice } from "@/lib/plans";
 
-export const metadata = { title: "Moi gioi chuyen nghiep" };
+export const metadata = { title: "Môi giới chuyên nghiệp" };
 export const dynamic = "force-dynamic";
 
-function formatDate(d: string | null) {
-  if (!d) return "--";
-  try {
-    return new Date(d).toLocaleDateString("vi-VN");
-  } catch {
-    return "--";
-  }
-}
+const QUYEN_LOI = [
+  {
+    icon: "🏆",
+    title: "Huy hiệu môi giới xác thực",
+    desc: "Tin đăng gắn nhãn tin cậy, tăng tỷ lệ khách liên hệ và chốt giao dịch.",
+  },
+  {
+    icon: "🚀",
+    title: "Ưu tiên hiển thị & đẩy tin",
+    desc: "Tin của bạn luôn nằm nhóm đầu danh sách, tiếp cận nhiều khách hơn.",
+  },
+  {
+    icon: "📊",
+    title: "Thống kê hiệu quả tin đăng",
+    desc: "Theo dõi lượt xem, lượng khách quan tâm để tối ưu nội dung tin.",
+  },
+  {
+    icon: "☎️",
+    title: "Gom khách quan tâm về một nơi",
+    desc: "Số điện thoại khách để lại trên tin được tổng hợp ở mục Quản lý khách hàng.",
+  },
+  {
+    icon: "⚡",
+    title: "Duyệt tin ưu tiên",
+    desc: "Tin được xét duyệt nhanh trong giờ làm việc, lên sóng sớm hơn.",
+  },
+  {
+    icon: "🎓",
+    title: "Hỗ trợ & đào tạo nghiệp vụ",
+    desc: "Cẩm nang pháp lý, kỹ năng chốt sale và tư vấn từ đội ngũ chuyên môn.",
+  },
+];
 
 export default async function MoiGioiPage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/dang-nhap");
+  if (!user) redirect("/dang-nhap?next=/tai-khoan/moi-gioi");
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select(
-      "full_name, phone, email, avatar_url, bio, address, membership_tier, created_at"
-    )
+    .select("*")
     .eq("id", user.id)
     .maybeSingle();
+  const p = profile as Profile | null;
 
-  const { count: totalPosts } = await supabase
-    .from("web_posts")
-    .select("id", { count: "exact", head: true })
-    .eq("owner", user.id);
+  const tier = p?.membership_tier || null;
+  const isPro = !!tier && tier !== "Miễn phí";
+  const expires = p?.membership_expires_at
+    ? new Date(p.membership_expires_at).toLocaleDateString("vi-VN")
+    : null;
 
-  const { count: activePosts } = await supabase
-    .from("web_posts")
-    .select("id", { count: "exact", head: true })
-    .eq("owner", user.id)
-    .eq("trang_thai", "duyet");
-
-  const { count: totalLeads } = await supabase
-    .from("web_post_leads")
-    .select("id", { count: "exact", head: true })
-    .eq("owner", user.id);
-
-  const { data: viewsRows } = await supabase
-    .from("web_posts")
-    .select("luot_xem")
-    .eq("owner", user.id);
-  const totalViews = (viewsRows ?? []).reduce(
-    (s: number, r: { luot_xem: number | null }) => s + (r.luot_xem ?? 0),
-    0
-  );
-
-  const tier = profile?.membership_tier ?? "free";
-  const isPro = tier && tier !== "free";
-  const name = profile?.full_name ?? "Moi gioi";
-  const letter = (name || "M").charAt(0).toUpperCase();
-
-  const stats = [
-    { label: "Tin da dang", value: totalPosts ?? 0 },
-    { label: "Tin dang hien thi", value: activePosts ?? 0 },
-    { label: "Luot xem tin", value: totalViews },
-    { label: "Khach hang tiem nang", value: totalLeads ?? 0 },
-  ];
+  const combos = PLANS.filter((pl) => pl.group === "COMBO");
 
   return (
     <main className="min-h-screen bg-gray-50 text-gray-900">
-      <div className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="mb-1 text-2xl font-extrabold">Moi gioi chuyen nghiep</h1>
-        <p className="mb-6 text-sm text-gray-500">
-          Ho so moi gioi cua ban - xay dung uy tin, ket noi khach hang va nang
-          tam thuong hieu ca nhan.
-        </p>
-
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-          <div className="h-24 bg-gradient-to-r from-emerald-500 to-emerald-600" />
-          <div className="px-6 pb-6">
-            <div className="-mt-10 flex flex-wrap items-end gap-4">
-              {profile?.avatar_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={profile.avatar_url}
-                  alt={name}
-                  className="h-20 w-20 rounded-full border-4 border-white object-cover shadow"
-                />
-              ) : (
-                <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-emerald-100 text-2xl font-bold text-emerald-700 shadow">
-                  {letter}
-                </div>
-              )}
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold">{name}</h2>
-                  {isPro ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-                      Da xac thuc
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-500">
-                      Chua xac thuc
-                    </span>
-                  )}
-                </div>
-                <p className="mt-1 text-sm text-gray-500">
-                  Tham gia tu {formatDate(profile?.created_at ?? null)}
-                  {profile?.address ? " - " + profile.address : ""}
-                </p>
-              </div>
-              <Link
-                href="/tai-khoan/thong-tin"
-                className="rounded-xl border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
-              >
-                Chinh sua ho so
-              </Link>
-            </div>
-
-            {profile?.bio ? (
-              <p className="mt-4 whitespace-pre-line text-sm text-gray-700">
-                {profile.bio}
-              </p>
-            ) : (
-              <p className="mt-4 text-sm text-gray-400">
-                Chua co gioi thieu. Them mo ta ban than de tang do tin cay voi
-                khach hang.
-              </p>
-            )}
-
-            <div className="mt-5 flex flex-wrap gap-4 text-sm text-gray-600">
-              {profile?.phone ? <span>SDT: {profile.phone}</span> : null}
-              {profile?.email ? <span>Email: {profile.email}</span> : null}
-            </div>
+      <div className="mx-auto max-w-4xl px-4 py-8">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Môi giới chuyên nghiệp</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Bộ công cụ giúp bạn bán nhà nhanh hơn và xây dựng thương hiệu cá nhân.
+            </p>
           </div>
+          <Link href="/tai-khoan" className="text-sm text-brand hover:underline">
+            ← Về tài khoản
+          </Link>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {stats.map((s) => (
+        <div
+          className={
+            "mb-8 flex flex-col gap-3 rounded-2xl p-5 sm:flex-row sm:items-center sm:justify-between " +
+            (isPro
+              ? "bg-emerald-50 ring-1 ring-emerald-100"
+              : "bg-white ring-1 ring-gray-200")
+          }
+        >
+          <div>
+            <p className="text-sm text-gray-500">Trạng thái tài khoản</p>
+            <p className="text-lg font-extrabold text-gray-900">
+              {isPro ? "Môi giới chuyên nghiệp — " + tier : "Tài khoản thường"}
+            </p>
+            {isPro && expires ? (
+              <p className="text-sm text-emerald-700">Hiệu lực đến {expires}</p>
+            ) : (
+              <p className="text-sm text-gray-500">
+                Nâng cấp để mở khóa toàn bộ quyền lợi môi giới.
+              </p>
+            )}
+          </div>
+          <Link
+            href="/goi-thanh-vien"
+            className="rounded-xl bg-brand px-5 py-2.5 text-center text-sm font-bold text-white transition hover:opacity-90"
+          >
+            {isPro ? "Gia hạn / nâng cấp" : "Nâng cấp ngay"}
+          </Link>
+        </div>
+
+        <h2 className="mb-4 text-lg font-bold text-gray-800">
+          Quyền lợi môi giới chuyên nghiệp
+        </h2>
+        <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {QUYEN_LOI.map((q) => (
             <div
-              key={s.label}
-              className="rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm"
+              key={q.title}
+              className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm"
             >
-              <div className="text-2xl font-extrabold text-emerald-600">
-                {s.value.toLocaleString("vi-VN")}
-              </div>
-              <div className="mt-1 text-xs text-gray-500">{s.label}</div>
+              <div className="mb-2 text-2xl">{q.icon}</div>
+              <p className="font-semibold text-gray-900">{q.title}</p>
+              <p className="mt-1 text-sm text-gray-500">{q.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h3 className="text-base font-bold">Quyen loi moi gioi chuyen nghiep</h3>
-          <ul className="mt-3 space-y-2 text-sm text-gray-700">
-            <li>- Huy hieu "Da xac thuc" giup tin dang duoc tin tuong hon.</li>
-            <li>- Uu tien hien thi tin dang tren ket qua tim kiem.</li>
-            <li>- Quan ly khach hang tiem nang tap trung tai mot noi.</li>
-            <li>- Bao cao hieu qua tin dang chi tiet theo luot xem.</li>
-          </ul>
-          {!isPro ? (
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Link
-                href="/tai-khoan/goi-hoi-vien"
-                className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
+        <h2 className="mb-4 text-lg font-bold text-gray-800">
+          Gói combo dành cho môi giới
+        </h2>
+        <div className="grid gap-5 lg:grid-cols-3">
+          {combos.map((pl) => {
+            const price = getEffectivePrice(pl);
+            return (
+              <div
+                key={pl.code}
+                className={
+                  "flex flex-col rounded-2xl border bg-white p-6 shadow-sm " +
+                  (pl.highlight
+                    ? "border-brand ring-2 ring-brand/20"
+                    : "border-gray-100")
+                }
               >
-                Nang cap moi gioi chuyen nghiep
-              </Link>
-              <Link
-                href="/tai-khoan/khach-hang"
-                className="rounded-xl border border-emerald-600 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50"
-              >
-                Xem khach hang tiem nang
-              </Link>
-            </div>
-          ) : (
-            <div className="mt-5">
-              <span className="inline-block rounded-full bg-emerald-50 px-4 py-1.5 text-sm font-semibold text-emerald-700">
-                Ban dang la moi gioi chuyen nghiep - Goi {tier}
-              </span>
-            </div>
-          )}
+                {pl.badge ? (
+                  <span className="mb-2 inline-block w-fit rounded-full bg-brand/10 px-3 py-1 text-xs font-bold text-brand">
+                    {pl.badge}
+                  </span>
+                ) : null}
+                <p className="text-lg font-extrabold text-gray-900">{pl.name}</p>
+                <div className="mt-2 flex items-end gap-2">
+                  <span className="text-2xl font-extrabold text-brand">
+                    {formatVND(price)}
+                  </span>
+                  <span className="pb-1 text-sm text-gray-400">
+                    {pl.unit || ""}
+                  </span>
+                </div>
+                {pl.marketPrice ? (
+                  <span className="text-sm text-gray-400 line-through">
+                    {formatVND(pl.marketPrice)}
+                  </span>
+                ) : null}
+                <ul className="mt-4 flex-1 space-y-2 text-sm text-gray-600">
+                  {pl.features.map((f) => (
+                    <li key={f} className="flex gap-2">
+                      <span className="text-emerald-500">✓</span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/goi-thanh-vien"
+                  className={
+                    "mt-5 rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition " +
+                    (pl.highlight
+                      ? "bg-brand text-white hover:opacity-90"
+                      : "border border-gray-300 text-gray-700 hover:bg-gray-50")
+                  }
+                >
+                  Chọn gói này
+                </Link>
+              </div>
+            );
+          })}
         </div>
       </div>
     </main>

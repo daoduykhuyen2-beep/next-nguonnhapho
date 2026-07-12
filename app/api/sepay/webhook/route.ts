@@ -90,5 +90,10 @@ export async function POST(req: NextRequest) {
     p_days: days,
   });
 
+  // Áp dụng gói cho tin cụ thể (VIP Kim Cương/Vàng hoặc đẩy tin) nếu đơn gắn với 1 tin.
+  if (order.post_id) {
+    await supabase.rpc("apply_post_plan", { p_payment_id: order.id });
+  }
+
   return NextResponse.json({ success: true, matched: true, paid: true });
 }

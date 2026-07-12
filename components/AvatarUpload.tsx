@@ -1,94 +1,119 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { updateAvatar } from "@/app/actions/profile";
 
 export default function AvatarUpload({
   userId,
-  initialUrl,
-  name,
+  currentUrl,
+  fullName,
 }: {
   userId: string;
-  initialUrl: string | null;
-  name: string | null;
+  currentUrl: string | null;
+  fullName: string | null;
 }) {
-  const [url, setUrl] = useState(initialUrl);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [url, setUrl] = useState<string | null>(currentUrl);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const letter = (name || "U").charAt(0).toUpperCase();
+  const initials = (fullName || "?")
+    .split(" ")
+    .map((w) => w[0])
+    .filter(Boolean)
+    .slice(-2)
+    .join("")
+    .toUpperCase();
 
-  async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setError(null);
+    setMsg(null);
 
     if (!file.type.startsWith("image/")) {
-      setError("Vui long chon file anh.");
+      setMsg("Vui lòng chọn tệp ảnh.");
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Anh toi da 5MB.");
+    if (file.size > 3 * 1024 * 1024) {
+      setMsg("Ảnh tối đa 3MB.");
       return;
     }
 
-    setUploading(true);
+    setBusy(true);
     try {
       const supabase = createClient();
-      const ext = file.name.split(".").pop() || "jpg";
-      const path = `${userId}/avatar-${Date.now()}.${ext}`;
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = userId + "/avatar_" + Date.now() + "." + ext;
+
       const { error: upErr } = await supabase.storage
         .from("avatars")
         .upload(path, file, { upsert: true, cacheControl: "3600" });
-      if (upErr) throw upErr;
+      if (upErr) {
+        setMsg("Tải ảnh thất bại: " + upErr.message);
+        setBusy(false);
+        return;
+      }
 
-      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      const publicUrl = data.publicUrl;
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+      const publicUrl = pub.publicUrl;
 
       const res = await updateAvatar(publicUrl);
-      if (res?.error) throw new Error(res.error);
-
-      setUrl(publicUrl);
+      if (res.error) {
+        setMsg(res.error);
+      } else {
+        setUrl(publicUrl);
+        setMsg("Đã cập nhật ảnh đại diện.");
+      }
     } catch (err) {
-      console.error(err);
-      setError("Tai anh that bai. Vui long thu lai.");
+      setMsg("Có lỗi xảy ra, vui lòng thử lại.");
     } finally {
-      setUploading(false);
+      setBusy(false);
     }
   }
 
   return (
     <div className="flex items-center gap-4">
-      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100">
+      <div className="relative">
         {url ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={url} alt="Anh dai dien" className="h-full w-full object-cover" />
+          <img
+            src={url}
+            alt="Ảnh đại diện"
+            className="h-20 w-20 rounded-full object-cover ring-2 ring-gray-100"
+          />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-brand text-2xl font-bold text-white">
-            {letter}
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-brand/10 text-2xl font-bold text-brand ring-2 ring-gray-100">
+            {initials}
           </div>
         )}
+        {busy ? (
+          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 text-xs text-white">
+            Đang tải...
+          </div>
+        ) : null}
       </div>
+
       <div>
         <input
           ref={inputRef}
           type="file"
           accept="image/*"
+          onChange={handleFile}
           className="hidden"
-          onChange={onFile}
         />
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={uploading}
+          disabled={busy}
           className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-60"
         >
-          {uploading ? "Dang tai..." : "Doi anh dai dien"}
+          {url ? "Đổi ảnh đại diện" : "Tải ảnh đại diện"}
         </button>
-        <p className="mt-1 text-xs text-gray-400">JPG, PNG, WEBP. Toi da 5MB.</p>
-        {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+        <p className="mt-1 text-xs text-gray-400">JPG, PNG — tối đa 3MB.</p>
+        {msg ? (
+          <p className="mt-1 text-xs text-brand">{msg}</p>
+        ) : null}
       </div>
     </div>
   );
