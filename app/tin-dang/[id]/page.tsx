@@ -198,7 +198,11 @@ export default async function TinChiTietPage({
   const polyline = points.map((p) => `${p.x},${p.y}`).join(" ");
 
   const mapQuery = encodeURIComponent(diaChi || post.quan || "TP.HCM");
-  const stats = getFakeStats(post.id, post.created_at);
+  const stats = getFakeStats(post.id, post.created_at, {
+    status: post.status,
+    boostedAt: post.boosted_at,
+    promotedAt: post.promoted_at,
+  });
 
   return (
     <div>
