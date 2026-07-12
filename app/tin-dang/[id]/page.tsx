@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
-import { formatGia } from "@/components/PostCard";
+import { formatGia, formatDienTich, formatSoTang } from "@/components/PostCard";
 import LoanCalculator from "@/components/LoanCalculator";
 import LeadForm from "@/components/LeadForm";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -219,7 +219,7 @@ export default async function TinChiTietPage({
         </div>
         <div>
           <p className="text-xs uppercase text-gray-500">Diện tích</p>
-          <p className="text-xl font-bold">{post.dien_tich ?? "—"}</p>
+          <p className="text-xl font-bold">{formatDienTich(post.dien_tich) || "—"}</p>
         </div>
         <div>
           <p className="text-xs uppercase text-gray-500">Đơn giá</p>
@@ -233,7 +233,7 @@ export default async function TinChiTietPage({
             <h2 className="mb-3 text-lg font-semibold">Thông số chi tiết</h2>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều ngang</dt><dd className="font-semibold">{ngang ? `${ngang} m` : "Đang cập nhật"}</dd></div><div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều dài</dt><dd className="font-semibold">{dai ? `${dai} m` : "Đang cập nhật"}</dd></div>
-              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Số tầng</dt><dd className="font-semibold">{soTang ?? "Đang cập nhật"}</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Số tầng</dt><dd className="font-semibold">{formatSoTang(soTang) || "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Loại</dt><dd className="font-semibold">{post.loai ?? "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Khu vực</dt><dd className="font-semibold">{post.quan ?? "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Pháp lý</dt><dd className="font-semibold">Liên hệ xem sổ trực tiếp</dd></div>
@@ -305,7 +305,7 @@ export default async function TinChiTietPage({
 
         <aside className="h-fit rounded-xl border bg-white p-4">
           <p className="text-2xl font-bold text-brand">{formatGia(post.gia)}</p>
-          {post.dien_tich ? <p className="mt-2 text-sm text-gray-600">Diện tích: <b>{post.dien_tich}</b></p> : null}
+          {post.dien_tich ? <p className="mt-2 text-sm text-gray-600">Diện tích: <b>{formatDienTich(post.dien_tich)}</b></p> : null}
           {post.loai ? <p className="mt-1 text-sm text-gray-600">Loại: <b>{post.loai}</b></p> : null}
           <hr className="my-3" />
           <p className="text-sm font-semibold">Liên hệ</p>
@@ -329,7 +329,7 @@ export default async function TinChiTietPage({
               <Link key={s.id} href={`/tin-dang/${s.id}`} className="rounded-xl border bg-white p-3 hover:shadow">
                 <p className="font-semibold line-clamp-2">{s.title ?? "Tin đăng"}</p>
                 <p className="mt-1 font-bold text-brand">{formatGia(s.gia)}</p>
-                <p className="text-sm text-gray-500">{s.dien_tich ?? ""}</p>
+                <p className="text-sm text-gray-500">{formatDienTich(s.dien_tich)}</p>
                 <p className="text-xs text-gray-400">📍 {[s.duong, s.quan].filter(Boolean).join(", ")}</p>
               </Link>
             ))}
