@@ -11,6 +11,8 @@ const LOAI_OPTIONS = [
   { value: "thue", label: "Cho thuê" },
   { value: "dat", label: "Đất nền" },
   { value: "can_ho", label: "Căn hộ" },
+  { value: "coc", label: "Cọc nhà" },
+  { value: "chot", label: "Chốt nhà" },
   { value: "khac", label: "Khác" },
 ];
 
@@ -62,7 +64,13 @@ export default function PostForm({ post }: { post?: Post }) {
   );
 
   function onPick(e: React.ChangeEvent<HTMLInputElement>) {
-    const list = Array.from(e.target.files || []);
+    const all = Array.from(e.target.files || []);
+    const list = all.slice(0, 5);
+    if (all.length > 5) {
+      setError("Chỉ được tải lên tối đa 5 ảnh. Hệ thống đã tự giữ lại 5 ảnh đầu.");
+    } else {
+      setError(null);
+    }
     setFiles(list);
     setPreviews(list.map((f) => URL.createObjectURL(f)));
   }
@@ -184,7 +192,7 @@ export default function PostForm({ post }: { post?: Post }) {
             onChange={onPick}
             className="block w-full text-sm"
           />
-          <p className="mt-1 text-xs text-gray-500">Chọn nhiều ảnh, mỗi ảnh tối đa 5MB.</p>
+          <p className="mt-1 text-xs text-gray-500">Chọn tối đa 5 ảnh, mỗi ảnh tối đa 5MB.</p>
 
           {existing.length > 0 && (
             <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -211,7 +219,7 @@ export default function PostForm({ post }: { post?: Post }) {
             </div>
           )}
         </div>
-        <Field name="video" label="Link video (tùy chọn)" defaultValue={post?.video} placeholder="Link YouTube hoặc video" />
+        <Field name="video" label="Link video TikTok (tùy chọn)" defaultValue={post?.video} placeholder="Dán link video TikTok, ví dụ: https://www.tiktok.com/@user/video/..." />
       </Section>
 
       {/* 6. Thông tin liên hệ */}
