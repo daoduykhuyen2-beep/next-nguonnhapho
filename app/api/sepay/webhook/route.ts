@@ -84,6 +84,22 @@ export async function POST(req: NextRequest) {
     .update({ status: "paid", sepay_ref: sepayRef, paid_at: new Date().toISOString() })
     .eq("id", order.id);
 
+  if (order.plan_code === "NAPTIEN") {
+    // Nạp tiền vào ví: cộng số dư + gửi thông báo "nạp tiền thành công".
+    await supabase.rpc("apply_topup", { p_payment_id: order.id });
+    await supabase.from("notifications").insert({
+      tieu_de: "Nạp tiền thành công",
+      noi_dung:
+        "Bạn đã nạp thành công " +
+        Number(order.amount).toLocaleString("vi-VN") +
+        "đ vào ví. Số dư đã được cập nhật.",
+      loai: "tai_chinh",
+      target_user: order.user_id,
+      da_doc: false,
+    });
+    return NextResponse.json({ success: true, matched: true, paid: true });
+  }
+
   await supabase.rpc("apply_membership", {
     p_user_id: order.user_id,
     p_plan_code: order.plan_code,
@@ -94,6 +110,18 @@ export async function POST(req: NextRequest) {
   if (order.post_id) {
     await supabase.rpc("apply_post_plan", { p_payment_id: order.id });
   }
+
+  // Gửi thông báo đăng ký gói thành công.
+  await supabase.from("notifications").insert({
+    tieu_de: "Đăng ký gói thành công",
+    noi_dung:
+      "Gói " +
+      order.plan_code +
+      " của bạn đã được thanh toán và kích hoạt thành công. Cảm ơn bạn!",
+    loai: "tai_chinh",
+    target_user: order.user_id,
+    da_doc: false,
+  });
 
   return NextResponse.json({ success: true, matched: true, paid: true });
 }
