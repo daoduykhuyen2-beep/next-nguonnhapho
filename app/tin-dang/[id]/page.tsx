@@ -232,12 +232,12 @@ export default async function TinChiTietPage({
           <section>
             <h2 className="mb-3 text-lg font-semibold">Thông số chi tiết</h2>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều ngang</dt><dd className="font-semibold">{ngang ? `${ngang} m` : "Đang cập nhật"}</dd></div><div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều dài</dt><dd className="font-semibold">{dai ? `${dai} m` : "Đang cập nhật"}</dd></div>
-              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Số tầng</dt><dd className="font-semibold">{formatSoTang(soTang) || "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Loại</dt><dd className="font-semibold">{post.loai ?? "Đang cập nhật"}</dd></div>
-              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Khu vực</dt><dd className="font-semibold">{post.quan ?? "Đang cập nhật"}</dd></div>
-              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Pháp lý</dt><dd className="font-semibold">Liên hệ xem sổ trực tiếp</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều ngang</dt><dd className="font-semibold">{ngang ? `${ngang} m` : "Đang cập nhật"}</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều dài</dt><dd className="font-semibold">{dai ? `${dai} m` : "Đang cập nhật"}</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Số tầng</dt><dd className="font-semibold">{formatSoTang(soTang) || "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Hướng</dt><dd className="font-semibold">Đang cập nhật</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Pháp lý</dt><dd className="font-semibold">Liên hệ xem sổ trực tiếp</dd></div>
             </dl>
           </section>
 
