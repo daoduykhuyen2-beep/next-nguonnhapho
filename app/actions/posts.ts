@@ -29,7 +29,7 @@ function buildPayload(formData: FormData) {
     quan: String(formData.get("quan") || "").trim() || null,
     phuong: String(formData.get("phuong") || "").trim() || null,
     duong: String(formData.get("duong") || "").trim() || null,
-    gia: String(formData.get("gia") || "").trim() || null,
+  gia: (() => { const raw = String(formData.get("gia") || "").trim(); const unit = String(formData.get("gia_don_vi") || "").trim(); if (unit === "thoathuan") return "Thỏa thuận"; if (!raw) return null; if (/[a-zA-ZÀ-ỹ]/.test(raw)) return raw; if (unit === "trieu_thang") return raw + " triệu/tháng"; if (unit === "trieu") return raw + " triệu"; return raw + " tỷ"; })(),
     dien_tich: String(formData.get("dien_tich") || "").trim() || null,
     chieu_ngang: String(formData.get("chieu_ngang") || "").trim() || null,
     chieu_dai: String(formData.get("chieu_dai") || "").trim() || null,
