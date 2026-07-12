@@ -17,6 +17,14 @@ export type FakeStats = {
 export function getFakeStats(id: number | null | undefined, createdAt?: string | null): FakeStats {
   const safeId = typeof id === "number" && !Number.isNaN(id) ? id : 1;
 
+  // An luot xem / quan tam trong 5 gio dau sau khi dang tin
+  if (createdAt) {
+    const _t = new Date(createdAt).getTime();
+    if (!Number.isNaN(_t) && Date.now() - _t < 5 * 60 * 60 * 1000) {
+      return { views: 0, interested: 0 };
+    }
+  }
+
   // So ngay ke tu ngay dang (toi thieu 0).
   let days = 0;
   if (createdAt) {
