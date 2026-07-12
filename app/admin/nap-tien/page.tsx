@@ -21,6 +21,7 @@ export default async function Page() {
 
   const { data } = await supabase.from("payments").select("id, user_id, plan_code, amount, status, created_at, paid_at, transfer_content, post_id, cho_duyet").order("created_at", { ascending: false }).limit(300);
   const rows = data || [];
+  const choDuyet = rows.filter((r) => r.status !== "paid" && r.cho_duyet === true);
   const doanhThu = rows.filter((r) => r.status === "paid").reduce((s, r) => s + Number(r.amount || 0), 0);
   return (
     <div>
@@ -39,6 +40,29 @@ export default async function Page() {
         </p>
         <PlanEditor plans={plans} />
       </section>
+
+      <h2 className="mb-3 text-xl font-bold">Đơn chờ duyệt ({choDuyet.length})</h2>
+      <div className="mb-6 overflow-x-auto rounded-xl border-2 border-amber-300 bg-amber-50">
+        {choDuyet.length === 0 ? (
+          <p className="p-4 text-sm text-gray-500">Chưa có đơn nào chờ duyệt. Khi khách bấm &quot;Tôi đã chuyển khoản&quot;, đơn sẽ hiện ở đây để bạn duyệt tay.</p>
+        ) : (
+          <table className="w-full text-left text-sm">
+            <thead className="border-b bg-amber-100 text-amber-800"><tr><th className="p-3">Thời gian</th><th className="p-3">Loại / Gói</th><th className="p-3">Số tiền</th><th className="p-3">Nội dung CK</th><th className="p-3">User</th><th className="p-3">Thao tác</th></tr></thead>
+            <tbody>
+              {choDuyet.map((r) => (
+                <tr key={r.id} className="border-b last:border-0">
+                  <td className="p-3">{r.created_at ? new Date(r.created_at as string).toLocaleString("vi-VN") : "-"}</td>
+                  <td className="p-3 font-semibold">{r.plan_code === "NAPTIEN" ? "Nạp tiền" : r.plan_code}</td>
+                  <td className="p-3">{vnd(Number(r.amount))}</td>
+                  <td className="p-3 font-mono text-xs">{r.transfer_content}</td>
+                  <td className="p-3 text-xs text-gray-400">{String(r.user_id).slice(0, 8)}</td>
+                  <td className="p-3"><DuyetThanhToanButton id={r.id as number} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
       <h2 className="mb-3 text-xl font-bold">Lịch sử giao dịch</h2>
       <div className="overflow-x-auto rounded-xl border bg-white">
