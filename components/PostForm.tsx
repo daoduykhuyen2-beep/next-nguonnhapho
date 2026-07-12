@@ -55,6 +55,10 @@ export default function PostForm({ post }: { post?: Post }) {
   const [existing, setExisting] = useState<string[]>(
     Array.isArray(post?.anh) ? (post!.anh as string[]) : []
   );
+  const [loai, setLoai] = useState<string>(post?.loai || LOAI_OPTIONS[0].value);
+  const [donVi, setDonVi] = useState<string>(
+    post?.loai === "thue" ? "trieu_thang" : "ty"
+  );
 
   function onPick(e: React.ChangeEvent<HTMLInputElement>) {
     const list = Array.from(e.target.files || []);
@@ -95,7 +99,12 @@ export default function PostForm({ post }: { post?: Post }) {
             <label className="mb-1 block text-sm font-medium">Loại tin</label>
             <select
               name="loai"
-              defaultValue={post?.loai || LOAI_OPTIONS[0].value}
+              value={loai}
+              onChange={(e) => {
+                const v = e.target.value;
+                setLoai(v);
+                setDonVi(v === "thue" ? "trieu_thang" : "ty");
+              }}
               className="w-full rounded-lg border border-gray-300 px-3 py-2"
             >
               {LOAI_OPTIONS.map((o) => (
@@ -109,12 +118,13 @@ export default function PostForm({ post }: { post?: Post }) {
               <input
                 name="gia"
                 defaultValue={post?.gia ?? ""}
-                placeholder="VD: 27"
+                placeholder={loai === "thue" ? "VD: 55" : "VD: 27"}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2"
               />
               <select
                 name="gia_don_vi"
-                defaultValue="ty"
+                value={donVi}
+                onChange={(e) => setDonVi(e.target.value)}
                 className="w-36 shrink-0 rounded-lg border border-gray-300 px-2 py-2"
               >
                 {DON_VI_OPTIONS.map((o) => (
