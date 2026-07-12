@@ -15,6 +15,17 @@ export const metadata = {
 
 const PAGE_SIZE = 12;
 
+// Cac quan trung tam (goi y nhanh cho khach)
+const QUAN_TRUNG_TAM = [
+  "Quận 1",
+  "Quận 3",
+  "Quận 4",
+  "Quận 5",
+  "Quận 10",
+  "Phú Nhuận",
+  "Bình Thạnh",
+];
+
 type SearchParams = {
   q?: string;
   loai?: string;
@@ -33,22 +44,50 @@ async function getPosts(sp: SearchParams) {
   const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
   const from = (page - 1) * PAGE_SIZE;
 
-  let query = supabase
-    .from("web_posts")
-    .select("*")
-    .eq("trang_thai", "duyet");
+  const hasJsFilter = Boolean(
+    sp.giaMin || sp.giaMax || sp.dtMin || sp.dtMax || sp.tang
+  );
 
-  if (sp.loai) query = query.eq("loai", sp.loai);
-  if (sp.quan) query = query.ilike("quan", `%${sp.quan}%`);
-  if (sp.duong) query = query.ilike("duong", `%${sp.duong}%`);
-  if (sp.q) query = query.ilike("title", `%${sp.q}%`);
+  const buildQuery = () => {
+    let q = supabase
+      .from("web_posts")
+      .select("*", hasJsFilter ? {} : { count: "exact" })
+      .eq("trang_thai", "duyet");
+    if (sp.loai) q = q.eq("loai", sp.loai);
+    if (sp.quan) q = q.ilike("quan", `%${sp.quan}%`);
+    if (sp.duong) q = q.ilike("duong", `%${sp.duong}%`);
+    if (sp.q) q = q.ilike("title", `%${sp.q}%`);
+    return q;
+  };
 
-  const { data, error } = await query.order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("getPosts error", error.message);
-    return { posts: [] as Post[], total: 0, page };
+  // Khong co bo loc JS (gia/dien tich/tang) -> phan trang & dem o cap DB (chinh xac, khong gioi han 1000)
+  if (!hasJsFilter) {
+    const { data, error, count } = await buildQuery()
+      .order("created_at", { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+    if (error) {
+      console.error("getPosts error", error.message);
+      return { posts: [] as Post[], total: 0, page };
+    }
+    return { posts: (data as Post[]) ?? [], total: count ?? 0, page };
   }
+
+  // Co bo loc JS -> tai toan bo tin (theo lo) roi loc trong JS (vuot qua gioi han 1000 dong cua PostgREST)
+  const BATCH = 1000;
+  let allRows: Post[] = [];
+  for (let offset = 0; ; offset += BATCH) {
+    const { data, error } = await buildQuery()
+      .order("created_at", { ascending: false })
+      .range(offset, offset + BATCH - 1);
+    if (error) {
+      console.error("getPosts error", error.message);
+      break;
+    }
+    const chunk = (data as Post[]) ?? [];
+    allRows = allRows.concat(chunk);
+    if (chunk.length < BATCH) break;
+  }
+  const data = allRows;
 
   const parseNum = (v?: string | null): number | null => {
     if (!v) return null;
@@ -149,7 +188,47 @@ export default async function TinDangPage({
         <PostFilter quanOptions={quanOptions} />
       </Suspense>
 
-      <p className="mb-4 text-sm text-gray-500">Tìm thấy {total} tin đăng.</p>
+      {/* Goi y cac quan trung tam */}
+      <div className="mb-4">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+          Khu vực trung tâm
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {QUAN_TRUNG_TAM.map((qt) => {
+            const params = new URLSearchParams();
+            if (sp.loai) params.set("loai", sp.loai);
+            params.set("quan", qt);
+            const active = sp.quan === qt;
+            return (
+              <Link
+                key={qt}
+                href={`/tin-dang?${params.toString()}`}
+                className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${
+                  active
+                    ? "border-brand bg-brand text-white"
+                    : "border-gray-200 bg-white text-gray-700 hover:border-brand hover:text-brand"
+                }`}
+              >
+                {qt}
+              </Link>
+            );
+          })}
+          {sp.quan ? (
+            <Link
+              href={`/tin-dang${sp.loai ? `?loai=${sp.loai}` : ""}`}
+              className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-brand"
+            >
+              ✕ Bỏ lọc quận
+            </Link>
+          ) : null}
+        </div>
+      </div>
+
+      <p className="mb-4 text-sm text-gray-600">
+        Tìm thấy <b className="text-brand">{total.toLocaleString("vi-VN")}</b> tin đăng
+        {sp.loai === "thue" ? " cho thuê" : sp.loai === "ban" ? " nhà bán" : ""}
+        {sp.quan ? ` tại ${sp.quan}` : " trên toàn TP.HCM"}.
+      </p>
 
       {posts.length === 0 ? (
         <p className="rounded-lg border bg-white p-6 text-gray-500">
