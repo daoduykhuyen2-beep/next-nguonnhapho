@@ -49,7 +49,7 @@ function discountPct(price: number, market?: number) {
   return Math.round((1 - price / market) * 100);
 }
 
-function PlanCard({ plan, disabled }: { plan: Plan; disabled: boolean }) {
+function PlanCard({ plan, disabled, postId }: { plan: Plan; disabled: boolean; postId?: number | null }) {
   const effPrice = getEffectivePrice(plan);
   const promoOn = isPromoActive(plan);
   const pct = promoOn
@@ -113,6 +113,7 @@ function PlanCard({ plan, disabled }: { plan: Plan; disabled: boolean }) {
         ) : (
           <form action={createOrder}>
             <input type="hidden" name="plan" value={plan.code} />
+            {postId ? <input type="hidden" name="post_id" value={postId} /> : null}
             <button
               type="submit"
               className={
@@ -131,7 +132,13 @@ function PlanCard({ plan, disabled }: { plan: Plan; disabled: boolean }) {
   );
 }
 
-export default async function GoiThanhVienPage() {
+export default async function GoiThanhVienPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ post?: string }>;
+}) {
+  const sp = await searchParams;
+  const postId = sp.post ? Number(sp.post) : null;
   const supabase = await createClient();
   const {
     data: { user },
@@ -164,6 +171,12 @@ export default async function GoiThanhVienPage() {
         </p>
       </header>
 
+      {postId ? (
+        <div className="mb-6 rounded-xl border border-brand/30 bg-brand/5 px-4 py-3 text-sm text-gray-700">
+          Bạn đang chọn gói cho tin <b>#{postId}</b>. Sau khi thanh toán được xác nhận, tin của bạn sẽ tự động được nâng cấp hoặc đẩy lên đầu danh sách.
+        </div>
+      ) : null}
+
       <div className="mb-10 rounded-2xl border border-green-200 bg-green-50 p-6">
         <p className="text-lg font-bold text-brand">
           Cam kết rẻ hơn 30% so với mặt bằng thị trường
@@ -188,6 +201,7 @@ export default async function GoiThanhVienPage() {
                   key={plan.code}
                   plan={plan}
                   disabled={currentTier === plan.code}
+                  postId={postId}
                 />
               ))}
             </div>
