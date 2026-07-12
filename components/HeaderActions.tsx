@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 type UserLite = { email?: string | null } | null;
 
@@ -68,11 +69,54 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
   const [open, setOpen] = useState<"none" | "app" | "fav" | "noti" | "acc">("none");
   const [notiTab, setNotiTab] = useState("all");
   const [onlyUnread, setOnlyUnread] = useState(false);
+  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const storageKey = user?.email ? "nnp_read_notis_" + user.email : "nnp_read_notis";
+  const source = notifications && notifications.length > 0 ? notifications : DEMO_NOTIS;
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw) setReadIds(new Set(JSON.parse(raw) as string[]));
+    } catch {}
+  }, [storageKey]);
+
+  const isRead = (n: Noti) => n.read || readIds.has(n.id);
+
+  function persistReadIds(next: Set<string>) {
+    setReadIds(new Set(next));
+    try { localStorage.setItem(storageKey, JSON.stringify([...next])); } catch {}
+  }
+
+  async function markRead(n: Noti) {
+    if (isRead(n)) return;
+    const next = new Set(readIds); next.add(n.id); persistReadIds(next);
+    if (user && /^[0-9]+$/.test(n.id)) {
+      try {
+        const supabase = createClient();
+        await supabase.from("notifications").update({ da_doc: true }).eq("id", Number(n.id));
+      } catch {}
+    }
+  }
+
+  async function markAllRead() {
+    const next = new Set(readIds);
+    source.forEach((n) => next.add(n.id));
+    persistReadIds(next);
+    if (user) {
+      const ids = source.filter((n) => /^[0-9]+$/.test(n.id) && !n.read).map((n) => Number(n.id));
+      if (ids.length > 0) {
+        try {
+          const supabase = createClient();
+          await supabase.from("notifications").update({ da_doc: true }).in("id", ids);
+        } catch {}
+      }
+    }
+  }
   const wrapRef = useOutside(() => setOpen("none"));
 
-  const unread = DEMO_NOTIS.filter((n) => !n.read).length;
-  const notis = (notifications ?? DEMO_NOTIS).filter(
-    (n) => (notiTab === "all" || n.cat === notiTab) && (!onlyUnread || !n.read)
+  const unread = useMemo(() => source.filter((n) => !isRead(n)).length, [source, readIds]);
+  const notis = source.filter(
+    (n) => (notiTab === "all" || n.cat === notiTab) && (!onlyUnread || !isRead(n))
   );
 
   function toggle(key: typeof open) {
@@ -178,14 +222,25 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
           <div className="absolute right-0 z-50 mt-2 w-[380px] max-w-[92vw] rounded-xl border border-gray-200 bg-white shadow-xl">
             <div className="flex items-center justify-between px-4 pt-4">
               <p className="text-lg font-bold text-black">Thông báo</p>
-              <label className="flex cursor-pointer items-center gap-2 text-xs font-normal text-gray-500">
-                <input type="checkbox" checked={onlyUnread} onChange={(e) => setOnlyUnread(e.target.checked)} className="accent-brand" />
-                Chưa đọc
-              </label>
+              <div className="flex items-center gap-3">
+                {unread > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => markAllRead()}
+                    className="text-xs font-semibold text-brand hover:underline"
+                  >
+                    Đánh dấu tất cả đã đọc
+                  </button>
+                )}
+                <label className="flex cursor-pointer items-center gap-2 text-xs font-normal text-gray-500">
+                  <input type="checkbox" checked={onlyUnread} onChange={(e) => setOnlyUnread(e.target.checked)} className="accent-brand" />
+                  Chưa đọc
+                </label>
+              </div>
             </div>
             <div className="mt-2 flex gap-4 overflow-x-auto border-b border-gray-100 px-4 text-sm">
               {NOTI_TABS.map((t) => {
-                const cnt = t.key === "all" ? unread : DEMO_NOTIS.filter((n) => n.cat === t.key && !n.read).length;
+                const cnt = t.key === "all" ? unread : source.filter((n) => n.cat === t.key && !isRead(n)).length;
                 const active = notiTab === t.key;
                 return (
                   <button
@@ -204,9 +259,9 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
                 <p className="px-4 py-8 text-center text-sm font-normal text-gray-400">Không có thông báo nào.</p>
               ) : (
                 notis.map((n) => (
-                  <div key={n.id} className={"flex gap-3 border-b border-gray-50 px-4 py-3 hover:bg-gray-50 " + (!n.read ? "bg-red-50/40" : "")}>
-                    {!n.read && <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-brand" />}
-                    <div className={n.read ? "pl-5" : ""}>
+                  <div key={n.id} onClick={() => markRead(n)} className={"flex cursor-pointer gap-3 border-b border-gray-50 px-4 py-3 hover:bg-gray-50 " + (!isRead(n) ? "bg-red-50/40" : "")}>
+                    {!isRead(n) && <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-brand" />}
+                    <div className={isRead(n) ? "pl-5" : ""}>
                       <p className="text-sm font-semibold text-black">{n.title}</p>
                       <p className="mt-0.5 text-xs font-normal leading-relaxed text-gray-500">{n.body}</p>
                       <p className="mt-1 text-[11px] font-normal text-gray-400">{n.date}</p>
