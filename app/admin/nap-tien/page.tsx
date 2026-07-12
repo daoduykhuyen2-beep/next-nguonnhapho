@@ -19,7 +19,7 @@ export default async function Page() {
 
   const plans = await getPlansMerged();
 
-  const { data } = await supabase.from("payments").select("id, user_id, plan_code, amount, status, created_at, paid_at, transfer_content, post_id").order("created_at", { ascending: false }).limit(300);
+  const { data } = await supabase.from("payments").select("id, user_id, plan_code, amount, status, created_at, paid_at, transfer_content, post_id, cho_duyet").order("created_at", { ascending: false }).limit(300);
   const rows = data || [];
   const doanhThu = rows.filter((r) => r.status === "paid").reduce((s, r) => s + Number(r.amount || 0), 0);
   return (
@@ -50,7 +50,7 @@ export default async function Page() {
                 <td className="p-3">{r.created_at ? new Date(r.created_at as string).toLocaleString("vi-VN") : "-"}</td>
                 <td className="p-3 font-semibold">{r.plan_code}</td>
                 <td className="p-3">{vnd(Number(r.amount))}</td>
-                <td className="p-3">{r.status === "paid" ? <span className="rounded bg-green-100 px-2 py-0.5 text-green-700">Thành công</span> : <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-500">{r.status}</span>}</td>
+                <td className="p-3">{r.status === "paid" ? <span className="rounded bg-green-100 px-2 py-0.5 text-green-700">Thành công</span> : r.cho_duyet ? <span className="rounded bg-amber-100 px-2 py-0.5 font-semibold text-amber-700">Chờ duyệt</span> : <span className="rounded bg-gray-100 px-2 py-0.5 text-gray-500">{r.status}</span>}</td>
                 <td className="p-3 text-xs text-gray-400">{String(r.user_id).slice(0, 8)}</td>
                 <td className="p-3">{r.status !== "paid" ? <DuyetThanhToanButton id={r.id as number} /> : <span className="text-xs text-gray-400">—</span>}</td>
               </tr>
