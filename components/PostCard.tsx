@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Post } from "@/lib/types";
+import { getFakeStats } from "@/lib/fakeStats";
 
 export function formatGia(gia: string | null): string {
   if (!gia) return "Thỏa thuận";
@@ -55,6 +56,7 @@ export default function PostCard({ post }: { post: Post }) {
       : post.status === "vang"
       ? { label: "🏅 VIP Vàng", cls: "bg-gradient-to-r from-amber-400 to-yellow-500" }
       : null;
+  const stats = getFakeStats(post.id, post.created_at);
 
   return (
     <Link
@@ -96,6 +98,7 @@ export default function PostCard({ post }: { post: Post }) {
           </p>
         ) : null}
         <p className="mt-1 line-clamp-1 text-sm text-gray-500">{diaChi}</p>
+                <div className="mt-2 flex items-center gap-3 text-xs text-gray-500"><span>👁 {stats.views.toLocaleString("vi-VN")} lượt xem</span><span>❤️ {stats.interested.toLocaleString("vi-VN")} quan tâm</span></div>
       </div>
     </Link>
   );
