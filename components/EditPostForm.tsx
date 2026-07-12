@@ -6,7 +6,7 @@ import { updatePost } from "@/app/actions/posts";
 import { uploadPostImages } from "@/lib/upload";
 import type { Post } from "@/lib/types";
 
-const LOAI_OPTIONS = ["Bán nhà", "Bán đất", "Cho thuê", "Căn hộ", "Khác"];
+const LOAI_OPTIONS = ["Bán nhà", "Bán đất", "Cho thuê", "Căn hộ", "Khác", "Cọc nhà", "Chốt nhà"];
 
 function SubmitButton({ uploading }: { uploading: boolean }) {
   const { pending } = useFormStatus();
@@ -32,7 +32,13 @@ export default function EditPostForm({ post }: { post: Post }) {
   );
 
   function onPick(e: React.ChangeEvent<HTMLInputElement>) {
-    const list = Array.from(e.target.files || []);
+    const all = Array.from(e.target.files || []);
+    const list = all.slice(0, 5);
+    if (all.length > 5) {
+      setError("Chỉ được tải lên tối đa 5 ảnh. Hệ thống đã tự giữ lại 5 ảnh đầu.");
+    } else {
+      setError(null);
+    }
     setFiles(list);
     setPreviews(list.map((f) => URL.createObjectURL(f)));
   }
@@ -144,7 +150,7 @@ export default function EditPostForm({ post }: { post: Post }) {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field name="video" label="Link video (tùy chọn)" defaultValue={post.video} />
+        <Field name="video" label="Link video TikTok (tùy chọn)" defaultValue={post?.video} placeholder="Dán link video TikTok, ví dụ: https://www.tiktok.com/@user/video/..." />
         <Field name="contact_name" label="Tên liên hệ" defaultValue={post.contact_name} />
       </div>
       <Field name="contact_phone" label="Số điện thoại" defaultValue={post.contact_phone} />
