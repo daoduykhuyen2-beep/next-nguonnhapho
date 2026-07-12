@@ -9,6 +9,7 @@ type Tier = {
   key: string;
   name: string;
   price: string;
+  oldPrice?: string;
   period: string;
   desc: string;
   highlight?: boolean;
@@ -19,47 +20,49 @@ type Tier = {
 const TIERS: Tier[] = [
   {
     key: "basic",
-    name: "Hoi vien Co ban",
-    price: "Mien phi",
-    period: "",
-    desc: "Danh cho ca nhan moi bat dau dang tin.",
+    name: "Gói Cơ bản",
+    price: "299.000đ",
+    oldPrice: "425.000đ",
+    period: "/tháng",
+    desc: "Dành cho môi giới cá nhân bắt đầu đăng tin.",
     features: [
-      "Dang tin thuong khong gioi han",
-      "Quan ly tin dang co ban",
-      "Nhan lien he tu khach hang",
-      "Ho tro qua email",
+      "15 tin Thường (15 ngày/tin)",
+      "5 lượt đẩy tin",
+      "Duyệt tin ưu tiên trong 4 giờ làm việc",
     ],
   },
   {
     key: "pro",
-    name: "Hoi vien Pro",
-    price: "299.000d",
-    period: "/thang",
-    desc: "Danh cho moi gioi ca nhan can nhieu hon.",
+    name: "Gói Chuyên nghiệp",
+    price: "2.490.000đ",
+    oldPrice: "3.685.000đ",
+    period: "/tháng",
+    desc: "Dành cho môi giới chuyên nghiệp cần hiệu quả cao.",
     highlight: true,
-    badge: "Duoc chon nhieu",
+    badge: "Tiết kiệm nhất",
     features: [
-      "Tat ca quyen loi goi Co ban",
-      "Huy hieu Moi gioi da xac thuc",
-      "Uu tien hien thi tin dang",
-      "Bao cao hieu qua tin dang",
-      "Quan ly khach hang tiem nang",
-      "Ho tro uu tien qua hotline",
+      "30 tin Thường (15 ngày/tin)",
+      "5 tin VIP Vàng (15 ngày/tin)",
+      "15 lượt đẩy tin",
+      "Duyệt tin ưu tiên trong 4 giờ làm việc",
+      "Huy hiệu tin từ đối tác xác thực",
     ],
   },
   {
     key: "business",
-    name: "Hoi vien Business",
-    price: "899.000d",
-    period: "/thang",
-    desc: "Danh cho doanh nghiep va san giao dich.",
+    name: "Gói VIP Toàn diện",
+    price: "7.490.000đ",
+    oldPrice: "11.705.000đ",
+    period: "/tháng",
+    desc: "Dành cho doanh nghiệp và sàn giao dịch.",
     features: [
-      "Tat ca quyen loi goi Pro",
-      "Trang thuong hieu doanh nghiep",
-      "Nhieu tai khoan quan ly",
-      "Uu dai combo day tin so luong lon",
-      "Quan ly nhan vien va phan quyen",
-      "Ho tro rieng 24/7",
+      "50 tin Thường (15 ngày/tin)",
+      "10 tin VIP Vàng (10 ngày/tin)",
+      "5 tin VIP Kim Cương (10 ngày/tin)",
+      "30 lượt đẩy tin",
+      "Duyệt tin ưu tiên trong 4 giờ làm việc",
+      "Huy hiệu tin từ đối tác xác thực",
+      "Hỗ trợ viết nội dung tin chuẩn SEO",
     ],
   },
 ];
@@ -153,6 +156,11 @@ export default async function GoiHoiVienPage() {
                     <span className="text-sm text-gray-400">{t.period}</span>
                   ) : null}
                 </div>
+                {t.oldPrice ? (
+                  <div className="mt-0.5 text-sm text-gray-400 line-through">
+                    {t.oldPrice}
+                  </div>
+                ) : null}
                 <ul className="mt-4 flex-1 space-y-2 text-sm text-gray-700">
                   {t.features.map((f, i) => (
                     <li key={i} className="flex gap-2">
