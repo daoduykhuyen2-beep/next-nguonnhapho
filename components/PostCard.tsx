@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Post } from "@/lib/types";
-import FavoriteButton from "@/components/FavoriteButton";
 
 export function formatGia(gia: string | null): string {
   if (!gia) return "Thoa thuan";
@@ -44,9 +43,6 @@ export default function PostCard({ post }: { post: Post }) {
             {vip.label}
           </span>
         ) : null}
-                  <div className="absolute right-2 bottom-2 z-10">
-                                <FavoriteButton postId={post.id} />
-        </div>
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
