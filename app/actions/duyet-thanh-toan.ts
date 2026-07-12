@@ -55,12 +55,16 @@ export async function adminDuyetThanhToan(
   const plan = getPlan(order.plan_code);
   const days = plan?.days || 30;
 
-  // 1) Đánh dấu đã thanh toán
-  const { error: upErr } = await db
+  // 1) Đánh dấu đã thanh toán (CÓ ĐIỀU KIỆN status=pending để chống duyệt trùng / cộng trùng)
+  const { data: paidRows, error: upErr } = await db
     .from("payments")
     .update({ status: "paid", paid_at: new Date().toISOString() })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("status", "pending")
+    .select("id");
   if (upErr) return { error: "Lỗi cập nhật đơn: " + upErr.message };
+  // Nếu không còn dòng pending nào -> đơn đã được xử lý trước đó, không cộng lại.
+  if (!paidRows || paidRows.length === 0) return { success: true, message: "Đơn đã được duyệt trước đó." };
 
   if (order.plan_code === "NAPTIEN") {
     // Nạp tiền vào ví
