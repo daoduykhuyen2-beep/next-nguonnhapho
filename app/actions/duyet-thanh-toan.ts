@@ -79,6 +79,20 @@ export async function adminDuyetThanhToan(
       target_user: order.user_id,
       da_doc: false,
     });
+
+    // Thong bao cho admin de vao kiem tra
+    const { data: __admins } = await db.from("profiles").select("id").eq("is_admin", true);
+    if (__admins?.length) {
+      await db.from("notifications").insert(
+        __admins.map((__a: any) => ({
+          tieu_de: "Khách vừa nạp tiền",
+          noi_dung: `Có khách (ID: ${order.user_id}) vừa nạp thành công ${Number(order.amount).toLocaleString("vi-VN")}đ. Vào kiểm tra.`,
+          loai: "he_thong",
+          target_user: __a.id,
+          da_doc: false,
+        })),
+      );
+    }
     revalidatePath("/admin/nap-tien");
     return { success: true, message: "Đã duyệt lệnh nạp tiền thành công." };
   }
@@ -106,6 +120,20 @@ export async function adminDuyetThanhToan(
     target_user: order.user_id,
     da_doc: false,
   });
+
+  // Thong bao cho admin de vao kiem tra
+  const { data: __admins } = await db.from("profiles").select("id").eq("is_admin", true);
+  if (__admins?.length) {
+    await db.from("notifications").insert(
+      __admins.map((__a: any) => ({
+        tieu_de: "Khách vừa đăng ký gói",
+        noi_dung: `Có khách (ID: ${order.user_id}) vừa đăng ký gói ${plan?.name ?? order.plan_code}. Vào kiểm tra.`,
+        loai: "he_thong",
+        target_user: __a.id,
+        da_doc: false,
+      })),
+    );
+  }
 
   revalidatePath("/admin/nap-tien");
   return { success: true, message: "Đã duyệt đơn và kích hoạt gói thành công." };
