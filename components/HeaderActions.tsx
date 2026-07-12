@@ -252,7 +252,13 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
             </div>
 
             <div className="border-b border-gray-100 px-4 pb-2">
-              <p className="text-sm font-bold text-black">{displayName || user.email}</p>
+              <Link
+                href="/tai-khoan/thong-tin"
+                onClick={() => setOpen("none")}
+                className="text-sm font-bold text-black hover:text-brand hover:underline"
+              >
+                {displayName || user.email}
+              </Link>
               <p className="text-xs font-normal text-gray-500">
                 {membershipTier ? "Gói: " + membershipTier : "Tài khoản thành viên"}
                 {typeof soDu === "number" ? " · Số dư: " + soDu.toLocaleString("vi-VN") + "đ" : ""}
