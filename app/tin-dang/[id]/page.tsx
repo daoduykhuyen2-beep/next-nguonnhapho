@@ -9,6 +9,13 @@ import LeadForm from "@/components/LeadForm";
 import FavoriteButton from "@/components/FavoriteButton";
 import { getFakeStats } from "@/lib/fakeStats";
 
+// Che 5 so cuoi cua so dien thoai bang dau *
+function maskPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length <= 5) return "*".repeat(digits.length);
+  return digits.slice(0, digits.length - 5) + "*****";
+}
+
 export const revalidate = 60;
 
 // Normalize `anh` field (array of urls, {imgs,tin} object, or JSON string) -> string[]
@@ -314,9 +321,14 @@ export default async function TinChiTietPage({
           <p className="text-sm font-semibold">Liên hệ</p>
           <p className="mt-1 text-sm text-gray-700">{post.contact_name ?? "Người đăng"}</p>
           {post.contact_phone ? (
-            <a href={`tel:${post.contact_phone}`} className="mt-2 block rounded-lg bg-brand px-4 py-2 text-center font-semibold text-white">
-              Gọi {post.contact_phone}
-            </a>
+            <div className="mt-2 space-y-2">
+              <a href={`tel:${post.contact_phone}`} className="block rounded-lg bg-brand px-4 py-2 text-center font-semibold text-white">
+                Gọi {maskPhone(post.contact_phone)}
+              </a>
+              <a href={`https://zalo.me/${post.contact_phone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="block rounded-lg bg-[#0068ff] px-4 py-2 text-center font-semibold text-white">
+                Nhắn Zalo
+              </a>
+            </div>
           ) : null}
           <div className="mt-4 border-t pt-4">
             <LeadForm postId={post.id} />
