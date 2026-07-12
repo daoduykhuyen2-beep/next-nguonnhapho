@@ -211,7 +211,9 @@ export default async function TinChiTietPage({
         <FavoriteButton postId={post.id} />
       </div>
       <p className="mt-1 text-sm text-gray-500">📍 {diaChi} · Mã tin: NP{String(post.id).padStart(4, "0")}</p>
-            <div className="mt-2 flex items-center gap-4 text-sm text-gray-500"><span>👁 {stats.views.toLocaleString("vi-VN")} lượt xem</span><span>❤️ {stats.interested.toLocaleString("vi-VN")} quan tâm</span></div>
+            {stats.views > 0 && (
+              <div className="mt-2 flex items-center gap-4 text-sm text-gray-500"><span>👁 {stats.views.toLocaleString("vi-VN")} lượt xem</span><span>❤️ {stats.interested.toLocaleString("vi-VN")} quan tâm</span></div>
+            )}
 
       {imgs.length > 0 ? (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
