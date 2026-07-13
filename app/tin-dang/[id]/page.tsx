@@ -202,6 +202,7 @@ export default async function TinChiTietPage({
     status: post.status,
     boostedAt: post.boosted_at,
     promotedAt: post.promoted_at,
+    hetHanVip: post.het_han_vip,
   });
 
   return (
