@@ -170,13 +170,47 @@ export default async function TinCuaToiPage({
                   </Link>
                   <p className="text-sm text-brand">{formatGia(p.gia)}</p>
                   <p className="mt-0.5 text-xs">
-                    {p.status === "kim_cuong" ? (
-                      <span className="font-semibold text-indigo-600">💎 VIP Kim Cương</span>
-                    ) : p.status === "vang" ? (
-                      <span className="font-semibold text-amber-600">🏅 VIP Vàng</span>
-                    ) : (
-                      <span className="text-gray-400">Tin thường</span>
-                    )}
+                    {(() => {
+                      const hetHan = p.het_han_vip ? new Date(p.het_han_vip) : null;
+                      const conHieuLuc =
+                        !!hetHan && hetHan.getTime() > Date.now();
+                      const isVip =
+                        (p.status === "kim_cuong" || p.status === "vang") &&
+                        conHieuLuc;
+                      const soNgayConLai = conHieuLuc
+                        ? Math.ceil(
+                            (hetHan!.getTime() - Date.now()) / 86400000
+                          )
+                        : 0;
+                      if (isVip) {
+                        const sapHet = soNgayConLai <= 3;
+                        return (
+                          <span className="inline-flex flex-wrap items-center gap-1">
+                            {p.status === "kim_cuong" ? (
+                              <span className="font-semibold text-indigo-600">
+                                💎 VIP Kim Cương
+                              </span>
+                            ) : (
+                              <span className="font-semibold text-amber-600">
+                                🏅 VIP Vàng
+                              </span>
+                            )}
+                            <span
+                              className={
+                                sapHet
+                                  ? "rounded bg-red-100 px-1.5 py-0.5 font-semibold text-red-600"
+                                  : "rounded bg-emerald-50 px-1.5 py-0.5 text-emerald-600"
+                              }
+                            >
+                              {sapHet
+                                ? `⚠️ Sắp hết hạn (còn ${soNgayConLai} ngày)`
+                                : `Còn ${soNgayConLai} ngày`}
+                            </span>
+                          </span>
+                        );
+                      }
+                      return <span className="text-gray-400">Tin thường</span>;
+                    })()}
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
