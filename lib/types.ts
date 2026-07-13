@@ -28,6 +28,7 @@ export type Post = {
   created_at: string | null;
   boosted_at: string | null;
   promoted_at: string | null;
+  het_han_vip: string | null;
 };
 
 export type Profile = {
