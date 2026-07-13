@@ -28,6 +28,7 @@ export type FakeStatsOpts = {
   status?: string | null;
   boostedAt?: string | null;
   promotedAt?: string | null;
+  hetHanVip?: string | null;
 };
 
 const MS_PHUT = 60 * 1000;
@@ -75,10 +76,15 @@ export function getFakeStats(
 ): FakeStats {
   const safeId = typeof id === "number" && !Number.isNaN(id) ? id : 1;
   const now = Date.now();
-  const { status, boostedAt, promotedAt } = opts;
+  const { status, boostedAt, promotedAt, hetHanVip } = opts;
 
   const boostTs = parseTime(boostedAt);
-  const promoteTs = parseTime(promotedAt);
+  // Moc nang cap VIP: uu tien promotedAt; neu chi co het_han_vip (tin nang bang kho tin)
+  // thi suy ra moc nang = het_han_vip - 15 ngay (dung bang cua so tang view VIP).
+  const hetHanVipTs = parseTime(hetHanVip);
+  const promoteTs =
+    parseTime(promotedAt) ??
+    (hetHanVipTs !== null ? hetHanVipTs - 15 * MS_NGAY : null);
   const createdTs = parseTime(createdAt);
 
   // So nen ban dau on dinh theo id (nho, de tin nao cung co chut view).
