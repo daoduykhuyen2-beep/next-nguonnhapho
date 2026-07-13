@@ -157,8 +157,8 @@ export const PLANS: Plan[] = [
     unit: "/tháng",
     features: [
       "50 tin Thường (15 ngày/tin)",
-      "10 tin VIP Vàng (10 ngày/tin)",
-      "5 tin VIP Kim Cương (10 ngày/tin)",
+      "10 tin VIP Vàng (15 ngày/tin)",
+      "5 tin VIP Kim Cương (15 ngày/tin)",
       "30 lượt đẩy tin",
       "Duyệt tin ưu tiên trong 4 giờ làm việc",
       "Huy hiệu tin từ đối tác xác thực",
