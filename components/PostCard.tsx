@@ -60,6 +60,7 @@ export default function PostCard({ post }: { post: Post }) {
     status: post.status,
     boostedAt: post.boosted_at,
     promotedAt: post.promoted_at,
+    hetHanVip: post.het_han_vip,
   });
 
   return (
