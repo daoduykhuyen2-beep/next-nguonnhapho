@@ -237,3 +237,82 @@ end;
 $$;
 
 -- HET
+
+-- ============================================================
+-- 9) apply_topup: cong so du vi khi don NAPTIEN duoc thanh toan.
+--    Goi tu webhook SePay / admin duyet (service role).
+-- ============================================================
+drop function if exists public.apply_topup(bigint);
+create or replace function public.apply_topup(p_payment_id bigint)
+returns void
+language plpgsql security definer as $$
+declare
+  v_user uuid;
+  v_amount bigint;
+begin
+  select user_id, amount into v_user, v_amount
+  from public.payments where id = p_payment_id;
+
+  if v_user is null then
+    return;
+  end if;
+
+  update public.profiles
+  set so_du = coalesce(so_du, 0) + coalesce(v_amount, 0)
+  where id = v_user;
+end;
+$$;
+
+-- ============================================================
+-- 10) apply_post_plan: ap dung goi da mua (VIP Vang/Kim Cuong/
+--     day tin) truc tiep cho 1 tin cu the sau khi don thanh toan.
+--     Don da tra tien nen ap dung ngay, khong tru kho tin/vi.
+--     Tat ca tin VIP deu hieu luc 15 ngay.
+-- ============================================================
+alter table public.payments
+add column if not exists post_id bigint;
+
+drop function if exists public.apply_post_plan(bigint);
+create or replace function public.apply_post_plan(p_payment_id bigint)
+returns void
+language plpgsql security definer as $$
+declare
+  v_user uuid;
+  v_plan text;
+  v_post bigint;
+  v_owner uuid;
+begin
+  select user_id, plan_code, post_id into v_user, v_plan, v_post
+  from public.payments where id = p_payment_id;
+
+  if v_user is null or v_post is null then
+    return;
+  end if;
+
+  -- Chi ap dung cho tin cua chinh chu don.
+  select owner into v_owner from public.web_posts where id = v_post;
+  if v_owner is null or v_owner <> v_user then
+    return;
+  end if;
+
+  if v_plan = 'VIP_KC_7' then
+    update public.web_posts
+    set status = 'kim_cuong', het_han_vip = now() + '15 days'::interval
+    where id = v_post;
+  elsif v_plan = 'VIP_VANG_7' then
+    update public.web_posts
+    set status = 'vang', het_han_vip = now() + '15 days'::interval
+    where id = v_post;
+  elsif v_plan = 'TIN_THUONG_15' then
+    update public.web_posts
+    set status = 'thuong', het_han_vip = now() + '15 days'::interval
+    where id = v_post;
+  elsif v_plan in ('DAY_1','DAY_3','DAY_6') then
+    -- Day tin: dua tin len dau danh sach.
+    update public.web_posts
+    set created_at = now()
+    where id = v_post;
+  end if;
+end;
+$$;
+-- HET (bo sung apply_topup & apply_post_plan)
