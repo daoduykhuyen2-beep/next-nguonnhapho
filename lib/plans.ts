@@ -20,6 +20,13 @@ export type Plan = {
   promoPrice?: number;   // giá khuyến mãi (VND) – nếu có sẽ ưu tiên hiển thị
   promoLabel?: string;   // nhãn chương trình, ví dụ "Ưu đãi tháng 7"
   promoUntil?: string;   // ISO date (YYYY-MM-DD) – hết hạn khuyến mãi
+  // So luong quyen loi cua goi COMBO (de cong vao quota nguoi dung khi mua)
+  quota?: {
+    thuong?: number;    // so tin Thuong
+    vip?: number;       // so tin VIP Vang
+    kim_cuong?: number; // so tin VIP Kim Cuong
+    day?: number;       // so luot day tin
+  };
 };
 
 export const PLANS: Plan[] = [
@@ -114,6 +121,7 @@ export const PLANS: Plan[] = [
   // --- Combo tháng ---
   {
     code: "COMBO_COBAN",
+    quota: { thuong: 15, vip: 0, kim_cuong: 0, day: 5 },
     name: "Gói Cơ bản",
     group: "COMBO",
     price: 299000,
@@ -129,6 +137,7 @@ export const PLANS: Plan[] = [
   },
   {
     code: "COMBO_CHUYENNGHIEP",
+    quota: { thuong: 30, vip: 5, kim_cuong: 0, day: 15 },
     name: "Gói Chuyên nghiệp",
     group: "COMBO",
     price: 2490000,
@@ -148,6 +157,7 @@ export const PLANS: Plan[] = [
   },
   {
     code: "COMBO_VIP",
+    quota: { thuong: 50, vip: 10, kim_cuong: 5, day: 30 },
     name: "Gói VIP Toàn diện",
     group: "COMBO",
     price: 7490000,
