@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile } from "@/lib/types";
-import { PLANS, formatVND, getEffectivePrice } from "@/lib/plans";
+import { formatVND, getEffectivePrice } from "@/lib/plans";
+import { getPlansMerged } from "@/lib/plans-server";
 
 export const metadata = { title: "Môi giới chuyên nghiệp" };
 export const dynamic = "force-dynamic";
@@ -60,7 +61,7 @@ export default async function MoiGioiPage() {
     ? new Date(p.membership_expires_at).toLocaleDateString("vi-VN")
     : null;
 
-  const combos = PLANS.filter((pl) => pl.group === "COMBO");
+  const combos = (await getPlansMerged()).filter((pl) => pl.group === "COMBO");
 
   // Quyền lợi còn lại: đọc từ kho tin (post_credits) + lượt đẩy (push_credits).
   // Chỉ tính các credit chưa hết hạn (het_han null hoặc còn hạn).
