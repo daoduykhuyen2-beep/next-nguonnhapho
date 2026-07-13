@@ -6,7 +6,7 @@ import { updatePost } from "@/app/actions/posts";
 import { uploadPostImages } from "@/lib/upload";
 import type { Post } from "@/lib/types";
 
-const LOAI_OPTIONS = ["Bán nhà", "Bán đất", "Cho thuê", "Căn hộ", "Khác", "Cọc nhà", "Chốt nhà"];
+const LOAI_OPTIONS = ["BÃ¡n nhÃ ", "BÃ¡n Äáº¥t", "Cho thuÃª", "CÄn há»", "KhÃ¡c", "Cá»c nhÃ ", "Chá»t nhÃ "];
 
 function SubmitButton({ uploading }: { uploading: boolean }) {
   const { pending } = useFormStatus();
@@ -17,7 +17,7 @@ function SubmitButton({ uploading }: { uploading: boolean }) {
       disabled={disabled}
       className="rounded-lg bg-brand px-6 py-3 font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
     >
-      {uploading ? "Đang tải ảnh..." : pending ? "Đang lưu..." : "Lưu thay đổi"}
+      {uploading ? "Äang táº£i áº£nh..." : pending ? "Äang lÆ°u..." : "LÆ°u thay Äá»i"}
     </button>
   );
 }
@@ -35,7 +35,7 @@ export default function EditPostForm({ post }: { post: Post }) {
     const all = Array.from(e.target.files || []);
     const list = all.slice(0, 5);
     if (all.length > 5) {
-      setError("Chỉ được tải lên tối đa 5 ảnh. Hệ thống đã tự giữ lại 5 ảnh đầu.");
+      setError("Chá» ÄÆ°á»£c táº£i lÃªn tá»i Äa 5 áº£nh. Há» thá»ng ÄÃ£ tá»± giá»¯ láº¡i 5 áº£nh Äáº§u.");
     } else {
       setError(null);
     }
@@ -61,18 +61,19 @@ export default function EditPostForm({ post }: { post: Post }) {
       const res = await updatePost(post.id, { error: undefined }, formData);
       if (res?.error) setError(res.error);
     } catch (err: any) {
+      if (err?.digest?.startsWith("NEXT_REDIRECT")) throw err;
       setUploading(false);
-      setError(err?.message || "Có lỗi xảy ra");
+      setError(err?.message || "CÃ³ lá»i xáº£y ra");
     }
   }
 
   return (
     <form action={handleSubmit} className="space-y-5">
-      <Field name="title" label="Tiêu đề" required defaultValue={post.title} />
+      <Field name="title" label="TiÃªu Äá»" required defaultValue={post.title} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm font-medium">Loại tin</label>
+          <label className="mb-1 block text-sm font-medium">Loáº¡i tin</label>
           <select
             name="loai"
             defaultValue={post.loai || LOAI_OPTIONS[0]}
@@ -83,27 +84,27 @@ export default function EditPostForm({ post }: { post: Post }) {
             ))}
           </select>
         </div>
-        <Field name="gia" label="Giá (VD: 2.5 tỷ)" defaultValue={post.gia} />
+        <Field name="gia" label="GiÃ¡ (VD: 2.5 tá»·)" defaultValue={post.gia} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field name="dien_tich" label="Diện tích (m²)" defaultValue={post.dien_tich} />
-        <Field name="quan" label="Quận/Huyện" defaultValue={post.quan} />
+        <Field name="dien_tich" label="Diá»n tÃ­ch (mÂ²)" defaultValue={post.dien_tich} />
+        <Field name="quan" label="Quáº­n/Huyá»n" defaultValue={post.quan} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Field name="chieu_ngang" label="Chiều ngang (m)" defaultValue={post.chieu_ngang} />
-        <Field name="chieu_dai" label="Chiều dài (m)" defaultValue={post.chieu_dai} />
-        <Field name="so_tang" label="Số tầng" defaultValue={post.so_tang} />
+        <Field name="chieu_ngang" label="Chiá»u ngang (m)" defaultValue={post.chieu_ngang} />
+        <Field name="chieu_dai" label="Chiá»u dÃ i (m)" defaultValue={post.chieu_dai} />
+        <Field name="so_tang" label="Sá» táº§ng" defaultValue={post.so_tang} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field name="phuong" label="Phường/Xã" defaultValue={post.phuong} />
-        <Field name="duong" label="Đường" defaultValue={post.duong} />
+        <Field name="phuong" label="PhÆ°á»ng/XÃ£" defaultValue={post.phuong} />
+        <Field name="duong" label="ÄÆ°á»ng" defaultValue={post.duong} />
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Mô tả</label>
+        <label className="mb-1 block text-sm font-medium">MÃ´ táº£</label>
         <textarea
           name="mota"
           rows={5}
@@ -113,7 +114,7 @@ export default function EditPostForm({ post }: { post: Post }) {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Hình ảnh</label>
+        <label className="mb-1 block text-sm font-medium">HÃ¬nh áº£nh</label>
         <input
           type="file"
           accept="image/*"
@@ -121,7 +122,7 @@ export default function EditPostForm({ post }: { post: Post }) {
           onChange={onPick}
           className="block w-full text-sm"
         />
-        <p className="mt-1 text-xs text-gray-500">Thêm ảnh mới hoặc xoá ảnh cũ bên dưới.</p>
+        <p className="mt-1 text-xs text-gray-500">ThÃªm áº£nh má»i hoáº·c xoÃ¡ áº£nh cÅ© bÃªn dÆ°á»i.</p>
 
         {existing.length > 0 && (
           <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -133,7 +134,7 @@ export default function EditPostForm({ post }: { post: Post }) {
                   onClick={() => removeExisting(url)}
                   className="absolute right-1 top-1 rounded bg-black/60 px-1 text-xs text-white"
                 >
-                  ✕
+                  â
                 </button>
               </div>
             ))}
@@ -150,10 +151,10 @@ export default function EditPostForm({ post }: { post: Post }) {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field name="video" label="Link video TikTok (tùy chọn)" defaultValue={post?.video} placeholder="Dán link video TikTok, ví dụ: https://www.tiktok.com/@user/video/..." />
-        <Field name="contact_name" label="Tên liên hệ" defaultValue={post.contact_name} />
+        <Field name="video" label="Link video TikTok (tÃ¹y chá»n)" defaultValue={post?.video} placeholder="DÃ¡n link video TikTok, vÃ­ dá»¥: https://www.tiktok.com/@user/video/..." />
+        <Field name="contact_name" label="TÃªn liÃªn há»" defaultValue={post.contact_name} />
       </div>
-      <Field name="contact_phone" label="Số điện thoại" defaultValue={post.contact_phone} />
+      <Field name="contact_phone" label="Sá» Äiá»n thoáº¡i" defaultValue={post.contact_phone} />
 
       {error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>
