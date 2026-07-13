@@ -47,10 +47,7 @@ export type Profile = {
   so_du: number | null;
   tong_nap: number | null;
   da_su_dung: number | null;
-  quota_thuong: number | null;
-  quota_vip: number | null;
-  quota_kim_cuong: number | null;
-  quota_day: number | null;
+  push_credits: number | null;
   giam_gia: number | null;
   vat_company: string | null;
   vat_tax_code: string | null;
