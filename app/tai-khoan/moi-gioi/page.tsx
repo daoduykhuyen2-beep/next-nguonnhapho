@@ -62,6 +62,19 @@ export default async function MoiGioiPage() {
 
   const combos = PLANS.filter((pl) => pl.group === "COMBO");
 
+  // Quyen loi con lai cua nguoi dung (tru dan khi su dung, het thi nap them)
+  const quotaThuong = p?.quota_thuong ?? 0;
+  const quotaVip = p?.quota_vip ?? 0;
+  const quotaKimCuong = p?.quota_kim_cuong ?? 0;
+  const quotaDay = p?.quota_day ?? 0;
+  const quotaItems = [
+    { label: "Tin Thường", value: quotaThuong, color: "text-gray-800", ring: "ring-gray-200" },
+    { label: "Tin VIP Vàng", value: quotaVip, color: "text-amber-600", ring: "ring-amber-200" },
+    { label: "Tin Kim Cương", value: quotaKimCuong, color: "text-sky-600", ring: "ring-sky-200" },
+    { label: "Lượt đẩy tin", value: quotaDay, color: "text-emerald-600", ring: "ring-emerald-200" },
+  ];
+  const tongQuota = quotaThuong + quotaVip + quotaKimCuong + quotaDay;
+
   return (
     <main className="min-h-screen bg-gray-50 text-gray-900">
       <div className="mx-auto max-w-4xl px-4 py-8">
@@ -104,6 +117,56 @@ export default async function MoiGioiPage() {
           >
             {isPro ? "Gia hạn / nâng cấp" : "Nâng cấp ngay"}
           </Link>
+        </div>
+
+        {/* Quyền lợi còn lại của combo tháng — tự trừ khi sử dụng */}
+        <div className="mb-8">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-800">Quyền lợi còn lại</h2>
+            <Link
+              href="/tai-khoan/nap-tien"
+              className="text-sm font-semibold text-brand hover:underline"
+            >
+              + Nạp thêm
+            </Link>
+          </div>
+          {tongQuota > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {quotaItems.map((it) => (
+                <div
+                  key={it.label}
+                  className={
+                    "flex flex-col items-center justify-center rounded-2xl bg-white px-3 py-5 text-center ring-1 " +
+                    it.ring
+                  }
+                >
+                  <span className={"text-3xl font-extrabold " + it.color}>
+                    {it.value}
+                  </span>
+                  <span className="mt-1 text-xs font-medium text-gray-500">
+                    {it.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl bg-white px-5 py-6 text-center ring-1 ring-gray-200">
+              <p className="text-sm text-gray-500">
+                Bạn chưa có quyền lợi nào. Mua combo tháng để nhận tin Thường,
+                tin VIP, tin Kim Cương và lượt đẩy tin.
+              </p>
+              <Link
+                href="/goi-thanh-vien"
+                className="mt-3 inline-block rounded-xl bg-brand px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
+              >
+                Xem các gói combo
+              </Link>
+            </div>
+          )}
+          <p className="mt-3 text-xs text-gray-400">
+            Mỗi lần đăng tin / đẩy tin sẽ tự trừ vào quyền lợi tương ứng. Khi hết,
+            hệ thống sẽ trừ tiền trong ví; hết tiền thì cần nạp thêm.
+          </p>
         </div>
 
         <h2 className="mb-4 text-lg font-bold text-gray-800">
