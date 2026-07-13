@@ -12,9 +12,13 @@ type Banner = {
 export default function BannerCarousel({
   banners,
   interval = 4000,
+  heightClass = "h-40 sm:h-56 md:h-64",
+  chromeless = false,
 }: {
   banners: Banner[];
   interval?: number;
+  heightClass?: string;
+  chromeless?: boolean;
 }) {
   // Chỉ lấy tối đa 5 ảnh
   const items = (banners || []).slice(0, 5);
@@ -33,9 +37,15 @@ export default function BannerCarousel({
   const go = (i: number) => setIndex(((i % items.length) + items.length) % items.length);
 
   return (
-    <div className="relative mb-6 overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
+    <div
+      className={
+        chromeless
+          ? "relative h-full w-full overflow-hidden"
+          : "relative mb-6 overflow-hidden rounded-2xl border border-gray-200 shadow-sm"
+      }
+    >
       <div
-        className="flex transition-transform duration-500 ease-out"
+        className="flex h-full transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
         {items.map((b) => {
@@ -43,7 +53,7 @@ export default function BannerCarousel({
             <img
               src={b.image_url}
               alt={b.title || "Banner quảng cáo"}
-              className="h-40 w-full flex-shrink-0 object-cover sm:h-56 md:h-64"
+              className={`w-full flex-shrink-0 object-cover ${heightClass}`}
               style={{ minWidth: "100%" }}
             />
           );
@@ -53,13 +63,13 @@ export default function BannerCarousel({
               href={b.link_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full flex-shrink-0"
+              className="block h-full w-full flex-shrink-0"
               style={{ minWidth: "100%" }}
             >
               {img}
             </a>
           ) : (
-            <div key={b.id} className="w-full flex-shrink-0" style={{ minWidth: "100%" }}>
+            <div key={b.id} className="h-full w-full flex-shrink-0" style={{ minWidth: "100%" }}>
               {img}
             </div>
           );
