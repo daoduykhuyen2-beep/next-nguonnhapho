@@ -48,6 +48,7 @@ for select to authenticated using (user_id = auth.uid());
 -- ============================================================
 -- 5) Ham cong 1 loai kho tin cho user (gom theo user+loai+so_ngay+han).
 -- ============================================================
+drop function if exists public.them_kho_tin(uuid, text, integer, integer, timestamptz);
 create or replace function public.them_kho_tin(
   p_user_id uuid,
   p_loai text,
@@ -72,6 +73,7 @@ $$;
 --    cong luot vao kho tin theo goi. Kho tin het han sau p_days ngay.
 --    Thay the ban cu (chi set tier) o PAYMENTS-SETUP.sql.
 -- ============================================================
+drop function if exists public.apply_membership(uuid, text, integer);
 create or replace function public.apply_membership(
   p_user_id uuid,
   p_plan_code text,
@@ -129,6 +131,7 @@ $$;
 --    (3) het ca so du      -> tra 'nofunds'
 --    Tra ve text: 'ok' | 'nofunds' | 'loi'.
 -- ============================================================
+drop function if exists public.dung_quyen_loi_tin(bigint, integer, text, boolean);
 create or replace function public.dung_quyen_loi_tin(
   p_post_id bigint,
   p_gia integer,
@@ -220,6 +223,7 @@ $$;
 alter table public.web_posts
 add column if not exists het_han_vip timestamptz;
 
+drop function if exists public.expire_vip_posts();
 create or replace function public.expire_vip_posts()
 returns void
 language plpgsql security definer as $$
