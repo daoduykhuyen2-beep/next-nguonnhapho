@@ -27,10 +27,23 @@ export default async function TinCuaToiPage({
 
   const { data: prof } = await supabase
     .from("profiles")
-    .select("so_du")
+    .select("so_du, push_credits")
     .eq("id", user.id)
     .single();
   const soDu = Number(prof?.so_du ?? 0);
+  const pushCredits = Number(prof?.push_credits ?? 0);
+
+  // Kho tin con lai theo loai (chi tinh cac luot chua het han).
+  const nowIso = new Date().toISOString();
+  const { data: creditRows } = await supabase
+    .from("post_credits")
+    .select("loai, so_luot, het_han")
+    .eq("user_id", user.id);
+  const khoTin = { thuong: 0, vang: 0, kim_cuong: 0 } as Record<string, number>;
+  for (const c of (creditRows ?? []) as { loai: string; so_luot: number; het_han: string | null }[]) {
+    if (c.het_han && c.het_han < nowIso) continue;
+    khoTin[c.loai] = (khoTin[c.loai] ?? 0) + Number(c.so_luot || 0);
+  }
 
   const { data } = await supabase
     .from("web_posts")
@@ -75,6 +88,38 @@ export default async function TinCuaToiPage({
             Mua gói
           </Link>
         </div>
+      </div>
+
+      {/* Kho tin còn lại: ưu tiên dùng trước khi trừ số dư */}
+      <div className="mb-4 rounded-lg border bg-white p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-sm font-semibold text-gray-700">Kho tin còn lại</p>
+          <Link
+            href="/goi-thanh-vien"
+            className="text-xs font-semibold text-brand hover:underline"
+          >
+            Mua thêm
+          </Link>
+        </div>
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="rounded-lg bg-gray-50 p-2">
+            <p className="text-lg font-bold text-gray-800">{khoTin.thuong}</p>
+            <p className="text-xs text-gray-500">Tin Thường</p>
+          </div>
+          <div className="rounded-lg bg-amber-50 p-2">
+            <p className="text-lg font-bold text-amber-600">{khoTin.vang}</p>
+            <p className="text-xs text-gray-500">VIP Vàng</p>
+          </div>
+          <div className="rounded-lg bg-sky-50 p-2">
+            <p className="text-lg font-bold text-sky-600">{khoTin.kim_cuong}</p>
+            <p className="text-xs text-gray-500">VIP Kim Cương</p>
+          </div>
+        </div>
+        <p className="mt-3 text-xs text-gray-500">
+          Còn <span className="font-semibold text-gray-700">{pushCredits}</span>{" "}
+          lượt đẩy tin. Khi đăng/nâng cấp tin, hệ thống ưu tiên trừ kho tin trước,
+          hết kho mới trừ vào số dư.
+        </p>
       </div>
 
       {/* Thông báo kết quả sau khi bấm nâng cấp / đẩy tin */}
