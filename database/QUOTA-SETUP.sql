@@ -295,11 +295,11 @@ begin
     return;
   end if;
 
-  if v_plan = 'VIP_KC_7' then
+  if v_plan = 'VIP_KC' then
     update public.web_posts
     set status = 'kim_cuong', het_han_vip = now() + '15 days'::interval
     where id = v_post;
-  elsif v_plan = 'VIP_VANG_7' then
+  elsif v_plan = 'VIP_VANG' then
     update public.web_posts
     set status = 'vang', het_han_vip = now() + '15 days'::interval
     where id = v_post;
