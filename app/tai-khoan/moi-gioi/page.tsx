@@ -62,11 +62,28 @@ export default async function MoiGioiPage() {
 
   const combos = PLANS.filter((pl) => pl.group === "COMBO");
 
-  // Quyen loi con lai cua nguoi dung (tru dan khi su dung, het thi nap them)
-  const quotaThuong = p?.quota_thuong ?? 0;
-  const quotaVip = p?.quota_vip ?? 0;
-  const quotaKimCuong = p?.quota_kim_cuong ?? 0;
-  const quotaDay = p?.quota_day ?? 0;
+  // Quyền lợi còn lại: đọc từ kho tin (post_credits) + lượt đẩy (push_credits).
+  // Chỉ tính các credit chưa hết hạn (het_han null hoặc còn hạn).
+  const nowISO = new Date().toISOString();
+  const { data: credits } = await supabase
+    .from("post_credits")
+    .select("loai, so_luot, het_han")
+    .eq("user_id", user.id)
+    .gt("so_luot", 0)
+    .or(`het_han.is.null,het_han.gt.${nowISO}`);
+  const creditRows = (credits ?? []) as {
+    loai: string;
+    so_luot: number | null;
+    het_han: string | null;
+  }[];
+  const sumLoai = (loai: string) =>
+    creditRows
+      .filter((c) => c.loai === loai)
+      .reduce((s, c) => s + (c.so_luot ?? 0), 0);
+  const quotaThuong = sumLoai("thuong");
+  const quotaVip = sumLoai("vang");
+  const quotaKimCuong = sumLoai("kim_cuong");
+  const quotaDay = p?.push_credits ?? 0;
   const quotaItems = [
     { label: "Tin Thường", value: quotaThuong, color: "text-gray-800", ring: "ring-gray-200" },
     { label: "Tin VIP Vàng", value: quotaVip, color: "text-amber-600", ring: "ring-amber-200" },
