@@ -56,8 +56,8 @@ export const PLANS: Plan[] = [
     highlight: true,
     badge: "Được chọn nhiều",
     features: [
-      "77.000đ/ngày (thị trường ~110.000đ)",
-      "Nhãn VIP Vàng nổi bật",
+        "36.000đ/ngày (thị trường ~51.000đ)",
+        "Nhãn VIP Vàng nổi bật",
       "Ưu tiên trên tin thường",
       "5 lần sửa tin miễn phí",
     ],
@@ -71,7 +71,7 @@ export const PLANS: Plan[] = [
     days: 15,
     maxPosts: 1,
     features: [
-      "220.000đ/ngày (thị trường ~315.000đ)",
+        "103.000đ/ngày (thị trường ~147.000đ)",
       "Vị trí đầu trang tìm kiếm",
       "Xuất hiện mục VIP trang chủ",
       "Hỗ trợ viết lại tiêu đề hút khách",
