@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createAdminSbClient } from "@supabase/supabase-js";
 
 const ADMIN_EMAIL = "daoduykhuyen2@gmail.com";
 
@@ -164,5 +165,41 @@ export async function adminSetRole(userId: string, role: string) {
     .eq("id", userId);
   if (error) return { error: error.message };
   revalidatePath("/admin/phan-quyen");
+  return { success: true };
+}
+
+
+// ----- Xoa tai khoan / dat lai mat khau (CHI ADMIN, dung service-role) -----
+function svcClient() {
+  return createAdminSbClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  );
+}
+
+export async function adminDeleteUser(userId: string): Promise<AdminState> {
+  const { ok, user } = await requireAdmin();
+  if (!ok) return { error: "Khong co quyen." };
+  if (!userId) return { error: "Thieu id tai khoan." };
+  if (user && userId === user.id) return { error: "Khong the tu xoa tai khoan cua chinh minh." };
+  const svc = svcClient();
+  await svc.from("profiles").delete().eq("id", userId);
+  const { error } = await svc.auth.admin.deleteUser(userId);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/thanh-vien");
+  return { success: true };
+}
+
+export async function adminSetPassword(userId: string, newPassword: string): Promise<AdminState> {
+  const { ok } = await requireAdmin();
+  if (!ok) return { error: "Khong co quyen." };
+  if (!userId) return { error: "Thieu id tai khoan." };
+  const pw = String(newPassword || "").trim();
+  if (pw.length < 6) return { error: "Mat khau phai tu 6 ky tu tro len." };
+  const svc = svcClient();
+  const { error } = await svc.auth.admin.updateUserById(userId, { password: pw });
+  if (error) return { error: error.message };
+  revalidatePath("/admin/thanh-vien");
   return { success: true };
 }
