@@ -1,8 +1,7 @@
 "use client";
 
-// Trích ID video từ nhiều dạng link TikTok:
+// Trich ID video tu nhieu dang link TikTok:
 // https://www.tiktok.com/@user/video/1234567890123456789
-// https://www.tiktok.com/t/xxxx / https://vt.tiktok.com/xxxx (link rút gọn - dùng blockquote)
 function layVideoId(url: string): string | null {
   const m = url.match(/\/video\/(\d+)/);
   if (m) return m[1];
@@ -10,12 +9,28 @@ function layVideoId(url: string): string | null {
   return m2 ? m2[1] : null;
 }
 
+// Phat hien video tu file tai len (Supabase Storage) hoac duoi file video.
+function laVideoTaiLen(url: string): boolean {
+  if (/tiktok\.com/i.test(url)) return false;
+  if (/\/storage\/v1\/object\/public\//i.test(url)) return true;
+  return /\.(mp4|webm|ogg|mov|m4v)(\?|$)/i.test(url);
+}
+
 export default function TiktokEmbed({ url, title }: { url: string; title?: string | null }) {
-  const id = layVideoId(url);
+  const uploaded = laVideoTaiLen(url);
+  const id = uploaded ? null : layVideoId(url);
   return (
     <div className="overflow-hidden rounded-xl border bg-black">
       <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-        {id ? (
+        {uploaded ? (
+          <video
+            src={url}
+            controls
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 h-full w-full bg-black"
+          />
+        ) : id ? (
           <iframe
             src={`https://www.tiktok.com/player/v1/${id}?music_info=1&description=1`}
             title={title || "TikTok video"}
@@ -26,7 +41,7 @@ export default function TiktokEmbed({ url, title }: { url: string; title?: strin
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-sm text-white/70">
-            Link video không hợp lệ
+            Link video khong hop le
           </div>
         )}
       </div>
