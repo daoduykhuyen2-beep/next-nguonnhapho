@@ -10,6 +10,7 @@ const items: Item[] = [
   { href: "/admin", label: "Tổng quan" },
   { href: "/admin/bai-dang", label: "Bài đăng" },
   { href: "/admin/banner", label: "Banner" },
+  { href: "/admin/quan-ly-video", label: "Video" },
   { href: "/admin/tin-tuc", label: "Tin tức" },
   { href: "/admin/thong-bao", label: "Thông báo / Khuyến mãi" },
   { href: "/admin/thanh-vien", label: "Thành viên", adminOnly: true },
