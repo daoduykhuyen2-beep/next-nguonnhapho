@@ -28,7 +28,7 @@ export default function NewsForm({ initial }: { initial?: NewsInitial }) {
       <div><label className="mb-1 block text-sm font-medium">Mô tả ngắn</label><input name="mo_ta" defaultValue={initial?.mo_ta ?? ""} className="w-full rounded-lg border px-4 py-3" /></div>
       <ImageUploadField name="anh_bia" bucket="news" label="Ảnh bìa (tải ảnh lên)" initialUrl={initial?.anh_bia ?? null} />
       <div><label className="mb-1 block text-sm font-medium">Nội dung</label><textarea name="noi_dung" rows={8} defaultValue={initial?.noi_dung ?? ""} className="w-full rounded-lg border px-4 py-3" /></div>
-      <div><label className="mb-1 block text-sm font-medium">Loại</label><select name="loai" defaultValue={initial?.loai ?? "tin_tuc"} className="w-full rounded-lg border px-4 py-3"><option value="tin_tuc">Tin tức</option><option value="video">Video</option><option value="canh_bao">Cảnh báo</option></select></div>
+      <div><label className="mb-1 block text-sm font-medium">Loại</label><select name="loai" defaultValue={initial?.loai ?? "tin_tuc"} className="w-full rounded-lg border px-4 py-3"><option value="tin_tuc">Tin tức</option><option value="canh_bao">Cảnh báo</option></select></div>
       {state?.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
       {state?.success ? <p className="text-sm text-green-600">Đã lưu bài viết.</p> : null}
       <Save editing={editing} />
