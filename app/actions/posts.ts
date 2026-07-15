@@ -1,12 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 const ADMIN_EMAIL = "daoduykhuyen2@gmail.com";
 
-export type ActionState = { error?: string };
+export type ActionState = { error?: string; ok?: boolean };
 
 // Nhận ảnh: ưu tiên JSON array (từ form upload), fallback comma-separated URLs.
 function parseImgs(raw: string): string[] {
@@ -69,7 +68,7 @@ export async function createPost(
 
   revalidatePath("/");
   revalidatePath("/tin-dang");
-  redirect("/tai-khoan/tin-cua-toi");
+  return { error: undefined, ok: true };
 }
 
 export async function updatePost(
@@ -99,7 +98,7 @@ export async function updatePost(
   revalidatePath("/");
   revalidatePath("/tin-dang");
   revalidatePath("/tin-dang/" + id);
-  redirect("/tai-khoan/tin-cua-toi");
+  return { error: undefined, ok: true };
 }
 
 export async function deletePost(id: number): Promise<void> {
