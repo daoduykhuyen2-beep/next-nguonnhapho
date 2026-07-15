@@ -82,11 +82,22 @@ export async function adminSaveNews(_prev: AdminState, formData: FormData): Prom
   const { ok, supabase } = await requireStaff();
   if (!ok) return { error: "Không có quyền." };
   const idRaw = String(formData.get("id") || "").trim();
+  let hinhAnh: string[] = [];
+  try {
+    const raw = String(formData.get("hinh_anh") || "").trim();
+    if (raw.startsWith("[")) hinhAnh = (JSON.parse(raw) as unknown[]).map(String).filter(Boolean);
+    else if (raw) hinhAnh = [raw];
+  } catch {
+    hinhAnh = [];
+  }
+  const anhBiaCu = String(formData.get("anh_bia") || "").trim();
+  const anhBia = hinhAnh[0] || anhBiaCu || null;
   const payload: Record<string, unknown> = {
     tieu_de: String(formData.get("tieu_de") || "").trim(),
     mo_ta: String(formData.get("mo_ta") || "").trim() || null,
     noi_dung: String(formData.get("noi_dung") || "").trim() || null,
-    anh_bia: String(formData.get("anh_bia") || "").trim() || null,
+    anh_bia: anhBia,
+    hinh_anh: hinhAnh,
     loai: String(formData.get("loai") || "tin_tuc").trim(),
   };
   let error;
