@@ -53,27 +53,6 @@ async function layBanner(): Promise<Banner[]> {
   return (data as Banner[]) ?? [];
 }
 
-type XepHang = { ten: string; so: number };
-
-async function layXepHang(limit = 8): Promise<XepHang[]> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("web_posts")
-    .select("owner, contact_name")
-    .eq("trang_thai", "duyet")
-    .not("owner", "is", null);
-  if (!data) return [];
-  const dem = new Map<string, { ten: string; so: number }>();
-  for (const row of data as { owner: string | null; contact_name: string | null }[]) {
-    if (!row.owner) continue;
-    const cur = dem.get(row.owner) ?? { ten: row.contact_name || "Thành viên", so: 0 };
-    cur.so += 1;
-    if (row.contact_name) cur.ten = row.contact_name;
-    dem.set(row.owner, cur);
-  }
-  return [...dem.values()].sort((a, b) => b.so - a.so).slice(0, limit);
-}
-
 type NewsItem = {
   id: number;
   tieu_de: string | null;
@@ -148,14 +127,13 @@ export default async function TrangChu() {
     await sb.rpc("expire_vip_posts");
   } catch {}
 
-  const [banners, hotHomNay, kimCuong, vang, tinMoi, xepHang, tinTuc, video, canhBao, khoNha] =
+  const [banners, hotHomNay, kimCuong, vang, tinMoi, tinTuc, video, canhBao, khoNha] =
     await Promise.all([
       layBanner(),
       layTin({ hotToday: true, limit: 8 }),
       layTin({ status: "kim_cuong", limit: 8 }),
       layTin({ status: "vang", limit: 8 }),
       layTin({ limit: 8 }),
-      layXepHang(8),
       layTinTuc({ limit: 3 }),
       layVideoTiktok(6),
       layTinTuc({ loai: "tin_tuc", limit: 4 }),
@@ -276,27 +254,6 @@ export default async function TrangChu() {
 
       {/* 4. Tin moi */}
       <Khoi tieuDe="🆕 Tin mới nhất" moTa="Tất cả tin đăng mới — xếp từ mới đến cũ" tin={tinMoi} xemThem="/tin-dang" />
-
-      {/* 5. Bang xep hang nguoi day tin */}
-      {xepHang.length ? (
-        <section className="mx-auto max-w-6xl px-4 py-8">
-          <div className="mb-5">
-            <h2 className="text-xl font-bold text-brand sm:text-2xl">🏆 Bảng xếp hạng người đẩy tin</h2>
-            <p className="mt-1 text-sm text-gray-500">Thành viên đăng nhiều tin nhất được vinh danh top đầu</p>
-          </div>
-          <div className="overflow-hidden rounded-xl border bg-white">
-            {xepHang.map((h, i) => (
-              <div key={i} className="flex items-center justify-between border-b px-4 py-3 last:border-b-0">
-                <div className="flex items-center gap-3">
-                  <span className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${i === 0 ? "bg-yellow-400 text-white" : i === 1 ? "bg-gray-300 text-white" : i === 2 ? "bg-amber-600 text-white" : "bg-gray-100 text-gray-600"}`}>{i + 1}</span>
-                  <span className="font-medium text-gray-800">{h.ten}</span>
-                </div>
-                <span className="text-sm font-semibold text-brand">{h.so} tin</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       {/* 6. Tin tuc */}
       {tinTuc.length ? (
