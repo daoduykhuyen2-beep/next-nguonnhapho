@@ -3,6 +3,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { adminSaveNews, type AdminState } from "@/app/actions/admin";
 import ImageUploadField from "@/components/ImageUploadField";
+import ImageMultiUploadField from "@/components/ImageMultiUploadField";
 
 export type NewsInitial = {
   id: number | string;
@@ -10,6 +11,7 @@ export type NewsInitial = {
   mo_ta?: string | null;
   noi_dung?: string | null;
   anh_bia?: string | null;
+  hinh_anh?: string[] | null;
   loai?: string | null;
 };
 
@@ -26,7 +28,7 @@ export default function NewsForm({ initial }: { initial?: NewsInitial }) {
       {editing ? <input type="hidden" name="id" value={String(initial!.id)} /> : null}
       <div><label className="mb-1 block text-sm font-medium">Tiêu đề</label><input name="tieu_de" required defaultValue={initial?.tieu_de ?? ""} className="w-full rounded-lg border px-4 py-3" /></div>
       <div><label className="mb-1 block text-sm font-medium">Mô tả ngắn</label><input name="mo_ta" defaultValue={initial?.mo_ta ?? ""} className="w-full rounded-lg border px-4 py-3" /></div>
-      <ImageUploadField name="anh_bia" bucket="news" label="Ảnh bìa (tải ảnh lên)" initialUrl={initial?.anh_bia ?? null} />
+      <ImageMultiUploadField name="hinh_anh" bucket="news" label="Hình ảnh (tối đa 5 ảnh, tải lên)" max={5} initialUrls={initial?.hinh_anh ?? (initial?.anh_bia ? [initial.anh_bia] : [])} />
       <div><label className="mb-1 block text-sm font-medium">Nội dung</label><textarea name="noi_dung" rows={8} defaultValue={initial?.noi_dung ?? ""} className="w-full rounded-lg border px-4 py-3" /></div>
       <div><label className="mb-1 block text-sm font-medium">Loại</label><select name="loai" defaultValue={initial?.loai ?? "tin_tuc"} className="w-full rounded-lg border px-4 py-3"><option value="tin_tuc">Tin tức</option><option value="canh_bao">Cảnh báo</option></select></div>
       {state?.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
