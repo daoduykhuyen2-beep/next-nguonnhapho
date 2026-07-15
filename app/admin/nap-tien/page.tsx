@@ -4,6 +4,7 @@ import AdminNav from "@/components/AdminNav";
 import PlanEditor from "@/components/PlanEditor";
 import { getPlansMerged } from "@/lib/plans-server";
 import DuyetThanhToanButton from "@/components/DuyetThanhToanButton";
+import AdminNapTools from "@/components/AdminNapTools";
 
 export const metadata = { title: "Nạp tiền & Gói" };
 export const dynamic = "force-dynamic";
@@ -22,7 +23,20 @@ export default async function Page() {
   const { data } = await supabase.from("payments").select("id, user_id, plan_code, amount, status, created_at, paid_at, transfer_content, post_id, cho_duyet").order("created_at", { ascending: false }).limit(300);
   const rows = data || [];
   const choDuyet = rows.filter((r) => r.status !== "paid" && r.cho_duyet === true);
-  const doanhThu = rows.filter((r) => r.status === "paid").reduce((s, r) => s + Number(r.amount || 0), 0);
+
+  // Moc reset doanh thu: chi tinh cac giao dich thanh toan tu moc nay tro di.
+  const { data: setting } = await supabase.from("app_settings").select("value").eq("key", "revenue_reset_at").maybeSingle();
+  const resetAt = setting?.value ? new Date(String(setting.value)).getTime() : 0;
+  const paidRows = rows.filter((r) => r.status === "paid");
+  const doanhThu = paidRows
+    .filter((r) => {
+      if (!resetAt) return true;
+      const t = r.paid_at ? new Date(String(r.paid_at)).getTime() : (r.created_at ? new Date(String(r.created_at)).getTime() : 0);
+      return t >= resetAt;
+    })
+    .reduce((s, r) => s + Number(r.amount || 0), 0);
+  const resetLabel = resetAt ? new Date(resetAt).toLocaleString("vi-VN") : null;
+  const planOpts = plans.map((p) => ({ code: p.code, name: p.name }));
   return (
     <div>
       <h1 className="mb-4 text-2xl font-bold">Nạp tiền & đăng ký gói</h1>
@@ -30,7 +44,7 @@ export default async function Page() {
       <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border bg-white p-4"><p className="text-sm text-gray-500">Tổng giao dịch</p><p className="text-xl font-bold">{rows.length}</p></div>
         <div className="rounded-xl border bg-white p-4"><p className="text-sm text-gray-500">Đã thanh toán</p><p className="text-xl font-bold">{rows.filter((r) => r.status === "paid").length}</p></div>
-        <div className="rounded-xl border bg-white p-4"><p className="text-sm text-gray-500">Doanh thu</p><p className="text-xl font-bold text-brand">{vnd(doanhThu)}</p></div>
+        <div className="rounded-xl border bg-white p-4"><p className="text-sm text-gray-500">Doanh thu {resetLabel ? "(ky moi)" : ""}</p><p className="text-xl font-bold text-brand">{vnd(doanhThu)}</p>{resetLabel && <p className="mt-1 text-[11px] text-gray-400">Tinh tu {resetLabel}</p>}</div>
       </div>
 
       <h2 id="cho-duyet" className="mb-3 scroll-mt-24 text-xl font-bold">Đơn chờ duyệt ({choDuyet.length})</h2>
@@ -55,6 +69,8 @@ export default async function Page() {
           </table>
         )}
       </div>
+
+      <AdminNapTools plans={planOpts} />
 
       <section className="mb-8 rounded-2xl border border-gray-200 bg-gray-50 p-5">
         <h2 className="mb-1 text-xl font-bold">Điều chỉnh giá & thông tin các gói</h2>
