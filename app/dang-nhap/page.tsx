@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function DangNhapPage() {
@@ -15,6 +15,17 @@ export default function DangNhapPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const e = searchParams.get("error");
+    if (e) {
+      setError(
+        e === "oauth" || e === "oauth_no_code"
+          ? "Khong the dang nhap bang Google. Vui long thu lai."
+          : decodeURIComponent(e)
+      );
+    }
+  }, [searchParams]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
