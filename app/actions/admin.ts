@@ -101,6 +101,18 @@ export async function adminSaveNews(_prev: AdminState, formData: FormData): Prom
   return { success: true };
 }
 
+export async function adminDeleteNews(_prev: AdminState, formData: FormData): Promise<AdminState> {
+  const { ok, supabase } = await requireStaff();
+  if (!ok) return { error: "Không có quyền." };
+  const idRaw = String(formData.get("id") || "").trim();
+  if (!idRaw) return { error: "Thiếu id bài viết." };
+  const { error } = await supabase.from("news").delete().eq("id", Number(idRaw));
+  if (error) return { error: error.message };
+  revalidatePath("/admin/tin-tuc");
+  revalidatePath("/tin-tuc");
+  return { success: true };
+}
+
 // ----- Thong bao / khuyen mai -----
 export async function adminSendNotification(_prev: AdminState, formData: FormData): Promise<AdminState> {
   const { ok, supabase } = await requireStaff();
