@@ -83,7 +83,6 @@ export default async function TinTucPage() {
   const tinTuc = all.filter((x) => x.loai === "tin_tuc" || !x.loai);
   const thiTruong = all.filter((x) => x.loai === "thi_truong");
   const founder = all.filter((x) => x.loai === "founder");
-  const videos = all.filter((x) => x.loai === "video");
 
   return (
     <>
@@ -128,13 +127,6 @@ export default async function TinTucPage() {
             moTa="Góc nhìn & chia sẻ từ người sáng lập Nguồn Nhà Phố"
             items={founder}
           />
-          <div className="bg-white">
-            <Section
-              tieuDe="Video thực tế"
-              moTa="Xem nhà thật qua video quay trực tiếp"
-              items={videos}
-            />
-          </div>
         </>
       )}
 
