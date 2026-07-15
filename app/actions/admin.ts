@@ -91,7 +91,7 @@ export async function adminSaveNews(_prev: AdminState, formData: FormData): Prom
   };
   let error;
   if (idRaw) {
-    ({ error } = await supabase.from("news").update(payload).eq("id", Number(idRaw)));
+    ({ error } = await supabase.from("news").update(payload).eq("id", idRaw));
   } else {
     ({ error } = await supabase.from("news").insert(payload));
   }
@@ -106,7 +106,7 @@ export async function adminDeleteNews(_prev: AdminState, formData: FormData): Pr
   if (!ok) return { error: "Không có quyền." };
   const idRaw = String(formData.get("id") || "").trim();
   if (!idRaw) return { error: "Thiếu id bài viết." };
-  const { error } = await supabase.from("news").delete().eq("id", Number(idRaw));
+  const { error } = await supabase.from("news").delete().eq("id", idRaw);
   if (error) return { error: error.message };
   revalidatePath("/admin/tin-tuc");
   revalidatePath("/tin-tuc");
