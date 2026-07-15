@@ -38,7 +38,7 @@ export default async function Page() {
                 <p className="text-xs text-gray-500">{n.loai} · {n.created_at ? new Date(n.created_at as string).toLocaleDateString("vi-VN") : ""}</p>
                 <div className="mt-2 flex gap-3 text-sm">
                   <Link href={`/admin/tin-tuc/${n.id}`} className="font-medium text-brand hover:underline">Sửa</Link>
-                  <NewsDeleteButton id={n.id as number} tieuDe={n.tieu_de as string} />
+                  <NewsDeleteButton id={n.id as string} tieuDe={n.tieu_de as string} />
                 </div>
               </div>
             ))}
