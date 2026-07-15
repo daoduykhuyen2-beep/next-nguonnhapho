@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
+import BannerCarousel from "@/components/BannerCarousel";
 import { getTongSoCan } from "@/lib/stats";
 
 export const revalidate = 60;
@@ -148,12 +149,19 @@ export default async function TrangChu() {
   return (
     <>
       {/* Hero + tìm kiếm */}
-      <section className="border-b border-gray-200 bg-white text-black">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <h1 className="max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
+      <section className="relative overflow-hidden border-b border-gray-200 bg-[color:var(--np-do,#c1121f)] text-white">
+        {/* Banner lam nen chay vong (quan ly tai /admin/banner) */}
+        {banners.length > 0 && (
+          <div className="absolute inset-0 z-0">
+            <BannerCarousel banners={banners} heightClass="h-full" chromeless />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/20" />
+          </div>
+        )}
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:py-24">
+          <h1 className="max-w-3xl text-3xl font-extrabold leading-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl">
             Nhà phố trung tâm Sài Gòn
           </h1>
-          <p className="mt-3 max-w-2xl text-sm text-gray-600 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm text-white/90 drop-shadow sm:text-base">
             Giá thật · Pháp lý rõ ràng · Uy tín — Kênh đăng tin mua bán, cho thuê
             nhà phố, căn hộ, đất nền tại TP. Hồ Chí Minh.
           </p>
@@ -208,29 +216,6 @@ export default async function TrangChu() {
         </div>
       </section>
 
-      {/* Banner quang cao (quan ly tai /admin/banner) */}
-      {banners.length ? (
-        <section className="mx-auto max-w-6xl px-4 pt-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {banners.map((b) => {
-              const img = (
-                <img
-                  src={b.image_url}
-                  alt={b.title ?? "Banner"}
-                  className="h-40 w-full rounded-xl object-cover shadow-sm sm:h-44"
-                />
-              );
-              return b.link_url ? (
-                <a key={b.id} href={b.link_url} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-xl transition hover:opacity-95">
-                  {img}
-                </a>
-              ) : (
-                <div key={b.id} className="overflow-hidden rounded-xl">{img}</div>
-              );
-            })}
-          </div>
-        </section>
-      ) : null}
 
       {/* Bang thong ke kho nha cong khai */}
       <section className="mx-auto max-w-6xl px-4 pt-8">
