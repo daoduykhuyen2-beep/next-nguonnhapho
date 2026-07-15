@@ -34,6 +34,7 @@ export default async function TinTucDetail({
     mo_ta: string | null;
     noi_dung: string | null;
     anh_bia: string | null;
+  hinh_anh?: string[] | null;
     loai: string | null;
     created_at: string;
   };
@@ -56,16 +57,20 @@ export default async function TinTucDetail({
         </p>
       </div>
 
-      {item.anh_bia ? (
-        <div className="mt-6 overflow-hidden rounded-xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={item.anh_bia}
-            alt={item.tieu_de}
-            className="w-full object-cover"
-          />
-        </div>
-      ) : null}
+      {(() => {
+        const imgs = (item.hinh_anh && item.hinh_anh.length ? item.hinh_anh : item.anh_bia ? [item.anh_bia] : []).filter(Boolean);
+        if (!imgs.length) return null;
+        return (
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {imgs.map((src, i) => (
+              <div key={src + i} className={`overflow-hidden rounded-xl ${imgs.length === 1 ? "sm:col-span-2" : ""}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt={`${item.tieu_de} ${i + 1}`} className="w-full object-cover" />
+              </div>
+            ))}
+          </div>
+        );
+      })()}
 
       {item.mo_ta ? (
         <p className="mt-6 text-lg font-medium text-gray-700">{item.mo_ta}</p>
