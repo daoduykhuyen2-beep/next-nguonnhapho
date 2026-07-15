@@ -21,7 +21,7 @@ function DelBtn({ tieuDe }: { tieuDe: string }) {
   );
 }
 
-export default function NewsDeleteButton({ id, tieuDe }: { id: number; tieuDe: string }) {
+export default function NewsDeleteButton({ id, tieuDe }: { id: string; tieuDe: string }) {
   const [state, formAction] = useActionState<AdminState, FormData>(adminDeleteNews, {});
   return (
     <form action={formAction} className="inline">
