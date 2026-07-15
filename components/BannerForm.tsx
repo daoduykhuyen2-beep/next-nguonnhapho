@@ -95,19 +95,12 @@ export default function BannerForm() {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
-          Hoặc dán link ảnh banner (URL)
-        </label>
-        <input
-          name="image_url"
-          required
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          placeholder="https://..."
-          className="w-full rounded-lg border px-4 py-3"
-        />
-        <p className="mt-1 text-xs text-gray-500">
-          Sau khi tải ảnh lên, link sẽ tự điền vào đây. Bạn cũng có thể dán link ảnh sẵn có.
+        {/* image_url chi duoc set qua upload anh, khong cho nhap link thu cong */}
+        <input type={"hidden"} name={"image_url"} value={imageUrl} readOnly />
+        <p className={"text-xs text-gray-500"}>
+          {imageUrl
+            ? "✓ Đã có ảnh. Bấm “Thêm banner” để lưu."
+            : "Vui lòng tải ảnh banner lên ở trên (chỉ nhận ảnh tải lên, không dán link)."}
         </p>
       </div>
 
