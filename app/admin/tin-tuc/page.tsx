@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminNav from "@/components/AdminNav";
 import NewsForm from "@/components/NewsForm";
+import Link from "next/link";
+import NewsDeleteButton from "@/components/NewsDeleteButton";
 
 export const metadata = { title: "Quản lý tin tức" };
 export const dynamic = "force-dynamic";
@@ -34,6 +36,10 @@ export default async function Page() {
               <div key={n.id} className="rounded-lg border bg-white p-3">
                 <p className="font-medium">{n.tieu_de}</p>
                 <p className="text-xs text-gray-500">{n.loai} · {n.created_at ? new Date(n.created_at as string).toLocaleDateString("vi-VN") : ""}</p>
+                <div className="mt-2 flex gap-3 text-sm">
+                  <Link href={`/admin/tin-tuc/${n.id}`} className="font-medium text-brand hover:underline">Sửa</Link>
+                  <NewsDeleteButton id={n.id as number} tieuDe={n.tieu_de as string} />
+                </div>
               </div>
             ))}
           </div>
