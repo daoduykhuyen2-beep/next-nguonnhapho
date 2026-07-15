@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { createPost } from "@/app/actions/posts";
 import { uploadPostImages } from "@/lib/upload";
@@ -51,6 +52,7 @@ function Section({ title, desc, children }: { title: string; desc?: string; chil
 }
 
 export default function PostForm({ post }: { post?: Post }) {
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
@@ -91,9 +93,13 @@ export default function PostForm({ post }: { post?: Post }) {
       }
       formData.set("anh", JSON.stringify(urls));
       const res = await createPost({ error: undefined }, formData);
-      if (res?.error) setError(res.error);
+      if (res?.error) {
+        setError(res.error);
+      } else {
+        router.push("/tai-khoan/tin-cua-toi");
+        router.refresh();
+      }
     } catch (err: any) {
-      if (err?.digest?.startsWith("NEXT_REDIRECT")) throw err;
       setUploading(false);
       setError(err?.message || "Có lỗi xảy ra");
     }
