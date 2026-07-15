@@ -31,9 +31,11 @@ export async function saveHomeVideo(
   if (!ok) return { error: "Không có quyền." };
 
   const tiktok_url = String(formData.get("tiktok_url") || "").trim();
-  if (!tiktok_url) return { error: "Vui lòng nhập link video TikTok." };
-  if (!/tiktok\.com/i.test(tiktok_url))
-    return { error: "Link không hợp lệ. Vui lòng dán link video TikTok." };
+  if (!tiktok_url) return { error: "Vui long dan link TikTok hoac tai video len." };
+  const isTiktok = /tiktok\.com/i.test(tiktok_url);
+  const isUploaded = /^https?:\/\//i.test(tiktok_url) && /\/storage\/v1\/object\/public\//i.test(tiktok_url);
+  if (!isTiktok && !isUploaded)
+    return { error: "Nguon video khong hop le. Dan link TikTok hoac tai file video len." };
 
   const payload = {
     title: String(formData.get("title") || "").trim() || null,
