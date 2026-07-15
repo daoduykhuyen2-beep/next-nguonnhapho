@@ -282,26 +282,52 @@ export default async function TrangChu() {
         </section>
       ) : null}
 
-      {/* 6. Tin tuc & Video */}
-      {tinTuc.length || video.length ? (
-        <section className="mx-auto max-w-6xl px-4 py-8">
-          <div className="mb-5 flex items-end justify-between">
-            <h2 className="text-xl font-bold text-brand sm:text-2xl">📰 Tin tức & Video</h2>
-            <Link href="/tin-tuc" className="shrink-0 text-sm font-semibold text-brand hover:underline">Xem tất cả →</Link>
+      {/* 6. Tin tuc */}
+      {tinTuc.length ? (
+        <section className={"mx-auto max-w-6xl px-4 py-8"}>
+          <div className={"mb-5 flex items-end justify-between"}>
+            <h2 className={"text-xl font-bold text-brand sm:text-2xl"}>🗞️ Tin tức</h2>
+            <Link href={"/tin-tuc"} className={"shrink-0 text-sm font-semibold text-brand hover:underline"}>Xem tất cả →</Link>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[...tinTuc, ...video].slice(0, 6).map((n) => (
-              <Link key={n.loai + "-" + n.id} href="/tin-tuc" className="overflow-hidden rounded-xl border bg-white transition hover:shadow-md">
-                <div className="aspect-[16/9] w-full bg-gray-100">
+          <div className={"grid gap-4 sm:grid-cols-2 lg:grid-cols-3"}>
+            {tinTuc.slice(0, 3).map((n) => (
+              <Link key={n.loai + "-" + n.id} href={"/tin-tuc"} className={"overflow-hidden rounded-xl border bg-white transition hover:shadow-md"}>
+                <div className={"aspect-[16/9] w-full bg-gray-100"}>
                   {n.anh_bia ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={n.anh_bia} alt={n.tieu_de ?? ""} className="h-full w-full object-cover" />
+                    <img src={n.anh_bia} alt={n.tieu_de ?? ""} className={"h-full w-full object-cover"} />
                   ) : null}
                 </div>
-                <div className="p-4">
-                  {n.loai === "video" ? <span className="mb-1 inline-block rounded bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand">Video</span> : null}
-                  <h3 className="line-clamp-2 font-semibold text-gray-900">{n.tieu_de}</h3>
-                  {n.mo_ta ? <p className="mt-1 line-clamp-2 text-sm text-gray-500">{n.mo_ta}</p> : null}
+                <div className={"p-4"}>
+                  {n.loai === "video" ? <span className={"mb-1 inline-block rounded bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand"}>Video</span> : null}
+                  <h3 className={"line-clamp-2 font-semibold text-gray-900"}>{n.tieu_de}</h3>
+                  {n.mo_ta ? <p className={"mt-1 line-clamp-2 text-sm text-gray-500"}>{n.mo_ta}</p> : null}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
+      {/* 7. Video */}
+      {video.length ? (
+        <section className={"mx-auto max-w-6xl px-4 py-8"}>
+          <div className={"mb-5 flex items-end justify-between"}>
+            <h2 className={"text-xl font-bold text-brand sm:text-2xl"}>🎬 Video</h2>
+            <Link href={"/tin-tuc"} className={"shrink-0 text-sm font-semibold text-brand hover:underline"}>Xem tất cả →</Link>
+          </div>
+          <div className={"grid gap-4 sm:grid-cols-2 lg:grid-cols-3"}>
+            {video.slice(0, 3).map((n) => (
+              <Link key={n.loai + "-" + n.id} href={"/tin-tuc"} className={"overflow-hidden rounded-xl border bg-white transition hover:shadow-md"}>
+                <div className={"aspect-[16/9] w-full bg-gray-100"}>
+                  {n.anh_bia ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={n.anh_bia} alt={n.tieu_de ?? ""} className={"h-full w-full object-cover"} />
+                  ) : null}
+                </div>
+                <div className={"p-4"}>
+                  {n.loai === "video" ? <span className={"mb-1 inline-block rounded bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand"}>Video</span> : null}
+                  <h3 className={"line-clamp-2 font-semibold text-gray-900"}>{n.tieu_de}</h3>
+                  {n.mo_ta ? <p className={"mt-1 line-clamp-2 text-sm text-gray-500"}>{n.mo_ta}</p> : null}
                 </div>
               </Link>
             ))}
