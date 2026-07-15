@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const { data: news } = await supabase
     .from("news")
     .select("id, tieu_de, mo_ta, noi_dung, anh_bia, loai")
-    .eq("id", Number(id))
+    .eq("id", id)
     .maybeSingle();
   if (!news) notFound();
 
