@@ -5,7 +5,7 @@ import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
 import PostFilter from "@/components/PostFilter";
 import BannerCarousel from "@/components/BannerCarousel";
-import { getDanhSachQuan } from "@/lib/stats";
+import { getDanhSachQuan, normalizeQuan, type QuanStat } from "@/lib/stats";
 
 export const revalidate = 60;
 
@@ -52,7 +52,7 @@ async function getBanners() {
   return data || [];
 }
 
-async function getPosts(sp: SearchParams) {
+async function getPosts(sp: SearchParams, quanOptions: QuanStat[]) {
   const supabase = await createClient();
   const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
   const from = (page - 1) * PAGE_SIZE;
@@ -67,7 +67,13 @@ async function getPosts(sp: SearchParams) {
       .select("*", hasJsFilter ? {} : { count: "exact" })
       .eq("trang_thai", "duyet");
     if (sp.loai) q = q.eq("loai", sp.loai);
-    if (sp.quan) q = q.eq("quan", sp.quan);
+    if (sp.quan) {
+      // Loc theo TAT CA cach ghi cua quan da chon (vi du "Binh Thanh" + "Quan Binh Thanh")
+      const canon = normalizeQuan(sp.quan);
+      const match = quanOptions.find((o) => o.quan === canon);
+      const variants = match && match.variants.length ? match.variants : [sp.quan];
+      q = q.in("quan", variants);
+    }
     if (sp.duong) q = q.ilike("duong", `%${sp.duong}%`);
     if (sp.q) q = q.ilike("title", `%${sp.q}%`);
     return q;
@@ -162,8 +168,8 @@ export default async function TinDangPage({
   searchParams: Promise<SearchParams>;
 }) {
   const sp = await searchParams;
-  const { posts, total, page } = await getPosts(sp);
   const quanOptions = await getDanhSachQuan();
+  const { posts, total, page } = await getPosts(sp, quanOptions);
   const banners = await getBanners();
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const isChoThueSapRaMat = sp.loai === "thue" && total === 0;
