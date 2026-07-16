@@ -211,6 +211,33 @@ export default async function TrangChu() {
       </section>
 
 
+      {/* Cam ket nha that - dat ngay dau trang de khach de thay */}
+      <section className="mx-auto max-w-6xl px-4 pt-8">
+        <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:p-6">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-green-800 sm:text-xl">
+            <span>✅</span> Hơn 3.000 căn nhà — 100% là nhà thật
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-gray-700 sm:text-base">
+            Toàn bộ hơn 3.000 căn đang đăng trên website đều là bất động sản có thật.
+            Bạn thích căn nào, chỉ cần <b>để lại thông tin</b> — chúng tôi sẽ gửi lại{" "}
+            <b>đúng căn đó</b>, đúng vị trí và đúng diện tích như mô tả.
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-gray-600">
+            Vì số lượng tin rất lớn nên không thể cập nhật hình ảnh đầy đủ cho từng căn,
+            do đó một số tin có thể chỉ dùng <b>ảnh minh họa</b>. Dù vậy, thông tin vị trí
+            và diện tích luôn chính xác, và nhân viên sẽ tư vấn trực tiếp căn bạn quan tâm.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link href="/tin-dang" className="rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:opacity-90">
+              Xem danh sách nhà
+            </Link>
+            <Link href="/dang-tin" className="rounded-lg border border-green-700 px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-100">
+              Để lại nhu cầu của bạn
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Bang thong ke kho nha cong khai */}
       <section className="mx-auto max-w-6xl px-4 pt-8">
         <div className="flex flex-wrap items-center justify-center gap-4 rounded-2xl bg-brand/5 px-6 py-5 text-center">
