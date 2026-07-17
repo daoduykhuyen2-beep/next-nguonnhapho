@@ -7,7 +7,6 @@ import { formatGia, formatDienTich, formatSoTang } from "@/components/PostCard";
 import LoanCalculator from "@/components/LoanCalculator";
 import LeadForm from "@/components/LeadForm";
 import FavoriteButton from "@/components/FavoriteButton";
-import MapView from "@/components/MapView";
 import { getFakeStats } from "@/lib/fakeStats";
 
 // Che 5 so cuoi cua so dien thoai bang dau *
@@ -199,7 +198,6 @@ export default async function TinChiTietPage({
   const polyline = points.map((p) => `${p.x},${p.y}`).join(" ");
 
   const mapQuery = encodeURIComponent(diaChi || post.quan || "TP.HCM");
-  const mapsKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || "AIzaSyBdsg7V4QV7r7j5bTWgAB-pvKXpIJsEJrw";
   const mapLinkSrc = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
   const stats = getFakeStats(post.id, post.created_at, {
     status: post.status,
@@ -327,10 +325,17 @@ export default async function TinChiTietPage({
         ) : null}
         <section>
             <h2 className="mb-3 text-lg font-semibold">Vị trí & tiện ích xung quanh</h2>
-            <MapView query={mapQuery} linkSrc={mapLinkSrc} mapsKey={mapsKey} />
+            <iframe
+              title="Bản đồ vị trí"
+              className="w-full rounded-lg border"
+              height="320"
+              loading="lazy"
+              src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+            />
             <p className="mt-2 text-xs text-gray-500">
               Bản đồ hiển thị theo tên đường để bảo mật cho chủ nhà — vị trí chính xác gửi qua Zalo sau khi xác nhận nhu cầu.
             </p>
+            <a href={mapLinkSrc} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-brand underline">Mở khu vực này trên Google Maps →</a>
           </section>
 
           {giaTy ? (
