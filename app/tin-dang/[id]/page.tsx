@@ -68,6 +68,20 @@ function formatTrieuPerM2(giaTy: number | null, dt: number | null): string | nul
   return `${Math.round(trieu).toLocaleString("vi-VN")} tr/m²`;
 }
 
+// Dinh dang gia cho tin CHO THUE: hien thi trieu/thang thay vi ty
+function formatGiaThue(gia?: string | null): string {
+  if (!gia) return "Thỏa thuận";
+  const s = String(gia).trim();
+  if (!s) return "Thỏa thuận";
+  // Neu da co chu (vd: "trieu/thang", "thỏa thuận") thi giu nguyen
+  if (/[a-zA-ZÀ-ỹ]/.test(s)) return s;
+  const num = s.replace(/[.,\s]/g, "");
+  if (/^\d+$/.test(num)) {
+    return Number(num).toLocaleString("vi-VN") + " triệu/tháng";
+  }
+  return s;
+}
+
 type PriceHistoryRow = {
   gia: string | null;
   gia_tri: number | null;
@@ -152,6 +166,7 @@ export default async function TinChiTietPage({
   const diaChi = [post.duong, post.phuong, post.quan].filter(Boolean).join(", ");
   const searchText = `${post.title ?? ""} ${post.mota ?? ""}`;
 
+  const isThue = post.loai === "thue";
   const giaTy = parseGiaTy(post.gia);
   const dt = parseDienTich(post.dien_tich);
   const donGia = formatTrieuPerM2(giaTy, dt);
@@ -232,8 +247,8 @@ export default async function TinChiTietPage({
 
       <div className="mt-6 rounded-xl border bg-gray-50 p-4 grid grid-cols-3 gap-4">
         <div>
-          <p className="text-xs uppercase text-gray-500">Giá bán</p>
-          <p className="text-xl font-bold text-brand">{formatGia(post.gia)}</p>
+          <p className="text-xs uppercase text-gray-500">{isThue ? "Giá thuê" : "Giá bán"}</p>
+          <p className="text-xl font-bold text-brand">{isThue ? formatGiaThue(post.gia) : formatGia(post.gia)}</p>
         </div>
         <div>
           <p className="text-xs uppercase text-gray-500">Diện tích</p>
@@ -241,7 +256,7 @@ export default async function TinChiTietPage({
         </div>
         <div>
           <p className="text-xs uppercase text-gray-500">Đơn giá</p>
-          <p className="text-xl font-bold">{donGia ?? "—"}</p>
+          <p className="text-xl font-bold">{isThue ? "—" : (donGia ?? "—")}</p>
         </div>
       </div>
 
