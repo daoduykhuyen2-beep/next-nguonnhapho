@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toggleFavorite } from "@/app/actions/favorites";
+import { showToast } from "@/components/Toast";
 
 export default function FavoriteButton({
   postId,
@@ -28,10 +29,14 @@ export default function FavoriteButton({
           router.push("/dang-nhap");
           return;
         }
-        alert(res.error);
+        showToast(res.error, "error");
         return;
       }
       setSaved(Boolean(res.saved));
+      showToast(
+        res.saved ? "Đã thêm vào danh sách quan tâm" : "Đã bỏ khỏi danh sách quan tâm",
+        "success"
+      );
     });
   }
 
