@@ -9,11 +9,22 @@ export const KHACH_HANG = [
   { ten: "Anh Tuấn", vaiTro: "Mua nhà Quận 3", noiDung: "Nhà đúng như ảnh, chủ thật nên đi xem là chốt được luôn, không mất thời gian lọc tin ảo như mấy chỗ khác." },
   { ten: "Chị Hương", vaiTro: "Cho thuê mặt bằng Q.1", noiDung: "Đăng buổi sáng, chiều đã có người liên hệ. Đội hỗ trợ nhiệt tình, hướng dẫn từng bước rất dễ hiểu." },
   { ten: "Anh Phát", vaiTro: "Nhà đầu tư", noiDung: "Mình thích nhất phần cảnh báo pháp lý, giúp tránh được vài căn dính quy hoạch trước khi đặt cọc." },
+  { ten: "Chị Ngọc Ánh", vaiTro: "Mua nhà Quận 5", noiDung: "Nhân viên tư vấn tận tâm, dẫn đi xem đúng nhà đúng giá. Sổ hồng rõ ràng nên mình đặt cọc rất yên tâm." },
+  { ten: "Anh Hoàng Nam", vaiTro: "Đầu tư căn hộ", noiDung: "Kho tin nhiều và cập nhật liên tục, mình lọc được căn dòng tiền tốt chỉ trong hai ngày. Rất chuyên nghiệp." },
+  { ten: "Chị Mỹ Duyên", vaiTro: "Thuê nhà nguyên căn", noiDung: "Thông tin minh bạch, hình ảnh đúng thực tế, không bị vẽ vời. Liên hệ chủ nhà nhanh, không qua trung gian lằng nhằng." },
+  { ten: "Anh Quốc Việt", vaiTro: "Bán nhà Bình Thạnh", noiDung: "Đăng tin xong được duyệt nhanh, khách gọi đều đặn mỗi ngày. Bán được nhà sớm hơn mình nghĩ." },
+  { ten: "Chị Thu Hà", vaiTro: "Mua nhà phố Quận 3", noiDung: "Được cảnh báo pháp lý kỹ càng trước khi mua, tránh được một căn đang tranh chấp. Cảm ơn đội ngũ rất nhiều." },
+  { ten: "Anh Đức Thịnh", vaiTro: "Nhà đầu tư dài hạn", noiDung: "Giá tham chiếu theo thị trường rất rõ ràng, giúp mình định giá chuẩn. Sẽ tiếp tục dùng cho các thương vụ sau." },
 ] as const;
 
 export const MOI_GIOI = [
   { ten: "Minh Đức", vaiTro: "Môi giới khu trung tâm", noiDung: "Nguồn hàng chính chủ nhiều nên mình tư vấn tự tin hơn hẳn. Khách tin tưởng vì tin nào cũng có thật, dẫn đi xem là có nhà." },
   { ten: "Thùy Linh", vaiTro: "Môi giới cho thuê", noiDung: "Công cụ đăng và đẩy tin dễ dùng, tin lên nhanh. Làm ở đây mình chủ động thời gian mà lượng khách gọi về đều đặn." },
+  { ten: "Anh Bảo", vaiTro: "Chuyên viên môi giới nhà phố", noiDung: "Kho hàng chuẩn nên mình không phải vất vả tự đi tìm, tập trung phục vụ khách và chốt giao dịch nhanh hơn." },
+  { ten: "Chị Trang", vaiTro: "Trưởng nhóm kinh doanh", noiDung: "Cơ chế hoa hồng minh bạch, dữ liệu khách rõ ràng. Đội của mình lên đơn đều mỗi tháng." },
+  { ten: "Anh Khoa", vaiTro: "Cộng tác viên môi giới", noiDung: "Làm bán thời gian mà thu nhập ổn, được đào tạo bài bản từ cách tư vấn đến chốt cọc. Rất đáng để gắn bó." },
+  { ten: "Chị Yến", vaiTro: "Chuyên viên tư vấn đầu tư", noiDung: "Khách có dòng tiền lớn rất thích cách mình phân tích pháp lý và tiềm năng. Nguồn hàng ở đây hỗ trợ mình nhiều." },
+  { ten: "Anh Duy", vaiTro: "Môi giới khu vực Quận 1", noiDung: "Tin được duyệt kỹ nên khách tin tưởng ngay từ cuộc gọi đầu. Mình dẫn đi xem là có nhà thật, không mất uy tín." },
 ] as const;
 
 export const DICH_VU = [
