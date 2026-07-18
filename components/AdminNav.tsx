@@ -16,6 +16,7 @@ const items: Item[] = [
   { href: "/admin/thanh-vien", label: "Thành viên", adminOnly: true },
   { href: "/admin/nap-tien", label: "Nạp tiền & Gói", adminOnly: true },
   { href: "/admin/phan-quyen", label: "Phân quyền", adminOnly: true },
+  { href: "/admin/ung-tuyen", label: "Ứng tuyển", adminOnly: true },
 ];
 
 // Nhận role để ẩn/hiện các mục chỉ dành cho admin.
