@@ -7,6 +7,7 @@ import HeaderActions from "@/components/HeaderActions";
 import PWARegister from "@/components/PWARegister";
 import PageViewTracker from "@/components/PageViewTracker";
 import FloatingContact from "@/components/FloatingContact";
+import Toast from "@/components/Toast";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nguonnhaphohcm.vn"),
@@ -193,6 +194,7 @@ export default async function RootLayout({
         <PWARegister />
         <PageViewTracker />
               <FloatingContact />
+        <Toast />
       </body>
     </html>
   );
