@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
-import { getPlan } from "@/lib/plans";
+import { getPlanMerged } from "@/lib/plans-server";
 
 const ADMIN_EMAIL = "daoduykhuyen2@gmail.com";
 
@@ -52,7 +52,7 @@ export async function adminDuyetThanhToan(
   if (order.status === "paid")
     return { success: true, message: "Đơn này đã được thanh toán trước đó." };
 
-  const plan = getPlan(order.plan_code);
+  const plan = await getPlanMerged(order.plan_code);
   const days = plan?.days || 30;
 
   // 1) Đánh dấu đã thanh toán (CÓ ĐIỀU KIỆN status=pending để chống duyệt trùng / cộng trùng)
