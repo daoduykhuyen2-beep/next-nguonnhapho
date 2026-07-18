@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { showToast } from "./Toast";
 import { useFormStatus } from "react-dom";
 import {
   adminCongSoDu,
@@ -40,6 +41,13 @@ export default function AdminNapTools({ plans }: { plans: PlanOpt[] }) {
   const [sdState, sdAction] = useActionState<NapState, FormData>(adminCongSoDu, {});
   const [goiState, goiAction] = useActionState<NapState, FormData>(adminKichHoatGoi, {});
   const [resetState, resetAction] = useActionState<NapState, FormData>(adminResetDoanhThu, {});
+
+  useEffect(() => {
+    for (const st of [sdState, goiState, resetState]) {
+      if (st?.success) { showToast(st.message || "Thao tác thành công"); }
+      else if (st?.error) { showToast(st.error, "error"); }
+    }
+  }, [sdState, goiState, resetState]);
 
   return (
     <div className="mb-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
