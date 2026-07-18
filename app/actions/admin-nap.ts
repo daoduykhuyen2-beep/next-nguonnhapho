@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
-import { getPlan } from "@/lib/plans";
+import { getPlanMerged } from "@/lib/plans-server";
 
 const ADMIN_EMAIL = "daoduykhuyen2@gmail.com";
 
@@ -94,7 +94,7 @@ export async function adminKichHoatGoi(_prev: NapState, formData: FormData): Pro
   const email = String(formData.get("email") || "").trim();
   const planCode = String(formData.get("plan_code") || "").trim();
   if (!email) return { error: "Nhap email tai khoan." };
-  const plan = getPlan(planCode);
+  const plan = await getPlanMerged(planCode);
   if (!plan) return { error: "Goi khong hop le." };
 
   const u = await timUserTheoEmail(db, email);
