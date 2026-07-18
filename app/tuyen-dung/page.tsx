@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTongSoCan, formatSoCan } from "@/lib/stats";
+import JobApplyForm from "@/components/JobApplyForm";
 
 export const metadata: Metadata = {
   title: "Tuyển dụng — Nguồn Nhà Phố HCM",
@@ -214,17 +215,13 @@ export default async function TuyenDungPage() {
         <div className="mx-auto max-w-4xl px-4 text-center">
           <h2 className="text-2xl font-bold sm:text-3xl">Sẵn sàng gia nhập?</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 sm:text-base">
-            Bấm nút <strong className="font-semibold">Gọi / Zalo</strong> hoặc liên hệ
-            trực tiếp <strong className="font-semibold">0987.645.314</strong> (Mr. Duy
-            Khuyến) — nhắn “Ứng tuyển môi giới” để được tư vấn về cơ chế và bắt đầu ngay.
+            Để lại thông tin bên dưới, bộ phận tuyển dụng sẽ liên hệ tư vấn về vị trí,
+            cơ chế hoa hồng và lộ trình đào tạo — hoàn toàn miễn phí.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <a
-              href="tel:0987645314"
-              className="rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark"
-            >
-              ☎ Gọi 0987.645.314
-            </a>
+          <div className="mt-6">
+            <JobApplyForm viTriList={viTri.map((v) => v.ten)} />
+          </div>
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link
               href="/gioi-thieu"
               className="rounded-lg border border-gray-300 px-6 py-3 font-semibold text-black hover:bg-gray-50"
