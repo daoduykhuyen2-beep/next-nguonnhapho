@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { adminSavePlanOverride, type PlanState } from "@/app/actions/plans";
 import { formatVND, type Plan } from "@/lib/plans";
+import { showToast } from "./Toast";
 
 function SaveBtn() {
   const { pending } = useFormStatus();
@@ -50,6 +51,12 @@ function PlanRow({ plan }: { plan: Plan }) {
     adminSavePlanOverride,
     {}
   );
+
+  useEffect(() => {
+    if (state?.success) showToast("Đã lưu gói thành công");
+    else if (state?.error) showToast(state.error, "error");
+  }, [state]);
+
   return (
     <form
       action={formAction}
