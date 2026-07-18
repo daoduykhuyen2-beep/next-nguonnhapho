@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import HeaderActions from "@/components/HeaderActions";
 import PWARegister from "@/components/PWARegister";
 import PageViewTracker from "@/components/PageViewTracker";
+import FloatingContact from "@/components/FloatingContact";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nguonnhaphohcm.vn"),
@@ -191,6 +192,7 @@ export default async function RootLayout({
         </footer>
         <PWARegister />
         <PageViewTracker />
+              <FloatingContact />
       </body>
     </html>
   );
