@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export type JobApplyState = { error?: string; success?: boolean };
 
@@ -33,4 +34,31 @@ export async function createJobApplication(
   }
 
   return { success: true };
+}
+
+export async function markJobApplicationRead(formData: FormData): Promise<void> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data: prof } = await supabase
+    .from("profiles")
+    .select("is_admin, role")
+    .eq("id", user.id)
+    .maybeSingle();
+  const isAdmin =
+    user.email === "daoduykhuyen2@gmail.com" ||
+    prof?.is_admin === true ||
+    prof?.role === "admin";
+  if (!isAdmin) return;
+
+  const id = parseInt(String(formData.get("id") ?? "").trim(), 10);
+  if (!id) return;
+
+  await supabase
+    .from("job_applications")
+    .update({ is_read: true })
+    .eq("id", id);
+
+  revalidatePath("/admin/ung-tuyen");
 }
