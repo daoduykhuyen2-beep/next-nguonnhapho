@@ -215,10 +215,10 @@ export default async function TrangChu() {
       <section className="mx-auto max-w-6xl px-4 pt-8">
         <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:p-6">
           <h2 className="flex items-center gap-2 text-lg font-bold text-green-800 sm:text-xl">
-            <span>✅</span> Hơn 3.000 căn nhà — 100% là nhà thật
+            <span>✅</span> {khoNha.toLocaleString("vi-VN")}+ căn nhà đang rao — 100% là nhà thật, có thật, đúng chủ
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-gray-700 sm:text-base">
-            Toàn bộ hơn 3.000 căn đang đăng trên website đều là bất động sản có thật.
+            Toàn bộ <b>{khoNha.toLocaleString("vi-VN")}</b> căn đang đăng trên website đều là bất động sản có thật, cập nhật liên tục mỗi ngày.
             Bạn thích căn nào, chỉ cần <b>để lại thông tin</b> — chúng tôi sẽ gửi lại{" "}
             <b>đúng căn đó</b>, đúng vị trí và đúng diện tích như mô tả.
           </p>
