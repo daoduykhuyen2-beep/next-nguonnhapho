@@ -5,6 +5,9 @@ import PostCard from "@/components/PostCard";
 import BannerCarousel from "@/components/BannerCarousel";
 import TiktokEmbed from "@/components/TiktokEmbed";
 import { getTongSoCan } from "@/lib/stats";
+import TieuDiem from "@/components/home/TieuDiem";
+import DichVu from "@/components/home/DichVu";
+import CamNhan from "@/components/home/CamNhan";
 
 type HomeVideo = { id: number; title: string | null; tiktok_url: string };
 
@@ -343,6 +346,9 @@ export default async function TrangChu() {
           <Link href="/tin-tuc" className="mt-4 inline-block text-sm font-semibold text-red-700 hover:underline">Xem thêm cảnh báo →</Link>
         </div>
       </section>
+      <TieuDiem />
+      <DichVu />
+      <CamNhan />
     </>
   );
 }
