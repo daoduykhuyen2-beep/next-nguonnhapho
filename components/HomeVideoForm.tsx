@@ -1,8 +1,9 @@
 "use client";
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useRef, useState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { saveHomeVideo, type HomeVideoState } from "@/app/actions/home-video";
 import { uploadHomeVideo } from "@/lib/upload";
+import { showToast } from "./Toast";
 
 function Save({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -19,6 +20,11 @@ function Save({ label }: { label: string }) {
 
 export default function HomeVideoForm() {
   const [state, formAction] = useActionState<HomeVideoState, FormData>(saveHomeVideo, {});
+
+  useEffect(() => {
+    if (state?.success) showToast("Đã lưu video trang chủ thành công");
+    else if (state?.error) showToast(state.error, "error");
+  }, [state]);
   const [mode, setMode] = useState<"link" | "upload">("link");
   const [uploading, setUploading] = useState(false);
   const [uploadErr, setUploadErr] = useState<string | null>(null);
