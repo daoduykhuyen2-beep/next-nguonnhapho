@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient as createServerClient } from "@/lib/supabase/server";
-import { getPlan, getEffectivePrice } from "@/lib/plans";
+import { getEffectivePrice } from "@/lib/plans";
+import { getPlanMerged } from "@/lib/plans-server";
 
 // Dùng quyền lợi trong ví để nâng cấp hạng tin hoặc đẩy tin.
 // Còn tiền trong ví thì trừ ví và áp dụng ngay; không đủ thì báo để nạp thêm.
@@ -17,7 +18,7 @@ export async function usePerk(formData: FormData): Promise<void> {
     redirect(`${back}?perk=loi`);
   }
 
-  const plan = getPlan(planCode);
+  const plan = await getPlanMerged(planCode);
   if (!plan) {
     redirect(`${back}?perk=loi`);
   }
