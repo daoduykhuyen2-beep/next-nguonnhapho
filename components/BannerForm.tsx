@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { saveBanner, type BannerState } from "@/app/actions/banner";
 import { createClient } from "@/lib/supabase/client";
+import { showToast } from "./Toast";
 
 const BUCKET = "post-images";
 
@@ -23,6 +24,11 @@ function Save() {
 
 export default function BannerForm() {
   const [state, formAction] = useActionState<BannerState, FormData>(saveBanner, {});
+
+  useEffect(() => {
+    if (state?.success) showToast("Đã lưu banner thành công");
+    else if (state?.error) showToast(state.error, "error");
+  }, [state]);
   const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
