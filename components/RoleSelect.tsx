@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { adminSetRole } from "@/app/actions/admin";
 import { ROLE_LABELS, type Role } from "@/lib/roles";
+import { showToast } from "./Toast";
 
 const ROLE_OPTIONS: Role[] = ["member", "pho_cong_dong", "admin"];
 
@@ -29,8 +30,10 @@ export default function RoleSelect({
       if (res?.error) {
         setRole(prev);
         setMsg(res.error);
+        showToast(res.error, "error");
       } else {
         setMsg("Đã cập nhật ✓");
+        showToast("Đã cập nhật vai trò thành viên");
       }
     });
   }
