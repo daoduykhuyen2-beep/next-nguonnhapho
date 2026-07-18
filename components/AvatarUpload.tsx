@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { showToast } from "./Toast";
 import { createClient } from "@/lib/supabase/client";
 import { updateAvatar } from "@/app/actions/profile";
 
@@ -51,6 +52,7 @@ export default function AvatarUpload({
         .upload(path, file, { upsert: true, cacheControl: "3600" });
       if (upErr) {
         setMsg("Tải ảnh thất bại: " + upErr.message);
+        showToast("Tải ảnh thất bại", "error");
         setBusy(false);
         return;
       }
@@ -61,9 +63,11 @@ export default function AvatarUpload({
       const res = await updateAvatar(publicUrl);
       if (res.error) {
         setMsg(res.error);
+        showToast(res.error, "error");
       } else {
         setUrl(publicUrl);
         setMsg("Đã cập nhật ảnh đại diện.");
+        showToast("Đã cập nhật ảnh đại diện");
       }
     } catch (err) {
       setMsg("Có lỗi xảy ra, vui lòng thử lại.");
