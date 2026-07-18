@@ -15,6 +15,7 @@ type NewsItem = {
   tieu_de: string | null;
   mo_ta: string | null;
   anh_bia: string | null;
+  hinh_anh: string[] | null;
   loai: string | null;
   video_url: string | null;
 };
@@ -23,25 +24,38 @@ async function layTin(): Promise<NewsItem[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("news")
-    .select("id, tieu_de, mo_ta, anh_bia, loai, video_url")
+            .select("id, tieu_de, mo_ta, anh_bia, hinh_anh, loai, video_url")
     .order("created_at", { ascending: false });
   if (error) return [];
   return (data as NewsItem[]) ?? [];
 }
 
 function NewsCard({ item }: { item: NewsItem }) {
+  const cover =
+    (Array.isArray(item.hinh_anh) && item.hinh_anh.length ? item.hinh_anh[0] : null) ||
+    item.anh_bia ||
+    null;
   return (
     <Link
       href={"/tin-tuc/" + item.id}
       className="group overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md"
     >
-      <div className="h-44 w-full bg-gray-100">
-        {item.anh_bia ? (
+      <div className="relative h-44 w-full overflow-hidden bg-gray-100">
+        {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={item.anh_bia} alt={item.tieu_de ?? ""} className="h-full w-full object-cover" />
+          <img
+            src={cover}
+            alt={item.tieu_de ?? ""}
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+          />
         ) : (
-          <div className="flex h-full items-center justify-center text-gray-400">
-            Không có ảnh
+          <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-slate-800 via-slate-700 to-brand p-4 text-center">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-white/70">
+              Nguồn Nhà Phố HCM
+            </span>
+            <span className="mt-1 line-clamp-3 text-sm font-bold text-white">
+              {item.tieu_de ?? "Tin thị trường bất động sản"}
+            </span>
           </div>
         )}
       </div>
