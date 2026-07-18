@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { toggleLeadRead, deleteLead } from "@/app/actions/leads";
+import { showToast } from "@/components/Toast";
 
 type Lead = {
   id: number;
@@ -41,6 +42,7 @@ export default function LeadRow({
     setRemoved(true);
     startTransition(async () => {
       await deleteLead(lead.id);
+      showToast("Đã xoá khách hàng khỏi danh sách", "success");
     });
   }
 
