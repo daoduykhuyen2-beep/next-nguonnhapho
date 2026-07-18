@@ -31,10 +31,12 @@ async function layTin(): Promise<NewsItem[]> {
 }
 
 function NewsCard({ item }: { item: NewsItem }) {
-  const cover =
-    (Array.isArray(item.hinh_anh) && item.hinh_anh.length ? item.hinh_anh[0] : null) ||
-    item.anh_bia ||
-    null;
+  const isRealImg = (u?: string | null) =>
+    !!u && !u.startsWith("data:") && !/placeholder|default/i.test(u);
+  const firstHinh = Array.isArray(item.hinh_anh)
+    ? item.hinh_anh.find(isRealImg)
+    : null;
+  const cover = firstHinh || (isRealImg(item.anh_bia) ? item.anh_bia : null);
   return (
     <Link
       href={"/tin-tuc/" + item.id}
