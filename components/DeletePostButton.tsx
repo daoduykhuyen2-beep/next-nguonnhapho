@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { deletePost } from "@/app/actions/posts";
+import { showToast } from "@/components/Toast";
 
 export default function DeletePostButton({ id }: { id: number }) {
   const router = useRouter();
@@ -15,7 +16,9 @@ export default function DeletePostButton({ id }: { id: number }) {
       const res = await deletePost(id);
       if (res?.error) {
         setErr(res.error);
+        showToast(res.error, "error");
       } else {
+        showToast("Đã xoá tin thành công", "success");
         router.refresh();
       }
     });
