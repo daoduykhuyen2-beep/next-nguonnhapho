@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getPlan } from "@/lib/plans";
+import { getPlanMerged } from "@/lib/plans-server";
 
 // SePay gọi webhook này mỗi khi có giao dịch tiền vào tài khoản.
 // Docs SePay: gửi POST JSON, xác thực bằng header "Authorization: Apikey <key>".
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
   }
 
   // 5) Đánh dấu đã thanh toán + nâng cấp gói
-  const plan = getPlan(order.plan_code);
+  const plan = await getPlanMerged(order.plan_code);
   const days = plan?.days || 30;
 
   // Đánh dấu paid CÓ ĐIỀU KIỆN status='pending' để chống cộng trùng (idempotency).
