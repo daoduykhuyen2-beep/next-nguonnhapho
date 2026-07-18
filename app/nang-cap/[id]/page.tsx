@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getPlan, formatVND } from "@/lib/plans";
+import { formatVND } from "@/lib/plans";
+import { getPlanMerged } from "@/lib/plans-server";
 import PaymentStatus from "@/components/PaymentStatus";
 import { payPackageWithBalance } from "@/app/actions/nap-tien";
 import { danhDauDaChuyenKhoan } from "@/app/actions/danh-dau-ck";
@@ -34,7 +35,7 @@ export default async function NangCapPage({
 
   if (!order) notFound();
 
-  const plan = getPlan(order.plan_code);
+  const plan = await getPlanMerged(order.plan_code);
 
   const { data: profBal } = await supabase
     .from("profiles")
