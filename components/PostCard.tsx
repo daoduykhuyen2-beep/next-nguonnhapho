@@ -36,7 +36,7 @@ const LOAI_LABEL: Record<string, string> = {
   khac: "Khác",
 };
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post, idx = 0 }: { post: Post; idx?: number }) {
   const loaiLabel = post.loai ? LOAI_LABEL[post.loai] || post.loai : null;
   const _pickCover = (x: any): string | null => {
     if (!x) return null;
@@ -47,6 +47,21 @@ export default function PostCard({ post }: { post: Post }) {
     return null;
   };
   const cover = _pickCover(post.anh);
+  const STOCK_SAIGON = [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/B%E1%BA%BFn_Th%C3%A0nh_Market.jpg/960px-B%E1%BA%BFn_Th%C3%A0nh_Market.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Landmark_81%2C_Ho_Chi_Minh_City%2C_Vietnam_-_February_2021.jpg/960px-Landmark_81%2C_Ho_Chi_Minh_City%2C_Vietnam_-_February_2021.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Bitexco_Financial_Tower.jpg/960px-Bitexco_Financial_Tower.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Saigon_Notre-Dame_Basilica.jpg/960px-Saigon_Notre-Dame_Basilica.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Ho_Chi_Minh_City_Hall.jpg/960px-Ho_Chi_Minh_City_Hall.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Saigon_Central_Post_Office.jpg/960px-Saigon_Central_Post_Office.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Independence_Palace%2C_Ho_Chi_Minh_City.jpg/960px-Independence_Palace%2C_Ho_Chi_Minh_City.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg/960px-B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg/960px-Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Saigon_Opera_House.jpg/960px-Saigon_Opera_House.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Ho_Chi_Minh_City%2C_Nguyen_Hue_Street%2C_2020-01_CN-01.jpg/960px-Ho_Chi_Minh_City%2C_Nguyen_Hue_Street%2C_2020-01_CN-01.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Thu_Thiem_Bridge_at_night.jpg/960px-Thu_Thiem_Bridge_at_night.jpg",
+  ];
+  const coverFinal = cover || STOCK_SAIGON[idx % STOCK_SAIGON.length];
   const diaChi = [post.duong, post.phuong, post.quan]
     .filter(Boolean)
     .join(", ");
@@ -79,18 +94,12 @@ export default function PostCard({ post }: { post: Post }) {
             {vip.label}
           </span>
         ) : null}
-        {cover ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={cover}
-            alt={post.title ?? "Tin đăng"}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-gray-400">
-            Không có ảnh
-          </div>
-        )}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={coverFinal}
+          alt={post.title ?? "Tin đăng"}
+          className="h-full w-full object-cover"
+        />
       </div>
       <div className="p-3">
         <h3 className="line-clamp-2 font-semibold">
