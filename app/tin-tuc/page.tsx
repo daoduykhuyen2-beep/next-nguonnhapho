@@ -52,7 +52,6 @@ function NewsCard({ item }: { item: NewsItem }) {
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center bg-gray-50 p-4 text-center">
-            <span className="text-3xl" aria-hidden>📰</span>
             <span className="mt-2 line-clamp-3 text-sm font-semibold text-gray-700">
               {item.tieu_de ?? "Tin thị trường bất động sản"}
             </span>
