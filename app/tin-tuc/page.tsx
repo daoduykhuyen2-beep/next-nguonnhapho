@@ -56,8 +56,7 @@ function NewsCard({ item }: { item: NewsItem }) {
               {item.tieu_de ?? "Tin thị trường bất động sản"}
             </span>
           </div>
-          </div>
-        )}
+          )}
       </div>
       <div className="p-4">
         <h3 className="line-clamp-2 font-semibold text-gray-900 group-hover:text-brand">
