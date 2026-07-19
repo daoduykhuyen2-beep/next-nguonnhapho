@@ -46,6 +46,9 @@ function NewsCard({ item, idx }: { item: NewsItem; idx: number }) {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Independence_Palace%2C_Ho_Chi_Minh_City.jpg/960px-Independence_Palace%2C_Ho_Chi_Minh_City.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg/960px-B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg/960px-Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Saigon_Opera_House.jpg/960px-Saigon_Opera_House.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Ho_Chi_Minh_City%2C_Nguyen_Hue_Street%2C_2020-01_CN-01.jpg/960px-Ho_Chi_Minh_City%2C_Nguyen_Hue_Street%2C_2020-01_CN-01.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Thu_Thiem_Bridge_at_night.jpg/960px-Thu_Thiem_Bridge_at_night.jpg",
   ];
   const real = firstHinh || (isRealImg(item.anh_bia) ? item.anh_bia : null);
   const cover = real || STOCK[idx % STOCK.length];
