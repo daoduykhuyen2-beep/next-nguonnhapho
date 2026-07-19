@@ -36,27 +36,28 @@ function NewsCard({ item }: { item: NewsItem }) {
   const firstHinh = Array.isArray(item.hinh_anh)
     ? item.hinh_anh.find(isRealImg)
     : null;
-  const cover = firstHinh || (isRealImg(item.anh_bia) ? item.anh_bia : null);
+  const STOCK = [
+    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=60",
+    "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=60",
+  ];
+  const real = firstHinh || (isRealImg(item.anh_bia) ? item.anh_bia : null);
+  const cover = real || STOCK[item.id % STOCK.length];
   return (
     <Link
       href={"/tin-tuc/" + item.id}
       className="group overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md"
     >
       <div className="relative h-44 w-full overflow-hidden bg-gray-100">
-        {cover ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={cover}
-            alt={item.tieu_de ?? ""}
-            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center bg-gray-50 p-4 text-center">
-            <span className="mt-2 line-clamp-3 text-sm font-semibold text-gray-700">
-              {item.tieu_de ?? "Tin thị trường bất động sản"}
-            </span>
-          </div>
-          )}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={cover}
+          alt={item.tieu_de ?? ""}
+          className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+        />
       </div>
       <div className="p-4">
         <h3 className="line-clamp-2 font-semibold text-gray-900 group-hover:text-brand">
