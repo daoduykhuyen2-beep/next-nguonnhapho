@@ -36,13 +36,13 @@ function NewsCard({ item }: { item: NewsItem }) {
   const firstHinh = Array.isArray(item.hinh_anh)
     ? item.hinh_anh.find(isRealImg)
     : null;
-  const STOCK = [
-    "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=60",
-    "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=60",
-    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=60",
-    "https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=800&q=60",
-    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=60",
-    "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=60",
+    const STOCK = [
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/B%E1%BA%BFn_Th%C3%A0nh_Market.jpg/960px-B%E1%BA%BFn_Th%C3%A0nh_Market.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Landmark_81%2C_Ho_Chi_Minh_City%2C_Vietnam_-_February_2021.jpg/960px-Landmark_81%2C_Ho_Chi_Minh_City%2C_Vietnam_-_February_2021.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Bitexco_Financial_Tower.jpg/960px-Bitexco_Financial_Tower.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Saigon_Notre-Dame_Basilica.jpg/960px-Saigon_Notre-Dame_Basilica.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Ho_Chi_Minh_City_Hall.jpg/960px-Ho_Chi_Minh_City_Hall.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Saigon_Central_Post_Office.jpg/960px-Saigon_Central_Post_Office.jpg",
   ];
   const real = firstHinh || (isRealImg(item.anh_bia) ? item.anh_bia : null);
   const cover = real || STOCK[item.id % STOCK.length];
