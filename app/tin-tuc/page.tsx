@@ -30,7 +30,7 @@ async function layTin(): Promise<NewsItem[]> {
   return (data as NewsItem[]) ?? [];
 }
 
-function NewsCard({ item }: { item: NewsItem }) {
+function NewsCard({ item, idx }: { item: NewsItem; idx: number }) {
   const isRealImg = (u?: string | null) =>
     !!u && !u.startsWith("data:") && !/placeholder|default/i.test(u);
   const firstHinh = Array.isArray(item.hinh_anh)
@@ -43,9 +43,12 @@ function NewsCard({ item }: { item: NewsItem }) {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Saigon_Notre-Dame_Basilica.jpg/960px-Saigon_Notre-Dame_Basilica.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Ho_Chi_Minh_City_Hall.jpg/960px-Ho_Chi_Minh_City_Hall.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Saigon_Central_Post_Office.jpg/960px-Saigon_Central_Post_Office.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Independence_Palace%2C_Ho_Chi_Minh_City.jpg/960px-Independence_Palace%2C_Ho_Chi_Minh_City.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg/960px-B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg/960px-Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg",
   ];
   const real = firstHinh || (isRealImg(item.anh_bia) ? item.anh_bia : null);
-  const cover = real || STOCK[item.id % STOCK.length];
+  const cover = real || STOCK[idx % STOCK.length];
   return (
     <Link
       href={"/tin-tuc/" + item.id}
@@ -84,8 +87,8 @@ function Section({
       <h2 className="text-2xl font-bold text-brand">{tieuDe}</h2>
       {moTa ? <p className="mt-1 text-gray-500">{moTa}</p> : null}
       <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <NewsCard key={item.id} item={item} />
+        {items.map((item, idx) => (
+          <NewsCard key={item.id} item={item} idx={idx} />
         ))}
       </div>
     </section>
