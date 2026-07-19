@@ -67,9 +67,9 @@ export default function PostCard({ post, idx = 0 }: { post: Post; idx?: number }
     .join(", ");
   const vip =
     post.status === "kim_cuong"
-      ? { label: "💎 VIP Kim Cương", cls: "bg-gradient-to-r from-sky-500 to-indigo-600" }
+      ? { label: "VIP Kim Cương", cls: "bg-gradient-to-r from-sky-500 to-indigo-600" }
       : post.status === "vang"
-      ? { label: "🏅 VIP Vàng", cls: "bg-gradient-to-r from-amber-400 to-yellow-500" }
+      ? { label: "VIP Vàng", cls: "bg-gradient-to-r from-amber-400 to-yellow-500" }
       : null;
   const stats = getFakeStats(post.id, post.created_at, {
     status: post.status,
@@ -108,13 +108,27 @@ export default function PostCard({ post, idx = 0 }: { post: Post; idx?: number }
         <p className="mt-1 font-bold text-brand">{formatGia(post.gia)}</p>
         {post.dien_tich ? (
           <p className="mt-0.5 text-sm text-gray-600">
-              Diện tích: {formatDienTich(post.dien_tich)}
+            Diện tích: {formatDienTich(post.dien_tich)}
           </p>
         ) : null}
         <p className="mt-1 line-clamp-1 text-sm text-gray-500">{diaChi}</p>
-                {stats.views > 0 && (
-                  <div className="mt-2 flex items-center gap-3 text-xs text-gray-500"><span>👁 {stats.views.toLocaleString("vi-VN")} lượt xem</span><span>❤️ {stats.interested.toLocaleString("vi-VN")} quan tâm</span></div>
-                )}
+        {stats.views > 0 && (
+          <div className="mt-2 flex items-center gap-3 text-xs text-gray-500">
+            <span className="inline-flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+              </svg>
+              {stats.views.toLocaleString("vi-VN")} lượt xem
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
+              </svg>
+              {stats.interested.toLocaleString("vi-VN")} quan tâm
+            </span>
+          </div>
+        )}
       </div>
     </Link>
   );
