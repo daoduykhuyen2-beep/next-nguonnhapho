@@ -197,7 +197,7 @@ export default async function TrangChu() {
                 type="submit"
                 className="np-btn rounded-lg px-5 py-3 text-sm font-semibold sm:col-span-3"
               >
-                🔍 Tìm kiếm
+                Tìm kiếm
               </button>
             </div>
           </form>
@@ -218,7 +218,7 @@ export default async function TrangChu() {
       <section className="mx-auto max-w-6xl px-4 pt-8">
         <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:p-6">
           <h2 className="flex items-center gap-2 text-lg font-bold text-green-800 sm:text-xl">
-            <span>✅</span> {khoNha.toLocaleString("vi-VN")}+ căn nhà đang rao — 100% là nhà thật, có thật, đúng chủ
+            {khoNha.toLocaleString("vi-VN")}+ căn nhà đang rao — 100% là nhà thật, có thật, đúng chủ
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-gray-700 sm:text-base">
             Toàn bộ <b>{khoNha.toLocaleString("vi-VN")}</b> căn đang đăng trên website đều là bất động sản có thật, cập nhật liên tục mỗi ngày.
@@ -264,7 +264,7 @@ export default async function TrangChu() {
           <div className="mb-5 flex items-end justify-between">
             <div>
               <h2 className="flex items-center gap-2 text-xl font-bold text-brand sm:text-2xl">
-                <span>🔥</span> Tin HÓT trong ngày
+                Tin HÓT trong ngày
               </h2>
               <p className="mt-1 text-sm text-gray-500">Những tin được xem nhiều &amp; nổi bật nhất, cập nhật liên tục</p>
             </div>
@@ -277,19 +277,19 @@ export default async function TrangChu() {
       ) : null}
 
       {/* 2. VIP Kim Cuong */}
-      <Khoi tieuDe="💎 Nhà VIP Kim Cương" moTa="Bất động sản nổi bật, vị trí đắc địa — xếp từ mới đến cũ" tin={kimCuong} xemThem="/tin-dang" />
+      <Khoi tieuDe="Nhà VIP Kim Cương" moTa="Bất động sản nổi bật, vị trí đắc địa — xếp từ mới đến cũ" tin={kimCuong} xemThem="/tin-dang" />
 
       {/* 3. VIP Vang */}
-      <Khoi tieuDe="🏅 Nhà VIP Vàng" moTa="Tin chọn lọc — xếp từ mới đến cũ" tin={vang} xemThem="/tin-dang" />
+      <Khoi tieuDe="Nhà VIP Vàng" moTa="Tin chọn lọc — xếp từ mới đến cũ" tin={vang} xemThem="/tin-dang" />
 
       {/* 4. Tin moi */}
-      <Khoi tieuDe="🆕 Tin mới nhất" moTa="Tất cả tin đăng mới — xếp từ mới đến cũ" tin={tinMoi} xemThem="/tin-dang" />
+      <Khoi tieuDe="Tin mới nhất" moTa="Tất cả tin đăng mới — xếp từ mới đến cũ" tin={tinMoi} xemThem="/tin-dang" />
 
       {/* 6. Tin tuc */}
       {tinTuc.length ? (
         <section className={"mx-auto max-w-6xl px-4 py-8"}>
           <div className={"mb-5 flex items-end justify-between"}>
-            <h2 className={"text-xl font-bold text-brand sm:text-2xl"}>🗞️ Tin tức</h2>
+            <h2 className={"text-xl font-bold text-brand sm:text-2xl"}>Tin tức</h2>
             <Link href={"/tin-tuc"} className={"shrink-0 text-sm font-semibold text-brand hover:underline"}>Xem tất cả →</Link>
           </div>
           <div className={"grid gap-4 sm:grid-cols-2 lg:grid-cols-3"}>
@@ -315,7 +315,7 @@ export default async function TrangChu() {
       {video.length ? (
         <section className={"mx-auto max-w-6xl px-4 py-8"}>
           <div className={"mb-5 flex items-end justify-between"}>
-            <h2 className={"text-xl font-bold text-brand sm:text-2xl"}>🎬 Video</h2>
+            <h2 className={"text-xl font-bold text-brand sm:text-2xl"}>Video</h2>
           </div>
           <div className={"grid gap-4 sm:grid-cols-2 lg:grid-cols-3"}>
             {video.map((v) => (
@@ -329,7 +329,7 @@ export default async function TrangChu() {
       <section className="mx-auto max-w-6xl px-4 py-8">
         <div className="rounded-2xl border border-red-200 bg-red-50 p-6">
           <h2 className="flex items-center gap-2 text-xl font-bold text-red-700 sm:text-2xl">
-            <span>⚠️</span> Cảnh báo rủi ro & lừa đảo
+            Cảnh báo rủi ro & lừa đảo
           </h2>
           <p className="mt-1 text-sm text-red-600/80">Kiến thức pháp lý giúp bạn mua nhà an toàn, tránh bẫy lừa đảo</p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
