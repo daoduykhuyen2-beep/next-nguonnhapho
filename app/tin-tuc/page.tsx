@@ -51,13 +51,12 @@ function NewsCard({ item }: { item: NewsItem }) {
             className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-slate-800 via-slate-700 to-brand p-4 text-center">
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-white/70">
-              Nguồn Nhà Phố HCM
-            </span>
-            <span className="mt-1 line-clamp-3 text-sm font-bold text-white">
+          <div className="flex h-full w-full flex-col items-center justify-center bg-gray-50 p-4 text-center">
+            <span className="text-3xl" aria-hidden>📰</span>
+            <span className="mt-2 line-clamp-3 text-sm font-semibold text-gray-700">
               {item.tieu_de ?? "Tin thị trường bất động sản"}
             </span>
+          </div>
           </div>
         )}
       </div>
