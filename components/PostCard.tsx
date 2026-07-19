@@ -2,12 +2,16 @@ import Link from "next/link";
 import type { Post } from "@/lib/types";
 import { getFakeStats } from "@/lib/fakeStats";
 
-export function formatGia(gia: string | null): string {
+export function formatGia(gia: string | null, loai?: string | null): string {
   if (!gia) return "Thỏa thuận";
   const s = String(gia).trim();
   if (!s) return "Thỏa thuận";
   if (/[a-zA-ZÀ-ỹ]/.test(s)) return s;
   const num = s.replace(/[.,\s]/g, "");
+  if (loai === "thue") {
+    if (/^\d+$/.test(num)) return Number(num).toLocaleString("vi-VN") + " VNĐ/tháng";
+    return s;
+  }
   if (/^\d+$/.test(num)) return num + " tỷ";
   return s;
 }
@@ -105,7 +109,7 @@ export default function PostCard({ post, idx = 0 }: { post: Post; idx?: number }
         <h3 className="line-clamp-2 font-semibold">
           {post.title ?? "(Không có tiêu đề)"}
         </h3>
-        <p className="mt-1 font-bold text-brand">{formatGia(post.gia)}</p>
+        <p className="mt-1 font-bold text-brand">{formatGia(post.gia, post.loai)}</p>
         {post.dien_tich ? (
           <p className="mt-0.5 text-sm text-gray-600">
             Diện tích: {formatDienTich(post.dien_tich)}
