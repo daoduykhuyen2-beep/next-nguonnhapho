@@ -248,7 +248,7 @@ export default async function TinChiTietPage({
       <div className="mt-6 rounded-xl border bg-gray-50 p-4 grid grid-cols-3 gap-4">
         <div>
           <p className="text-xs uppercase text-gray-500">{isThue ? "Giá thuê" : "Giá bán"}</p>
-          <p className="text-xl font-bold text-brand">{isThue ? formatGiaThue(post.gia) : formatGia(post.gia)}</p>
+          <p className="text-xl font-bold text-brand">{isThue ? formatGiaThue(post.gia) : formatGia(post.gia, post.loai)}</p>
         </div>
         <div>
           <p className="text-xs uppercase text-gray-500">Diện tích</p>
@@ -386,7 +386,7 @@ export default async function TinChiTietPage({
         </div>
 
         <aside className="h-fit rounded-xl border bg-white p-4">
-          <p className="text-2xl font-bold text-brand">{formatGia(post.gia)}</p>
+          <p className="text-2xl font-bold text-brand">{formatGia(post.gia, post.loai)}</p>
           {post.dien_tich ? <p className="mt-2 text-sm text-gray-600">Diện tích: <b>{formatDienTich(post.dien_tich)}</b></p> : null}
           {post.loai ? <p className="mt-1 text-sm text-gray-600">Loại: <b>{post.loai === "thue" ? "Nhà cho thuê" : post.loai === "ban" ? "Nhà bán" : post.loai}</b></p> : null}
           <hr className="my-3" />
