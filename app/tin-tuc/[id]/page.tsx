@@ -11,6 +11,24 @@ const LOAI_LABEL: Record<string, string> = {
   video: "Video",
 };
 
+const STOCK = [
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/B%E1%BA%BFn_Th%C3%A0nh_Market.jpg/960px-B%E1%BA%BFn_Th%C3%A0nh_Market.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Landmark_81%2C_Ho_Chi_Minh_City%2C_Vietnam_-_February_2021.jpg/960px-Landmark_81%2C_Ho_Chi_Minh_City%2C_Vietnam_-_February_2021.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Bitexco_Financial_Tower.jpg/960px-Bitexco_Financial_Tower.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Saigon_Notre-Dame_Basilica.jpg/960px-Saigon_Notre-Dame_Basilica.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Ho_Chi_Minh_City_Hall.jpg/960px-Ho_Chi_Minh_City_Hall.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Saigon_Central_Post_Office.jpg/960px-Saigon_Central_Post_Office.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Independence_Palace%2C_Ho_Chi_Minh_City.jpg/960px-Independence_Palace%2C_Ho_Chi_Minh_City.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg/960px-B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg/960px-Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Saigon_Opera_House.jpg/960px-Saigon_Opera_House.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Ho_Chi_Minh_City%2C_Nguyen_Hue_Street%2C_2020-01_CN-01.jpg/960px-Ho_Chi_Minh_City%2C_Nguyen_Hue_Street%2C_2020-01_CN-01.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Thu_Thiem_Bridge_at_night.jpg/960px-Thu_Thiem_Bridge_at_night.jpg",
+];
+
+const isRealImg = (u?: string | null) =>
+  !!u && !u.startsWith("data:") && !/placeholder|default/i.test(u);
+
 export default async function TinTucDetail({
   params,
 }: {
@@ -34,10 +52,14 @@ export default async function TinTucDetail({
     mo_ta: string | null;
     noi_dung: string | null;
     anh_bia: string | null;
-  hinh_anh?: string[] | null;
+    hinh_anh?: string[] | null;
     loai: string | null;
     created_at: string;
   };
+
+  const realImgs = (item.hinh_anh && item.hinh_anh.length ? item.hinh_anh : item.anh_bia ? [item.anh_bia] : []).filter(isRealImg) as string[];
+  const cover = realImgs.length ? realImgs[0] : STOCK[Number(item.id) % STOCK.length];
+  const gallery = realImgs.length ? realImgs : [cover];
 
   return (
     <article className="mx-auto max-w-3xl">
@@ -57,20 +79,14 @@ export default async function TinTucDetail({
         </p>
       </div>
 
-      {(() => {
-        const imgs = (item.hinh_anh && item.hinh_anh.length ? item.hinh_anh : item.anh_bia ? [item.anh_bia] : []).filter(Boolean);
-        if (!imgs.length) return null;
-        return (
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {imgs.map((src, i) => (
-              <div key={src + i} className={`overflow-hidden rounded-xl ${imgs.length === 1 ? "sm:col-span-2" : ""}`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt={`${item.tieu_de} ${i + 1}`} className="w-full object-cover" />
-              </div>
-            ))}
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        {gallery.map((src, i) => (
+          <div key={src + i} className={`overflow-hidden rounded-xl ${gallery.length === 1 ? "sm:col-span-2" : ""}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={src} alt={`${item.tieu_de} ${i + 1}`} className="w-full object-cover" />
           </div>
-        );
-      })()}
+        ))}
+      </div>
 
       {item.mo_ta ? (
         <p className="mt-6 text-lg font-medium text-gray-700">{item.mo_ta}</p>
@@ -84,4 +100,3 @@ export default async function TinTucDetail({
     </article>
   );
 }
- 
