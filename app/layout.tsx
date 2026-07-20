@@ -145,65 +145,67 @@ export default async function RootLayout({
 
         <main className="flex-1">{children}</main>
 
-        <footer className="mt-12 border-t border-gray-200 bg-neutral-900 text-white">
-          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
+      <footer className="mt-12 border-t border-gray-200 bg-gray-50 text-gray-700">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2">
-                <Image src="/logo-white.png" alt="Nguồn Nhà Phố HCM" width={40} height={40} className="h-10 w-10 object-contain" />
-                <span className="text-base font-bold">Nguồn Nhà Phố HCM</span>
+                <Image src="/logo-black.png" alt="Nguồn Nhà Phố HCM" width={40} height={40} className="h-10 w-10 object-contain" />
+                <span className="text-base font-bold text-gray-900">Nguồn Nhà Phố HCM</span>
               </div>
-              <div className="mt-3 text-sm leading-relaxed text-white/70">
-                Chuyên nhà phố, shophouse trung tâm TP.HCM. Kiểm tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch.
+              <div className="mt-3 text-sm leading-relaxed text-gray-500">
+                Chuyên nhà phố, shophouse trung tâm TP.HCM. Kiểm tra pháp lý trước khi đăng — mua bán và cho thuê minh bạch, uy tín.
               </div>
             </div>
 
             <div>
-              <div className="mb-3 text-sm font-bold uppercase tracking-wide">Khám phá</div>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/tin-dang" className="hover:text-white">Nhà bán</Link></li>
-                <li><Link href="/tin-dang?loai=thue" className="hover:text-white">Nhà cho thuê</Link></li>
-                <li><Link href="/tin-tuc" className="hover:text-white">Tin tức</Link></li>
-                <li><Link href="/goi-thanh-vien" className="hover:text-white">Bảng giá đăng tin</Link></li>
+              <div className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-900">Khám phá</div>
+              <ul className="space-y-2 text-sm text-gray-500">
+                <li><Link href="/tin-dang" className="transition-colors hover:text-brand">Nhà bán</Link></li>
+                <li><Link href="/tin-dang?loai=thue" className="transition-colors hover:text-brand">Nhà cho thuê</Link></li>
+                <li><Link href="/tin-tuc" className="transition-colors hover:text-brand">Tin tức</Link></li>
+                <li><Link href="/goi-thanh-vien" className="transition-colors hover:text-brand">Bảng giá đăng tin</Link></li>
               </ul>
             </div>
 
             <div>
-              <div className="mb-3 text-sm font-bold uppercase tracking-wide">Khu vực</div>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/tin-dang?quan=Quận 1" className="hover:text-white">Nhà Quận 1</Link></li>
-                <li><Link href="/tin-dang?quan=Quận 3" className="hover:text-white">Nhà Quận 3</Link></li>
-                <li><Link href="/tin-dang?quan=Bình Thạnh" className="hover:text-white">Nhà Bình Thạnh</Link></li>
-                <li><Link href="/tin-dang?quan=Quận 4" className="hover:text-white">Nhà Quận 4</Link></li>
+              <div className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-900">Khu vực</div>
+              <ul className="space-y-2 text-sm text-gray-500">
+                <li><Link href="/tin-dang?quan=Quận 1" className="transition-colors hover:text-brand">Nhà Quận 1</Link></li>
+                <li><Link href="/tin-dang?quan=Quận 3" className="transition-colors hover:text-brand">Nhà Quận 3</Link></li>
+                <li><Link href="/tin-dang?quan=Bình Thạnh" className="transition-colors hover:text-brand">Nhà Bình Thạnh</Link></li>
+                <li><Link href="/tin-dang?quan=Quận 4" className="transition-colors hover:text-brand">Nhà Quận 4</Link></li>
               </ul>
             </div>
 
             <div>
-              <div className="mb-3 text-sm font-bold uppercase tracking-wide">Ký gửi & liên hệ</div>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li><Link href="/gioi-thieu" className="hover:text-white">Về Nguồn Nhà Phố & quy trình</Link></li>
-                <li><Link href="/tuyen-dung" className="hover:text-white">Tuyển dụng</Link></li>
-                <li><Link href="/dang-tin" className="hover:text-white">Đăng tin ký gửi</Link></li>
+              <div className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-900">Ký gửi & liên hệ</div>
+              <ul className="space-y-2 text-sm text-gray-500">
+                <li><Link href="/gioi-thieu" className="transition-colors hover:text-brand">Về Nguồn Nhà Phố & quy trình</Link></li>
+                <li><Link href="/tuyen-dung" className="transition-colors hover:text-brand">Tuyển dụng</Link></li>
+                <li><Link href="/dang-tin" className="transition-colors hover:text-brand">Đăng tin ký gửi</Link></li>
               </ul>
             </div>
           </div>
-        <div className="flex justify-center pt-6 pb-2">
-          <a
-            href="https://online.gov.vn/Home/WebDetails/5480"
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            aria-label="Đã đăng ký Bộ Công Thương"
-          >
-            <Image
-              src="/bo-cong-thuong.png"
-              alt="Đã đăng ký Bộ Công Thương"
-              width={160}
-              height={60}
-              className="h-auto w-40 object-contain"
-            />
-          </a>
-        </div>
-          <div className="border-t border-white/10 py-4 text-center text-xs text-white/60">
-            © {new Date().getFullYear()} Nguồn Nhà Phố HCM. Nhà phố trung tâm TP.HCM.
+
+          <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 border-t border-gray-200 px-4 py-6 sm:flex-row sm:justify-between">
+            <div className="text-center text-xs text-gray-500 sm:text-left">
+              © {new Date().getFullYear()} Nguồn Nhà Phố HCM. Nhà phố trung tâm TP.HCM.
+            </div>
+            <a
+              href="https://online.gov.vn/Home/WebDetails/5480"
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              aria-label="Đã đăng ký Bộ Công Thương"
+              className="shrink-0 opacity-90 transition-opacity hover:opacity-100"
+            >
+              <Image
+                src="/bo-cong-thuong.png"
+                alt="Đã đăng ký Bộ Công Thương"
+                width={160}
+                height={60}
+                className="h-auto w-40 object-contain"
+              />
+            </a>
           </div>
         </footer>
         <PWARegister />
