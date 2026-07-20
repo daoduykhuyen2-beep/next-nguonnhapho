@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { showToast } from "@/components/Toast";
 
 export default function DangKyPage() {
   const router = useRouter();
@@ -45,9 +46,11 @@ export default function DangKyPage() {
     }
 
     if (data.session) {
+      showToast("Đăng ký thành công! Chào mừng bạn đến với Nguồn Nhà Phố!", "success");
       router.push("/tai-khoan");
       router.refresh();
     } else {
+      showToast("Đăng ký thành công! Chào mừng bạn đến với Nguồn Nhà Phố!", "success");
       setDone(true);
     }
   }
