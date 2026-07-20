@@ -353,7 +353,7 @@ export default async function TinChiTietPage({
             <a href={mapLinkSrc} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-brand underline">Mở khu vực này trên Google Maps →</a>
           </section>
 
-          {giaTy ? (
+          {!isThue && giaTy ? (
             <section>
               <h2 className="mb-3 text-lg font-semibold">Lịch sử giá bán</h2>
               <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full">
@@ -374,7 +374,7 @@ export default async function TinChiTietPage({
             </section>
           ) : null}
 
-          {giaTy ? (
+          {!isThue && giaTy ? (
             <section>
               <h2 className="mb-3 text-lg font-semibold">Máy tính vay ngân hàng</h2>
               <LoanCalculator giaTy={giaTy} />
