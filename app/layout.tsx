@@ -186,7 +186,22 @@ export default async function RootLayout({
               </ul>
             </div>
           </div>
-
+        <div className="flex justify-center pt-6 pb-2">
+          <a
+            href="https://online.gov.vn/Home/WebDetails/5480"
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            aria-label="Đã đăng ký Bộ Công Thương"
+          >
+            <Image
+              src="/bo-cong-thuong.png"
+              alt="Đã đăng ký Bộ Công Thương"
+              width={160}
+              height={60}
+              className="h-auto w-40 object-contain"
+            />
+          </a>
+        </div>
           <div className="border-t border-white/10 py-4 text-center text-xs text-white/60">
             © {new Date().getFullYear()} Nguồn Nhà Phố HCM. Nhà phố trung tâm TP.HCM.
           </div>
