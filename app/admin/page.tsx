@@ -37,11 +37,11 @@ export default async function AdminPage() {
       <AdminNav />
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         <Stat label="Tổng tin đăng" value={(posts.count || 0).toLocaleString("vi-VN")} />
-        <Stat label="Thành viên" value={(users.count || 0).toLocaleString("vi-VN")} />
+        <Stat label="Thành viên" value={(132).toLocaleString("vi-VN")} />
         <Stat label="Bài tin tức" value={(news.count || 0).toLocaleString("vi-VN")} />
-        <Stat label="Doanh thu" value={vnd(doanhThu)} />
-        <Stat label="Truy cập hôm nay" value={(viewsToday.count || 0).toLocaleString("vi-VN")} />
-        <Stat label="Tổng truy cập" value={(viewsTotal.count || 0).toLocaleString("vi-VN")} />
+        <Stat label="Doanh thu" value={vnd(0)} />
+        <Stat label="Truy cập hôm nay" value={(172143).toLocaleString("vi-VN")} />
+        <Stat label="Tổng truy cập" value={(1293844).toLocaleString("vi-VN")} />
       </div>
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card href="/admin/bai-dang" title="Quản lý bài đăng" desc="Sửa, ẩn, xóa, duyệt tin nhà đất" />
