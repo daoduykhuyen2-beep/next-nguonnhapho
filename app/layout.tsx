@@ -186,26 +186,27 @@ export default async function RootLayout({
               </ul>
             </div>
           </div>
-
-          <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 border-t border-gray-200 px-4 py-6 sm:flex-row sm:justify-between">
-            <div className="text-center text-xs text-gray-500 sm:text-left">
-              © {new Date().getFullYear()} Nguồn Nhà Phố HCM. Nhà phố trung tâm TP.HCM.
+        <div className="border-t border-gray-200">
+            <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 py-6">
+              <a
+                href="https://online.gov.vn/Home/WebDetails/5480"
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                aria-label="Đã đăng ký Bộ Công Thương"
+                className="opacity-90 transition-opacity hover:opacity-100"
+              >
+                <Image
+                  src="/bo-cong-thuong.png"
+                  alt="Đã đăng ký Bộ Công Thương"
+                  width={160}
+                  height={60}
+                  className="h-auto w-40 object-contain"
+                />
+              </a>
+              <div className="text-center text-xs text-gray-500">
+                © {new Date().getFullYear()} Nguồn Nhà Phố HCM. Bảo lưu mọi quyền.
+              </div>
             </div>
-            <a
-              href="https://online.gov.vn/Home/WebDetails/5480"
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              aria-label="Đã đăng ký Bộ Công Thương"
-              className="shrink-0 opacity-90 transition-opacity hover:opacity-100"
-            >
-              <Image
-                src="/bo-cong-thuong.png"
-                alt="Đã đăng ký Bộ Công Thương"
-                width={160}
-                height={60}
-                className="h-auto w-40 object-contain"
-              />
-            </a>
           </div>
         </footer>
         <PWARegister />
