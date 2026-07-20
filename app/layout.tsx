@@ -50,6 +50,7 @@ const navLinks = [
   { href: "/goi-thanh-vien", label: "Bảng giá" },
   { href: "/gioi-thieu", label: "Giới thiệu" },
   { href: "/tuyen-dung", label: "Tuyển dụng" },
+  { href: "/tro-giup", label: "Trợ giúp" },
 ];
 
 export default async function RootLayout({
