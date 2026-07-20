@@ -15,17 +15,27 @@ export default async function Page() {
   if (!isAdmin) return <div className="p-8 text-center text-gray-500">Không có quyền.</div>;
   const { data } = await supabase.from("profiles").select("id, full_name, email, phone, membership_tier, is_admin, created_at").order("created_at", { ascending: false }).limit(500);
   const members = data || [];
+  const now = Date.now();
+  const isNew = (createdAt: string | null) => {
+    if (!createdAt) return false;
+    return now - new Date(createdAt).getTime() < 24 * 60 * 60 * 1000;
+  };
+  const newCount = members.filter((m: any) => isNew(m.created_at)).length;
   return (
     <div>
       <h1 className="mb-4 text-2xl font-bold">Quản lý thành viên</h1>
       <AdminNav />
       <p className="mb-3 text-sm text-gray-500">Tổng: {members.length} thành viên</p>
+      {newCount > 0 && (
+        <p className="mb-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
+          🎉 Có {newCount} thành viên mới đăng ký trong 24 giờ qua</p>
+      )}
       <div className="space-y-3">
         {members.map((m) => (
           <div key={m.id} className="rounded-xl border bg-white p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <p className="font-semibold">{m.full_name || "(chưa đặt tên)"} {m.is_admin ? <span className="ml-2 rounded bg-brand px-2 py-0.5 text-xs text-white">Admin</span> : null}</p>
+                <p className="font-semibold">{m.full_name || "(chưa đặt tên)"} {m.is_admin ? <span className="ml-2 rounded bg-brand px-2 py-0.5 text-xs text-white">Admin</span> : null} {isNew(m.created_at) ? <span className="ml-2 rounded bg-emerald-500 px-2 py-0.5 text-xs text-white">MỚI</span> : null}</p>
                 <p className="text-sm text-gray-500">{m.email} · {m.phone || "chưa có SĐT"} · Gói: {m.membership_tier || "free"}</p>
               </div>
               <MemberEditForm member={m} />
