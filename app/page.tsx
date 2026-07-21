@@ -331,6 +331,7 @@ export default async function TrangChu() {
         </section>
       ) : null}
 
+      <DiaDiem items={diaDiemHienThi} />
       {/* 7. Canh bao rui ro phap ly */}
       <section className="mx-auto max-w-6xl px-4 py-8">
         <div className="rounded-2xl border border-red-200 bg-red-50 p-6">
@@ -353,7 +354,6 @@ export default async function TrangChu() {
         </div>
       </section>
       <TinTucBds items={tinTuc} />
-      <DiaDiem items={diaDiemHienThi} />
       <TieuDiem items={tinTuc} />
       <DichVu />
       <CamNhan />
