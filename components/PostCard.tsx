@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Post } from "@/lib/types";
 import { getFakeStats } from "@/lib/fakeStats";
+import { pickStockImage } from "@/lib/stockImages";
 
 export function formatGia(gia: string | null, loai?: string | null): string {
   if (!gia) return "Thỏa thuận";
@@ -51,21 +52,7 @@ export default function PostCard({ post, idx = 0 }: { post: Post; idx?: number }
     return null;
   };
   const cover = _pickCover(post.anh);
-  const STOCK_SAIGON = [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/B%E1%BA%BFn_Th%C3%A0nh_Market.jpg/960px-B%E1%BA%BFn_Th%C3%A0nh_Market.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Landmark_81%2C_Ho_Chi_Minh_City%2C_Vietnam_-_February_2021.jpg/960px-Landmark_81%2C_Ho_Chi_Minh_City%2C_Vietnam_-_February_2021.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Bitexco_Financial_Tower.jpg/960px-Bitexco_Financial_Tower.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Saigon_Notre-Dame_Basilica.jpg/960px-Saigon_Notre-Dame_Basilica.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Ho_Chi_Minh_City_Hall.jpg/960px-Ho_Chi_Minh_City_Hall.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Saigon_Central_Post_Office.jpg/960px-Saigon_Central_Post_Office.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Independence_Palace%2C_Ho_Chi_Minh_City.jpg/960px-Independence_Palace%2C_Ho_Chi_Minh_City.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg/960px-B%E1%BA%BFn_Nh%C3%A0_R%E1%BB%93ng.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg/960px-Ch%E1%BB%A3_B%C3%ACnh_T%C3%A2y.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Saigon_Opera_House.jpg/960px-Saigon_Opera_House.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Ho_Chi_Minh_City%2C_Nguyen_Hue_Street%2C_2020-01_CN-01.jpg/960px-Ho_Chi_Minh_City%2C_Nguyen_Hue_Street%2C_2020-01_CN-01.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Thu_Thiem_Bridge_at_night.jpg/960px-Thu_Thiem_Bridge_at_night.jpg",
-  ];
-  const coverFinal = cover || STOCK_SAIGON[idx % STOCK_SAIGON.length];
+  const coverFinal = cover || pickStockImage(post.id ?? idx);
   const diaChi = [post.duong, post.phuong, post.quan]
     .filter(Boolean)
     .join(", ");
