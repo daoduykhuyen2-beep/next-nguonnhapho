@@ -298,9 +298,6 @@ export default async function TrangChu() {
       {/* 4. Tin moi */}
       <Khoi tieuDe="Tin mới nhất" moTa="Tất cả tin đăng mới — xếp từ mới đến cũ" tin={tinMoi} xemThem="/tin-dang" />
 
-      {/* 6. Tin tuc */}
-      {tinTuc.length ? (
-) : null}
       {/* 7. Video TikTok */}
       {video.length ? (
         <section className={"mx-auto max-w-6xl px-4 py-8"}>
