@@ -158,12 +158,12 @@ export default async function TrangChu() {
 
   // Fallback khi chưa có dữ liệu quận từ DB: hiển thị các địa điểm tiêu biểu
   const DIA_DIEM_MAC_DINH = [
-    { ten: "Quận 1", soTin: "1.240", quan: "Quận 1" },
-    { ten: "Quận 3", soTin: "870", quan: "Quận 3" },
-    { ten: "Quận 7", soTin: "1.050", quan: "Quận 7" },
-    { ten: "Bình Thạnh", soTin: "1.630", quan: "Bình Thạnh" },
-    { ten: "Gò Vấp", soTin: "1.420", quan: "Gò Vấp" },
-    { ten: "Tân Bình", soTin: "1.180", quan: "Tân Bình" },
+    { ten: "Tân Phú", soTin: "424", quan: "Tân Phú" },
+    { ten: "Quận 12", soTin: "401", quan: "Quận 12" },
+    { ten: "Bình Tân", soTin: "387", quan: "Bình Tân" },
+    { ten: "Tân Bình", soTin: "380", quan: "Tân Bình" },
+    { ten: "Gò Vấp", soTin: "317", quan: "Gò Vấp" },
+    { ten: "Hóc Môn", soTin: "226", quan: "Hóc Môn" },
   ];
   const diaDiemHienThi =
     diaDiemItems.length > 0
