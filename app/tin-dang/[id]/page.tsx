@@ -8,6 +8,7 @@ import LoanCalculator from "@/components/LoanCalculator";
 import LeadForm from "@/components/LeadForm";
 import FavoriteButton from "@/components/FavoriteButton";
 import { getFakeStats } from "@/lib/fakeStats";
+import { pickStockImage } from "@/lib/stockImages";
 
 // Che 5 so cuoi cua so dien thoai bang dau *
 function maskPhone(phone: string): string {
@@ -162,7 +163,7 @@ export default async function TinChiTietPage({
   const post = await getPost(id);
   if (!post) notFound();
 
-  const imgs = normAnh(post.anh);
+    const _imgs0 = normAnh(post.anh); const imgs = _imgs0.length ? _imgs0 : [pickStockImage(post.id)];
   const diaChi = [post.duong, post.phuong, post.quan].filter(Boolean).join(", ");
   const searchText = `${post.title ?? ""} ${post.mota ?? ""}`;
 
