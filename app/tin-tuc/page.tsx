@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { pickStockImage } from "@/lib/stockImages";
 
 export const revalidate = 60;
 
@@ -51,7 +52,7 @@ function NewsCard({ item, idx }: { item: NewsItem; idx: number }) {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Thu_Thiem_Bridge_at_night.jpg/960px-Thu_Thiem_Bridge_at_night.jpg",
   ];
   const real = firstHinh || (isRealImg(item.anh_bia) ? item.anh_bia : null);
-  const cover = real || STOCK[idx % STOCK.length];
+  const cover = real || pickStockImage(item.id);
   return (
     <Link
       href={"/tin-tuc/" + item.id}
