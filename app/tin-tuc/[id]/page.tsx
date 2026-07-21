@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { pickStockImage } from "@/lib/stockImages";
 
 export const dynamic = "force-dynamic";
 
@@ -58,7 +59,7 @@ export default async function TinTucDetail({
   };
 
   const realImgs = (item.hinh_anh && item.hinh_anh.length ? item.hinh_anh : item.anh_bia ? [item.anh_bia] : []).filter(isRealImg) as string[];
-  const cover = realImgs.length ? realImgs[0] : STOCK[Number(item.id) % STOCK.length];
+  const cover = realImgs.length ? realImgs[0] : pickStockImage(item.id);
   const gallery = realImgs.length ? realImgs : [cover];
 
   return (
