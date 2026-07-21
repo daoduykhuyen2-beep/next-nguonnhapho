@@ -4,8 +4,11 @@ import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
 import BannerCarousel from "@/components/BannerCarousel";
 import TiktokEmbed from "@/components/TiktokEmbed";
-import { getTongSoCan } from "@/lib/stats";
+import { getTongSoCan, getDanhSachQuan, formatSoCan } from "@/lib/stats";
+import { pickStockImage } from "@/lib/stockImages";
 import TieuDiem from "@/components/home/TieuDiem";
+import TinTucBds from "@/components/home/TinTucBds";
+import DiaDiem from "@/components/home/DiaDiem";
 import DichVu from "@/components/home/DichVu";
 import CamNhan from "@/components/home/CamNhan";
 
@@ -66,7 +69,7 @@ type NewsItem = {
 
 async function layTinTuc(opts: { loai?: string; limit?: number } = {}): Promise<NewsItem[]> {
   const supabase = await createClient();
-  let q = supabase.from("news").select("id, tieu_de, mo_ta, anh_bia, loai");
+  let q = supabase.from("news").select("id, tieu_de, mo_ta, anh_bia, loai, created_at");
   if (opts.loai) q = q.eq("loai", opts.loai);
   q = q.order("created_at", { ascending: false }).limit(opts.limit ?? 3);
   const { data, error } = await q;
@@ -130,7 +133,7 @@ export default async function TrangChu() {
     await sb.rpc("expire_vip_posts");
   } catch {}
 
-  const [banners, hotHomNay, kimCuong, vang, tinMoi, tinTuc, video, canhBao, khoNha] =
+  const [banners, hotHomNay, kimCuong, vang, tinMoi, tinTuc, video, canhBao, khoNha, danhSachQuan] =
     await Promise.all([
       layBanner(),
       layTin({ hotToday: true, limit: 8 }),
@@ -141,7 +144,17 @@ export default async function TrangChu() {
       layVideoTiktok(6),
       layTinTuc({ loai: "tin_tuc", limit: 4 }),
       getTongSoCan(),
+      getDanhSachQuan(),
     ]);
+
+  // Dữ liệu "Bất động sản theo địa điểm" (theo quận, dùng số tin thật)
+  const dsQuan = (danhSachQuan?.quan ?? []).filter((q) => q.count > 0);
+  const diaDiemItems = dsQuan.slice(0, 5).map((q, i) => ({
+    ten: q.quan,
+    soTin: formatSoCan(q.count),
+    href: `/tin-dang?quan=${encodeURIComponent(q.quan)}`,
+    anh: pickStockImage(i + 1),
+  }));
 
   return (
     <>
@@ -287,30 +300,7 @@ export default async function TrangChu() {
 
       {/* 6. Tin tuc */}
       {tinTuc.length ? (
-        <section className={"mx-auto max-w-6xl px-4 py-8"}>
-          <div className={"mb-5 flex items-end justify-between"}>
-            <h2 className={"text-xl font-bold text-brand sm:text-2xl"}>Tin tức</h2>
-            <Link href={"/tin-tuc"} className={"shrink-0 text-sm font-semibold text-brand hover:underline"}>Xem tất cả →</Link>
-          </div>
-          <div className={"grid gap-4 sm:grid-cols-2 lg:grid-cols-3"}>
-            {tinTuc.slice(0, 3).map((n) => (
-              <Link key={n.loai + "-" + n.id} href={"/tin-tuc"} className={"overflow-hidden rounded-xl border bg-white transition hover:shadow-md"}>
-                <div className={"aspect-[16/9] w-full bg-gray-100"}>
-                  {n.anh_bia ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={n.anh_bia} alt={n.tieu_de ?? ""} className={"h-full w-full object-cover"} />
-                  ) : null}
-                </div>
-                <div className={"p-4"}>
-                  {n.loai === "video" ? <span className={"mb-1 inline-block rounded bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand"}>Video</span> : null}
-                  <h3 className={"line-clamp-2 font-semibold text-gray-900"}>{n.tieu_de}</h3>
-                  {n.mo_ta ? <p className={"mt-1 line-clamp-2 text-sm text-gray-500"}>{n.mo_ta}</p> : null}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : null}
+) : null}
       {/* 7. Video TikTok */}
       {video.length ? (
         <section className={"mx-auto max-w-6xl px-4 py-8"}>
@@ -346,7 +336,9 @@ export default async function TrangChu() {
           <Link href="/tin-tuc" className="mt-4 inline-block text-sm font-semibold text-red-700 hover:underline">Xem thêm cảnh báo →</Link>
         </div>
       </section>
-      <TieuDiem />
+      <TinTucBds items={tinTuc} />
+      <DiaDiem items={diaDiemItems} />
+      <TieuDiem items={tinTuc} />
       <DichVu />
       <CamNhan />
     </>
