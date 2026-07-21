@@ -156,6 +156,24 @@ export default async function TrangChu() {
     anh: pickStockImage(i + 1),
   }));
 
+  // Fallback khi chưa có dữ liệu quận từ DB: hiển thị các địa điểm tiêu biểu
+  const DIA_DIEM_MAC_DINH = [
+    { ten: "TP. Hồ Chí Minh", soTin: "24.444", quan: "TP. Hồ Chí Minh" },
+    { ten: "Hà Nội", soTin: "11.823", quan: "Hà Nội" },
+    { ten: "Đà Nẵng", soTin: "475", quan: "Đà Nẵng" },
+    { ten: "Bình Dương", soTin: "1.435", quan: "Bình Dương" },
+    { ten: "Đồng Nai", soTin: "319", quan: "Đồng Nai" },
+  ];
+  const diaDiemHienThi =
+    diaDiemItems.length > 0
+      ? diaDiemItems
+      : DIA_DIEM_MAC_DINH.map((d, i) => ({
+          ten: d.ten,
+          soTin: d.soTin,
+          href: `/tin-dang?quan=${encodeURIComponent(d.quan)}`,
+          anh: pickStockImage(i + 1),
+        }));
+
   return (
     <>
       {/* Hero + tìm kiếm */}
@@ -334,7 +352,7 @@ export default async function TrangChu() {
         </div>
       </section>
       <TinTucBds items={tinTuc} />
-      <DiaDiem items={diaDiemItems} />
+      <DiaDiem items={diaDiemHienThi} />
       <TieuDiem items={tinTuc} />
       <DichVu />
       <CamNhan />
