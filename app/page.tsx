@@ -223,10 +223,6 @@ export default async function TrangChu() {
                 <input type="radio" name="loai" value="thue" className="peer sr-only" />
                 <span className="block cursor-pointer border-b-[3px] border-transparent px-4 py-3 text-center text-sm font-semibold text-gray-500 transition peer-checked:border-[color:var(--np-do)] peer-checked:bg-white peer-checked:text-[color:var(--np-do)]">Cho thuê</span>
               </label>
-              <label className="flex-1">
-                <input type="radio" name="loai" value="dat" className="peer sr-only" />
-                <span className="block cursor-pointer border-b-[3px] border-transparent px-4 py-3 text-center text-sm font-semibold text-gray-500 transition peer-checked:border-[color:var(--np-do)] peer-checked:bg-white peer-checked:text-[color:var(--np-do)]">Dự án / Đất nền</span>
-              </label>
             </div>
             {/* Thanh tim kiem */}
             <div className="grid gap-3 border-t border-gray-200 p-3 sm:grid-cols-12 sm:p-4">
