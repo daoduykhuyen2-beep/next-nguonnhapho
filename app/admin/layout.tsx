@@ -1,22 +1,44 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser, isStaffRole } from "@/lib/permissions";
+import { createClient } from "@/lib/supabase/server";
 
-// Layout bảo vệ toàn bộ khu vực /admin.
-// Cho phép: admin và phó cộng đồng (nhân sự). Các trang chỉ-admin
-// (thành viên, nạp tiền, phân quyền) tự kiểm tra thêm requireAdmin bên trong.
+// Bảo mật: khu vực quản trị không được cache tĩnh và luôn kiểm tra quyền theo từng request.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    redirect("/dang-nhap?next=/admin");
+  // Lớp 1: kiểm tra phiên đăng nhập trực tiếp từ Supabase (fail-closed).
+  let hasSession = false;
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
+    hasSession = !!authUser;
+  } catch {
+    hasSession = false;
+  }
+  if (!hasSession) {
+    redirect("/dang-nhap");
   }
 
+  // Lớp 2: xác định người dùng và vai trò. Bất kỳ lỗi nào cũng coi như không có quyền.
+  let user = null;
+  try {
+    user = await getCurrentUser();
+  } catch {
+    user = null;
+  }
+  if (!user) {
+    redirect("/dang-nhap");
+  }
+
+  // Lớp 3: chỉ nhân sự (admin + phó cộng đồng) mới được vào /admin.
   if (!isStaffRole(user.role)) {
-    // Đã đăng nhập nhưng không phải nhân sự → về trang tài khoản
     redirect("/tai-khoan");
   }
 
