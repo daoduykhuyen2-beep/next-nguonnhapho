@@ -254,9 +254,9 @@ export default async function TrangChu() {
           <div className="mt-5 flex flex-wrap gap-2 text-sm">
             <Link href="/tin-dang?quan=Quận 1" className="np-chip">Nhà Quận 1</Link>
             <Link href="/tin-dang?quan=Quận 3" className="np-chip">Nhà Quận 3</Link>
-            <Link href="/tin-dang" className="np-chip">Nhà mặt tiền</Link>
-            <Link href="/tin-dang" className="np-chip">Dưới 10 tỷ</Link>
-            <Link href="/tin-dang" className="np-chip">Hẻm xe hơi</Link>
+            <Link href="/tin-dang?q=mặt tiền" className="np-chip">Nhà mặt tiền</Link>
+            <Link href="/tin-dang?giaMax=10" className="np-chip">Dưới 10 tỷ</Link>
+            <Link href="/tin-dang?q=hẻm xe hơi" className="np-chip">Hẻm xe hơi</Link>
             <Link href="/tin-dang?loai=thue" className="np-chip">Thuê mặt bằng kinh doanh</Link>
           </div>
         </div>
