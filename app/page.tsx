@@ -27,7 +27,8 @@ async function layVideoTiktok(limit = 6): Promise<HomeVideo[]> {
   return (data as HomeVideo[]) ?? [];
 }
 
-export const revalidate = 60;
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 async function layTin(opts: { status?: string; limit?: number; hotToday?: boolean } = {}): Promise<Post[]> {
   const supabase = await createClient();
@@ -146,6 +147,22 @@ export default async function TrangChu() {
       getTongSoCan(),
       getDanhSachQuan(),
     ]);
+
+  // Xao tron ngau nhien de trang khong bi tinh, moi lan truy cap thu tu khac nhau
+  const troll = <T,>(arr: T[]): T[] => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+  const hotHomNayHT = troll(hotHomNay);
+  const kimCuongHT = troll(kimCuong);
+  const vangHT = troll(vang);
+  const tinMoiHT = troll(tinMoi);
+  const tinTucHT = troll(tinTuc);
+  const canhBaoHT = troll(canhBao);
 
   // Dữ liệu "Bất động sản theo địa điểm" (theo quận, dùng số tin thật)
   const dsQuan = (danhSachQuan?.quan ?? []).filter((q) => q.count > 0);
@@ -291,7 +308,7 @@ export default async function TrangChu() {
       </section>
 
       {/* 1. Tin HOT trong ngay */}
-      {hotHomNay.length ? (
+      {hotHomNayHT.length ? (
         <section className="mx-auto max-w-6xl px-4 py-8">
           <div className="mb-5 flex items-end justify-between">
             <div>
@@ -303,19 +320,19 @@ export default async function TrangChu() {
             <Link href="/tin-dang" className="shrink-0 text-sm font-semibold text-brand hover:underline">Xem tất cả →</Link>
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {hotHomNay.map((p) => <PostCard key={p.id} post={p} />)}
+            {hotHomNayHT.map((p) => <PostCard key={p.id} post={p} />)}
           </div>
         </section>
       ) : null}
 
       {/* 2. VIP Kim Cuong */}
-      <Khoi tieuDe="Nhà VIP Kim Cương" moTa="Bất động sản nổi bật, vị trí đắc địa — xếp từ mới đến cũ" tin={kimCuong} xemThem="/tin-dang" />
+      <Khoi tieuDe="Nhà VIP Kim Cương" moTa="Bất động sản nổi bật, vị trí đắc địa — xếp từ mới đến cũ" tin={kimCuongHT} xemThem="/tin-dang" />
 
       {/* 3. VIP Vang */}
-      <Khoi tieuDe="Nhà VIP Vàng" moTa="Tin chọn lọc — xếp từ mới đến cũ" tin={vang} xemThem="/tin-dang" />
+      <Khoi tieuDe="Nhà VIP Vàng" moTa="Tin chọn lọc — xếp từ mới đến cũ" tin={vangHT} xemThem="/tin-dang" />
 
       {/* 4. Tin moi */}
-      <Khoi tieuDe="Tin mới nhất" moTa="Tất cả tin đăng mới — xếp từ mới đến cũ" tin={tinMoi} xemThem="/tin-dang" />
+      <Khoi tieuDe="Tin mới nhất" moTa="Tất cả tin đăng mới — xếp từ mới đến cũ" tin={tinMoiHT} xemThem="/tin-dang" />
 
       {/* 7. Video TikTok */}
       {video.length ? (
@@ -340,7 +357,7 @@ export default async function TrangChu() {
           </h2>
           <p className="mt-1 text-sm text-red-600/80">Kiến thức pháp lý giúp bạn mua nhà an toàn, tránh bẫy lừa đảo</p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {canhBao.map((n) => (
+            {canhBaoHT.map((n) => (
               <Link key={n.id} href="/tin-tuc" className="flex items-start gap-3 rounded-lg bg-white p-3 transition hover:shadow">
                 <span className="mt-0.5 text-red-500">•</span>
                 <div>
@@ -353,8 +370,8 @@ export default async function TrangChu() {
           <Link href="/tin-tuc" className="mt-4 inline-block text-sm font-semibold text-red-700 hover:underline">Xem thêm cảnh báo →</Link>
         </div>
       </section>
-      <TinTucBds items={tinTuc} />
-      <TieuDiem items={tinTuc} />
+      <TinTucBds items={tinTucHT} />
+      <TieuDiem items={tinTucHT} />
       <DichVu />
       <CamNhan />
     </>
