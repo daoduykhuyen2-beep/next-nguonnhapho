@@ -7,8 +7,6 @@ import type { QuanStat } from "@/lib/stats";
 const LOAI_OPTIONS = [
   { value: "ban", label: "Nhà bán" },
   { value: "thue", label: "Cho thuê" },
-  { value: "dat", label: "Đất nền" },
-  { value: "can_ho", label: "Căn hộ" },
 ];
 
 const GIA_OPTIONS = [
