@@ -18,65 +18,66 @@ export default function QuyCheDangTinPage() {
       <div className="space-y-6 text-sm leading-relaxed">
         <section>
           <p>
-            <strong>Nguồn Nhà Phố HCM</strong> là kho nhà đất được kiểm duyệt thủ
-            công nhằm giữ chất lượng tin thật. Quy chế dưới đây giúp người đăng và
-            người tìm nhà cùng có trải nghiệm minh bạch, đáng tin cậy.
+            Nguồn Nhà Phố HCM là kho nhà đất được kiểm duyệt thủ công nhằm giữ chất
+            lượng tin thật. Quy chế dưới đây giúp người đăng và người tìm nhà cùng có
+            trải nghiệm minh bạch, đáng tin cậy.
           </p>
         </section>
 
         <section>
           <h2 className="mb-2 text-lg font-semibold text-gray-900">
-            A. Thời gian hiển thị & các hạng tin
+            A. Thời gian hiển thị &amp; các hạng tin
           </h2>
           <p className="mb-3">
-            Nguồn Nhà Phố HCM áp dụng cơ chế mua theo tin hoặc gói combo tháng,
-            thanh toán bằng chuyển khoản QR và được quản trị viên duyệt thủ công.
+            Nguồn Nhà Phố HCM áp dụng cơ chế mua theo tin hoặc gói combo tháng, thanh
+            toán bằng chuyển khoản QR và được quản trị viên duyệt thủ công.
           </p>
-          <h3 className="mb-1 font-semibold text-gray-900">Mua lẻ theo tin</h3>
+          <p className="mb-1 font-semibold text-gray-900">Mua lẻ theo tin</p>
           <ul className="mb-3 list-disc space-y-1 pl-5">
             <li>
-              <strong>Tin Thường</strong> — hiển thị 15 ngày, xuất hiện trong danh
-              sách tìm kiếm, kèm 3 lần sửa tin miễn phí.
+              <span className="font-medium">Tin Thường</span> — hiển thị 15 ngày, xuất
+              hiện trong danh sách tìm kiếm, kèm 3 lần sửa tin miễn phí.
             </li>
             <li>
-              <strong>VIP Vàng</strong> — hiển thị 7 ngày, gắn nhãn VIP Vàng nổi
-              bật, ưu tiên xếp trên tin thường, kèm 5 lần sửa tin.
+              <span className="font-medium">VIP Vàng</span> — hiển thị 7 ngày, gắn nhãn
+              VIP Vàng nổi bật, ưu tiên xếp trên tin thường, kèm 5 lần sửa tin.
             </li>
             <li>
-              <strong>VIP Kim Cương</strong> — hiển thị 7 ngày, nằm ở vị trí đầu
-              trang tìm kiếm và mục VIP trang chủ, được hỗ trợ viết lại tiêu đề hút
-              khách.
+              <span className="font-medium">VIP Kim Cương</span> — hiển thị 7 ngày, nằm
+              ở vị trí đầu trang tìm kiếm và mục VIP trang chủ, được hỗ trợ viết lại
+              tiêu đề hút khách.
             </li>
           </ul>
-          <h3 className="mb-1 font-semibold text-gray-900">
+          <p className="mb-1 font-semibold text-gray-900">
             Đẩy tin (làm mới lên đầu danh sách)
-          </h3>
-          <p className="mb-3">
-            Mua theo lượt (1 / 3 / 6 lượt); mỗi lượt đưa tin nhảy lên đầu danh
-            sách, gói nhiều lượt tự đẩy mỗi 24 giờ.
           </p>
-          <h3 className="mb-1 font-semibold text-gray-900">
+          <p className="mb-3">
+            Mua theo lượt (1 / 3 / 6 lượt); mỗi lượt đưa tin nhảy lên đầu danh sách, gói
+            nhiều lượt tự đẩy mỗi 24 giờ.
+          </p>
+          <p className="mb-1 font-semibold text-gray-900">
             Gói combo tháng (dành cho nhà môi giới)
-          </h3>
-          <ul className="list-disc space-y-1 pl-5">
+          </p>
+          <ul className="mb-3 list-disc space-y-1 pl-5">
             <li>
-              <strong>Gói Cơ Bản</strong> — 15 tin Thường (15 ngày/tin) + 5 lượt
-              đẩy tin, duyệt ưu tiên trong 4 giờ làm việc.
+              <span className="font-medium">Gói Cơ Bản</span> — 15 tin Thường (15
+              ngày/tin) + 5 lượt đẩy tin, duyệt ưu tiên trong 4 giờ làm việc.
             </li>
             <li>
-              <strong>Gói Chuyên Nghiệp</strong> — 30 tin Thường + 5 tin VIP Vàng
-              (15 ngày/tin) + 15 lượt đẩy tin, có huy hiệu tin từ đối tác xác thực.
+              <span className="font-medium">Gói Chuyên Nghiệp</span> — 30 tin Thường + 5
+              tin VIP Vàng (15 ngày/tin) + 15 lượt đẩy tin, có huy hiệu tin từ đối tác
+              xác thực.
             </li>
             <li>
-              <strong>Gói VIP Toàn Diện</strong> — 50 tin Thường + 10 tin VIP Vàng
-              + 5 tin VIP Kim Cương (15 ngày/tin) + 30 lượt đẩy tin, kèm hỗ trợ viết
-              nội dung chuẩn SEO.
+              <span className="font-medium">Gói VIP Toàn Diện</span> — 50 tin Thường +
+              10 tin VIP Vàng + 5 tin VIP Kim Cương (15 ngày/tin) + 30 lượt đẩy tin, kèm
+              hỗ trợ viết nội dung chuẩn SEO.
             </li>
           </ul>
-          <p className="mt-3">
-            Mọi tin (kể cả tin VIP) đều được kiểm duyệt thủ công trước khi lên
-            trang. Tin để quá hạn mà không được duyệt do sai quy định sẽ được thông
-            báo để chỉnh sửa; tin hết hạn được lưu tạm một thời gian trước khi ẩn.
+          <p>
+            Mọi tin (kể cả tin VIP) đều được kiểm duyệt thủ công trước khi lên trang.
+            Tin để quá hạn mà không được duyệt do sai quy định sẽ được thông báo để
+            chỉnh sửa; tin hết hạn được lưu tạm một thời gian trước khi ẩn.
           </p>
         </section>
 
@@ -84,14 +85,27 @@ export default function QuyCheDangTinPage() {
           <h2 className="mb-2 text-lg font-semibold text-gray-900">
             B. Nguyên tắc về nội dung tin đăng
           </h2>
+          <p className="mb-3">
+            Để giữ kho tin thật và dễ tìm, tin sẽ không được duyệt hoặc bị gỡ nếu rơi
+            vào một trong các trường hợp sau:
+          </p>
+          <ol className="mb-3 list-decimal space-y-1 pl-5">
+            <li>Nội dung không dấu, mô tả sơ sài hoặc nhồi từ khóa.</li>
+            <li>Chèn đường dẫn hoặc quảng cáo sang website, dịch vụ khác.</li>
+            <li>Địa chỉ không rõ ràng (tối thiểu phải có tên đường, tổ hoặc ấp).</li>
+            <li>Giá rao không đúng thực tế hoặc chỉ đăng giá trả trước.</li>
+            <li>Hình ảnh không phải của tài sản thật hoặc không đúng nội dung.</li>
+            <li>Chọn sai loại bất động sản hoặc sai khu vực.</li>
+            <li>
+              Tên và số điện thoại liên hệ trong nội dung mâu thuẫn với ô liên hệ.
+            </li>
+            <li>Giả danh chính chủ.</li>
+            <li>Đăng lại tin cũ, đăng trùng hoặc gộp nhiều tài sản trong một tin.</li>
+          </ol>
           <p>
-            Tin sẽ không được duyệt hoặc bị gỡ nếu rơi vào các trường hợp: nội dung
-            không dấu, mô tả sơ sài hoặc nhồi từ khóa; chèn đường dẫn/quảng cáo sang
-            website khác; địa chỉ không rõ ràng (tối thiểu phải có tên đường/tổ/ấp);
-            giá không đúng thực tế; hình ảnh không phải của tài sản thật; chọn sai
-            loại bất động sản; tên hoặc số điện thoại liên hệ mâu thuẫn giữa nội
-            dung và ô liên hệ; giả danh chính chủ; đăng lại tin cũ hoặc gộp nhiều
-            tài sản trong một tin.
+            Nếu vô tình vi phạm, quản trị viên sẽ chủ động hỗ trợ chỉnh sửa; nếu cố tình
+            vi phạm nhiều lần, tin sẽ không được duyệt hoặc tài khoản bị xử lý theo mục
+            C.
           </p>
         </section>
 
@@ -99,23 +113,23 @@ export default function QuyCheDangTinPage() {
           <h2 className="mb-2 text-lg font-semibold text-gray-900">
             C. Các trường hợp dẫn đến khóa tài khoản
           </h2>
-          <p className="mb-2">
-            Chúng tôi xử lý theo mức độ để bảo vệ người dùng thật:
-          </p>
-          <ul className="list-disc space-y-1 pl-5">
+          <p className="mb-3">Chúng tôi xử lý theo mức độ để bảo vệ người dùng thật:</p>
+          <ul className="mb-3 list-disc space-y-1 pl-5">
             <li>
-              <strong>Đăng tin sai sự thật</strong> (báo đã giao dịch rồi kéo khách
-              sang tài sản khác, sai giá/ảnh/địa chỉ): vi phạm cố ý sẽ bị khóa vĩnh
-              viễn.
+              <span className="font-medium">Đăng tin sai sự thật</span> (báo đã giao
+              dịch rồi kéo khách sang tài sản khác, sai giá, sai ảnh, sai địa chỉ): vi
+              phạm cố ý sẽ bị khóa vĩnh viễn.
             </li>
             <li>
-              <strong>Đăng trùng, sao chép nội dung, tạo nhiều tài khoản để đăng
-              lại tài sản cũ, dùng phần mềm đẩy tin tự động gây quá tải hệ thống</strong>,
-              hoặc <strong>không liên lạc được với người đăng</strong>: áp dụng khóa
-              theo cấp độ (lần 1 mở khóa khi liên hệ ban quản trị; lần 2 khóa kèm
-              không duyệt tin; tái phạm khóa vĩnh viễn).
+              <span className="font-medium">Đăng trùng, sao chép nội dung, tạo nhiều
+              tài khoản</span> để đăng lại tài sản cũ, dùng phần mềm đẩy tin tự động gây
+              quá tải hệ thống, hoặc không liên lạc được với người đăng.
             </li>
           </ul>
+          <p>
+            Các vi phạm nhóm sau được áp dụng khóa theo cấp độ: lần 1 mở khóa khi liên
+            hệ ban quản trị; lần 2 khóa kèm không duyệt tin; tái phạm sẽ khóa vĩnh viễn.
+          </p>
         </section>
 
         <section>
@@ -123,23 +137,19 @@ export default function QuyCheDangTinPage() {
             D. Lời nhắn từ Nguồn Nhà Phố HCM
           </h2>
           <p>
-            Mọi quy định đều hướng đến một kho tin thật, sạch và dễ tìm — điều đó
-            tốt cho cả người mua lẫn người bán. Rất mong Quý thành viên đăng tin có
-            trách nhiệm, xây dựng, để Nguồn Nhà Phố HCM ngày càng là địa chỉ tin cậy
-            của thị trường nhà đất TP.HCM. Xin cảm ơn sự đồng hành của Quý thành
-            viên.
+            Mọi quy định đều hướng đến một kho tin thật, sạch và dễ tìm — điều đó tốt
+            cho cả người mua lẫn người bán. Rất mong Quý thành viên đăng tin có trách
+            nhiệm, xây dựng, để Nguồn Nhà Phố HCM ngày càng là địa chỉ tin cậy của thị
+            trường nhà đất TP.HCM. Xin cảm ơn sự đồng hành của Quý thành viên.
           </p>
         </section>
 
-        <section>
-          <h2 className="mb-2 text-lg font-semibold text-gray-900">Liên hệ</h2>
-          <ul className="list-none space-y-1">
-            <li>Website: nguonnhaphohcm.vn</li>
-            <li>Email: hotro@nguonnhaphohcm.vn</li>
-          </ul>
+        <section className="border-t pt-4 text-gray-600">
+          <p className="font-semibold text-gray-900">Liên hệ</p>
+          <p>Website: nguonnhaphohcm.vn</p>
+          <p>Email: hotro@nguonnhaphohcm.vn</p>
         </section>
       </div>
     </main>
   );
 }
-
