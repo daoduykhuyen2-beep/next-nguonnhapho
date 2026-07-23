@@ -190,6 +190,7 @@ export default async function RootLayout({
                 <li><Link href="/gioi-thieu" className="transition-colors hover:text-brand">Về Nguồn Nhà Phố & quy trình</Link></li>
                 <li><Link href="/tuyen-dung" className="transition-colors hover:text-brand">Tuyển dụng</Link></li>
                 <li><Link href="/dang-tin" className="transition-colors hover:text-brand">Đăng tin ký gửi</Link></li>
+                      <li><Link href="/quy-che" className="transition-colors hover:text-brand">Quy chế đăng tin</Link></li>
               </ul>
             </div>
           </div>
