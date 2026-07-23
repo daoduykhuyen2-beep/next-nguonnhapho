@@ -49,9 +49,7 @@ const navLinks = [
   { href: "/tin-dang?loai=thue", label: "Nhà cho thuê" },
   { href: "/tin-tuc", label: "Tin tức" },
   { href: "/goi-thanh-vien", label: "Bảng giá" },
-  { href: "/quy-che", label: "Quy chế đăng tin" },
   { href: "/gioi-thieu", label: "Giới thiệu" },
-  { href: "/tuyen-dung", label: "Tuyển dụng" },
 ];
 
 export default async function RootLayout({
@@ -192,6 +190,7 @@ export default async function RootLayout({
                 <li><Link href="/tuyen-dung" className="transition-colors hover:text-brand">Tuyển dụng</Link></li>
                 <li><Link href="/dang-tin" className="transition-colors hover:text-brand">Đăng tin ký gửi</Link></li>
                       <li><Link href="/quy-che" className="transition-colors hover:text-brand">Quy chế đăng tin</Link></li>
+              <li><Link href="/chinh-sach-bao-mat" className="transition-colors hover:text-brand">Chính sách bảo mật</Link></li>
               </ul>
             </div>
           </div>
