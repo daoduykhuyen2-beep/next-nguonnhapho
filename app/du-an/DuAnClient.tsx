@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { type DuAnItem } from "@/lib/duAnData";
+import { pickStockImage } from "@/lib/stockImages";
 
 const GIA_RANGES = [
   { label: "Tất cả mức giá", min: 0, max: Infinity },
@@ -23,12 +24,14 @@ function DuAnCard({ item }: { item: DuAnItem }) {
     .filter(Boolean)
     .join(", ");
   const dacDiem = item.dacDiem ? item.dacDiem.split(",").map((s) => s.trim()).filter(Boolean) : [];
+  // Anh that nguoi dung upload (neu co), khong thi dung anh minh hoa on dinh theo ma tin.
+  const anh = item.anh || pickStockImage(item.ma);
   return (
-    <div className="flex flex-col rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md">
-      <div className="mb-2 flex items-center gap-2">
+    <div className="flex flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md">
+      <div className="relative aspect-[4/3] w-full bg-gray-100">
         <span
           className={
-            "rounded-full px-2.5 py-0.5 text-xs font-semibold " +
+            "absolute left-2 top-2 z-10 rounded-full px-2.5 py-0.5 text-xs font-semibold " +
             (item.loai === "Dự án"
               ? "bg-amber-100 text-amber-700"
               : "bg-blue-100 text-blue-700")
@@ -36,31 +39,34 @@ function DuAnCard({ item }: { item: DuAnItem }) {
         >
           {item.loai}
         </span>
-        <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700">
+        <span className="absolute right-2 top-2 z-10 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700">
           {item.htrang}
         </span>
-        <span className="ml-auto text-xs text-gray-400">#{item.ma}</span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={anh} alt={tenChinh} className="h-full w-full object-cover" />
       </div>
-      <h3 className="text-base font-semibold text-gray-900">{tenChinh}</h3>
-      <p className="mt-1 text-sm text-gray-500">{diaChiDayDu}</p>
-      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-700">
-        <span className="font-bold text-brand">{formatGia(item.gia)}</span>
-        {item.dt ? <span>{item.dt} m²</span> : null}
-        {item.donGia ? <span>{item.donGia} tr/m²</span> : null}
-        {item.tang ? <span>{item.tang} tầng</span> : null}
-      </div>
-      <div className="mt-3 border-t pt-3 text-xs text-gray-500">
-        <span className="font-medium text-gray-700">Pháp lý:</span> {item.phapLy}
-      </div>
-      {dacDiem.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1">
-          {dacDiem.slice(0, 4).map((d, idx) => (
-            <span key={idx} className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
-              {d}
-            </span>
-          ))}
+      <div className="flex flex-col p-5">
+        <h3 className="text-base font-semibold text-gray-900">{tenChinh}</h3>
+        <p className="mt-1 text-sm text-gray-500">{diaChiDayDu}</p>
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-700">
+          <span className="font-bold text-brand">{formatGia(item.gia)}</span>
+          {item.dt ? <span>{item.dt} m²</span> : null}
+          {item.donGia ? <span>{item.donGia} tr/m²</span> : null}
+          {item.tang ? <span>{item.tang} tầng</span> : null}
         </div>
-      )}
+        <div className="mt-3 border-t pt-3 text-xs text-gray-500">
+          <span className="font-medium text-gray-700">Pháp lý:</span> {item.phapLy}
+        </div>
+        {dacDiem.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {dacDiem.slice(0, 4).map((d, idx) => (
+              <span key={idx} className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                {d}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
