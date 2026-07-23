@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function DatLaiMatKhauPage() {
@@ -14,8 +14,33 @@ export default function DatLaiMatKhauPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  // "checking" -> dang kiem tra phien; "valid" -> co the doi mat khau; "invalid" -> link het han
+  const [status, setStatus] = useState<"checking" | "valid" | "invalid">(
+    "checking"
+  );
 
   const mismatch = confirmPassword.length > 0 && password !== confirmPassword;
+
+  // Kiem tra nguoi dung co dang trong phien dat lai mat khau hop le hay khong.
+  useEffect(() => {
+    const supabase = createClient();
+
+    // Supabase phat su kien PASSWORD_RECOVERY khi mo link tu email.
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY" || session) {
+        setStatus("valid");
+      }
+    });
+
+    // Truong hop session da duoc thiet lap truoc do (vd qua auth callback).
+    supabase.auth.getSession().then(({ data }) => {
+      setStatus((prev) =>
+        prev === "valid" ? prev : data.session ? "valid" : "invalid"
+      );
+    });
+
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,10 +60,37 @@ export default function DatLaiMatKhauPage() {
 
     setLoading(false);
     if (error) {
-      setError(error.message);
+      setError(
+        "Không thể đổi mật khẩu. Liên kết có thể đã hết hạn, vui lòng yêu cầu gửi lại."
+      );
       return;
     }
     setDone(true);
+  }
+
+  if (status === "checking") {
+    return (
+      <div className="mx-auto max-w-md rounded-xl border bg-white p-6 text-center">
+        <p className="text-gray-600">Đang kiểm tra liên kết...</p>
+      </div>
+    );
+  }
+
+  if (status === "invalid") {
+    return (
+      <div className="mx-auto max-w-md rounded-xl border bg-white p-6 text-center">
+        <h1 className="mb-2 text-xl font-bold">Liên kết không hợp lệ</h1>
+        <p className="text-gray-600">
+          Liên kết đặt lại mật khẩu đã hết hạn hoặc không hợp lệ. Vui lòng yêu cầu gửi lại email đặt lại mật khẩu.
+        </p>
+        <Link
+          href="/quen-mat-khau"
+          className="mt-4 inline-block rounded-lg bg-brand px-5 py-2 font-semibold text-white"
+        >
+          Yêu cầu liên kết mới
+        </Link>
+      </div>
+    );
   }
 
   if (done) {
@@ -132,15 +184,9 @@ export default function DatLaiMatKhauPage() {
           disabled={loading || mismatch}
           className="w-full rounded-lg bg-brand px-4 py-2 font-semibold text-white disabled:opacity-60"
         >
-          {loading ? "Đang lưu..." : "Cập nhật mật khẩu"}
+          {loading ? "Đang cập nhật..." : "Đổi mật khẩu"}
         </button>
       </form>
-
-      <p className="mt-4 text-center text-sm text-gray-600">
-        <Link href="/dang-nhap" className="font-semibold text-brand">
-          Quay lại đăng nhập
-        </Link>
-      </p>
     </div>
   );
 }
