@@ -12,6 +12,7 @@ const LOAI_OPTIONS = [
   { value: "thue", label: "Cho thuê" },
   { value: "dat", label: "Đất nền" },
   { value: "can_ho", label: "Căn hộ" },
+  { value: "du_an", label: "Dự án" },
   { value: "coc", label: "Cọc nhà" },
   { value: "chot", label: "Chốt nhà" },
   { value: "khac", label: "Khác" },
