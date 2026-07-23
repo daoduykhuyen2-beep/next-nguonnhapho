@@ -1,17 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+
+// Thoi gian cho (giay) truoc khi cho phep gui lai email.
+const RESEND_COOLDOWN = 60;
 
 export default function QuenMatKhauPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
-  async function handleReset(e: React.FormEvent) {
-    e.preventDefault();
+  // Dem nguoc thoi gian cho gui lai.
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setInterval(() => setCooldown((c) => (c > 0 ? c - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, [cooldown]);
+
+  async function sendResetEmail() {
     setLoading(true);
     setError(null);
 
@@ -26,10 +36,19 @@ export default function QuenMatKhauPage() {
 
     setLoading(false);
     if (error) {
-      setError(error.message);
+      // Khong tiet lo email co ton tai hay khong, chi bao loi chung than thien.
+      setError(
+        "Không thể gửi email lúc này. Vui lòng kiểm tra lại địa chỉ email và thử lại sau."
+      );
       return;
     }
     setSent(true);
+    setCooldown(RESEND_COOLDOWN);
+  }
+
+  async function handleReset(e: React.FormEvent) {
+    e.preventDefault();
+    await sendResetEmail();
   }
 
   if (sent) {
@@ -40,12 +59,27 @@ export default function QuenMatKhauPage() {
           Vui lòng kiểm tra hộp thư của bạn và nhấn vào liên kết để đặt lại mật
           khẩu. Nếu không thấy, hãy kiểm tra mục spam.
         </p>
-        <Link
-          href="/dang-nhap"
-          className="mt-4 inline-block rounded-lg bg-brand px-5 py-2 font-semibold text-white"
+        <button
+          type="button"
+          disabled={cooldown > 0 || loading}
+          onClick={sendResetEmail}
+          className="mt-4 inline-block rounded-lg border border-brand px-5 py-2 font-semibold text-brand disabled:opacity-60"
         >
-          Về trang đăng nhập
-        </Link>
+          {cooldown > 0
+            ? `Gửi lại sau ${cooldown}s`
+            : loading
+            ? "Đang gửi..."
+            : "Gửi lại email"}
+        </button>
+        {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+        <div className="mt-4">
+          <Link
+            href="/dang-nhap"
+            className="inline-block rounded-lg bg-brand px-5 py-2 font-semibold text-white"
+          >
+            Về trang đăng nhập
+          </Link>
+        </div>
       </div>
     );
   }
