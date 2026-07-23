@@ -47,6 +47,7 @@ export const viewport: Viewport = {
 const navLinks = [
   { href: "/tin-dang?loai=ban", label: "Nhà bán" },
   { href: "/tin-dang?loai=thue", label: "Nhà cho thuê" },
+  { href: "/du-an", label: "Dự án & Chung cư" },
   { href: "/tin-tuc", label: "Tin tức" },
   { href: "/goi-thanh-vien", label: "Bảng giá" },
   { href: "/gioi-thieu", label: "Giới thiệu" },
@@ -168,6 +169,7 @@ export default async function RootLayout({
               <ul className="space-y-2 text-sm text-gray-500">
                 <li><Link href="/tin-dang" className="transition-colors hover:text-brand">Nhà bán</Link></li>
                 <li><Link href="/tin-dang?loai=thue" className="transition-colors hover:text-brand">Nhà cho thuê</Link></li>
+                <li><Link href="/du-an" className="transition-colors hover:text-brand">Dự án & Chung cư</Link></li>
                 <li><Link href="/tin-tuc" className="transition-colors hover:text-brand">Tin tức</Link></li>
                 <li><Link href="/goi-thanh-vien" className="transition-colors hover:text-brand">Bảng giá đăng tin</Link></li>
               </ul>
