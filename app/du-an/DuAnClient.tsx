@@ -2,11 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { DU_AN_ITEMS, type DuAnItem } from "@/lib/duAnData";
-
-const QUAN_LIST = Array.from(new Set(DU_AN_ITEMS.map((i) => i.quan))).sort((a, b) =>
-  a.localeCompare(b, "vi")
-);
+import { type DuAnItem } from "@/lib/duAnData";
 
 const GIA_RANGES = [
   { label: "Tất cả mức giá", min: 0, max: Infinity },
@@ -69,16 +65,24 @@ function DuAnCard({ item }: { item: DuAnItem }) {
   );
 }
 
-export default function DuAnClient() {
+export default function DuAnClient({ items }: { items: DuAnItem[] }) {
   const [tuKhoa, setTuKhoa] = useState("");
   const [loai, setLoai] = useState("Tất cả");
   const [quan, setQuan] = useState("");
   const [giaIdx, setGiaIdx] = useState(0);
 
+  const quanList = useMemo(
+    () =>
+      Array.from(new Set(items.map((i) => i.quan).filter(Boolean))).sort((a, b) =>
+        a.localeCompare(b, "vi")
+      ),
+    [items]
+  );
+
   const ketQua = useMemo(() => {
     const kw = tuKhoa.trim().toLowerCase();
     const range = GIA_RANGES[giaIdx];
-    return DU_AN_ITEMS.filter((it) => {
+    return items.filter((it) => {
       if (loai !== "Tất cả" && it.loai !== loai) return false;
       if (quan && it.quan !== quan) return false;
       if (it.gia < range.min || it.gia > range.max) return false;
@@ -90,14 +94,14 @@ export default function DuAnClient() {
       }
       return true;
     });
-  }, [tuKhoa, loai, quan, giaIdx]);
+  }, [items, tuKhoa, loai, quan, giaIdx]);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
       <h1 className="text-2xl font-bold text-gray-900">Dự án &amp; Chung cư</h1>
       <p className="mt-1 text-sm text-gray-500">
-        Danh sách {DU_AN_ITEMS.length} căn hộ chung cư và dự án đang bán — tìm theo tên dự án,
-        khu vực và mức giá.
+        Danh sách {items.length} căn hộ chung cư và dự án đang bán — tìm theo tên dự án,
+        khu vực và mức giá. Tin mới đăng loại Căn hộ/Dự án sẽ tự động hiển thị tại đây.
       </p>
 
       <div className="mt-6 rounded-2xl border bg-gray-50 p-4">
@@ -129,7 +133,7 @@ export default function DuAnClient() {
             className="rounded-full border bg-white px-4 py-1.5 text-sm text-gray-700"
           >
             <option value="">Tất cả khu vực</option>
-            {QUAN_LIST.map((q) => (
+            {quanList.map((q) => (
               <option key={q} value={q}>
                 {q}
               </option>
