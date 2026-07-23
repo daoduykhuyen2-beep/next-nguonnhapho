@@ -43,6 +43,7 @@ export default function PasswordForm() {
   return (
     <form action={formAction} className="max-w-md space-y-5">
       <PasswordInput name="password" label="Mật khẩu mới" />
+        <p className="mt-1 text-xs text-gray-500">Tối thiểu 8 ký tự, gồm cả chữ và số.</p>
       <PasswordInput name="password2" label="Nhập lại mật khẩu" />
       {state?.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
       {state?.success ? <p className="text-sm text-green-600">Đã đổi mật khẩu thành công.</p> : null}
