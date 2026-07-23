@@ -29,7 +29,7 @@ export async function changePassword(_prev: AccountState, formData: FormData): P
   if (!user) return { error: "Bạn cần đăng nhập." };
   const pw = String(formData.get("password") || "");
   const pw2 = String(formData.get("password2") || "");
-  if (pw.length < 6) return { error: "Mật khẩu phải từ 6 ký tự trở lên." };
+  if (pw.length < 8 || !/[A-Za-z]/.test(pw) || !/[0-9]/.test(pw)) return { error: "Mật khẩu phải từ 8 ký tự trở lên và gồm cả chữ và số." };
   if (pw !== pw2) return { error: "Mật khẩu nhập lại không khớp." };
   const { error } = await supabase.auth.updateUser({ password: pw });
   if (error) { console.error("changePassword", error.message); return { error: "Không thể đổi mật khẩu." }; }
