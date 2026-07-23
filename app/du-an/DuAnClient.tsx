@@ -20,7 +20,8 @@ function formatGia(gia: number) {
 
 function DuAnCard({ item }: { item: DuAnItem }) {
   const tenChinh = item.duAn || (item.loai === "Dự án" ? "Dự án bất động sản" : "Căn hộ chung cư");
-  const diaChiDayDu = [item.diaChi, item.duong, item.quan, item.tinh]
+  // An so can / ten toa (item.diaChi) - chi hien duong, quan, tinh de khong lo can cu the.
+  const diaChiDayDu = [item.duong, item.quan, item.tinh]
     .filter(Boolean)
     .join(", ");
   const dacDiem = item.dacDiem ? item.dacDiem.split(",").map((s) => s.trim()).filter(Boolean) : [];
