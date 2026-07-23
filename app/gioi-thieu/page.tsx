@@ -45,12 +45,12 @@ const GIA_TRI = [
   { icon: "🛡️", t: "Minh bạch", d: "Thông tin thật, giá thị trường, không tin ảo — không giá ảo." },
   { icon: "⚖️", t: "Pháp lý an toàn", d: "Mọi căn đều được kiểm tra sổ và quy hoạch trước khi giao dịch." },
   { icon: "🤝", t: "Tận tâm", d: "Đặt lợi ích khách hàng làm trung tâm trong từng quyết định." },
-  { icon: "⭐", t: "Chuyên nghiệp", d: "Quy trình khép kín 4 bước, đội ngũ đào tạo bài bản." },
+  { icon: "⭐", t: "Chuyên nghiệp", d: "Quy trình khép kín 6 bước, đội ngũ đào tạo bài bản." },
 ];
 
 const SO_LIEU = [
   { n: "1.700+", l: "Căn nhà phố trong kho" },
-  { n: "4", l: "Đội chuyên trách" },
+  { n: "6", l: "Đội chuyên trách" },
   { n: "100%", l: "Tin kiểm tra pháp lý" },
   { n: "10+", l: "Ngân hàng đối tác" },
 ];
