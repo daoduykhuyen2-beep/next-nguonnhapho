@@ -27,6 +27,10 @@ export default function DangKyPage() {
       setError("Mật khẩu xác nhận không khớp.");
       return;
     }
+    if (password.length < 8 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+      setError("Mật khẩu phải từ 8 ký tự trở lên và gồm cả chữ và số.");
+      return;
+    }
     setLoading(true);
     setError(null);
 
@@ -116,7 +120,7 @@ export default function DangKyPage() {
             <input
               type={showPassword ? "text" : "password"}
               required
-              minLength={6}
+              minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-md border px-3 py-2 pr-16"
