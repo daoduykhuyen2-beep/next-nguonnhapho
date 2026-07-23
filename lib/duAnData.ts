@@ -18,6 +18,7 @@ export type DuAnItem = {
   hopDong: string;
   dacDiem: string;
   ngayCN: string;
+  anh?: string;
 };
 
 export const DU_AN_ITEMS: DuAnItem[] = [
