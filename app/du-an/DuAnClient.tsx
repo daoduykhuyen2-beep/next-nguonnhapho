@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { type DuAnItem } from "@/lib/duAnData";
-import { pickStockImage } from "@/lib/stockImages";
+import { pickStockImageByType } from "@/lib/stockImages";
 
 const GIA_RANGES = [
   { label: "Tất cả mức giá", min: 0, max: Infinity },
@@ -24,8 +24,8 @@ function DuAnCard({ item }: { item: DuAnItem }) {
     .filter(Boolean)
     .join(", ");
   const dacDiem = item.dacDiem ? item.dacDiem.split(",").map((s) => s.trim()).filter(Boolean) : [];
-  // Anh that nguoi dung upload (neu co), khong thi dung anh minh hoa on dinh theo ma tin.
-  const anh = item.anh || pickStockImage(item.ma);
+  // Anh that nguoi dung upload (neu co); neu khong thi anh minh hoa theo loai (du an / can ho).
+  const anh = item.anh || pickStockImageByType(item.ma, item.loai);
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md">
       <div className="relative aspect-[4/3] w-full bg-gray-100">
