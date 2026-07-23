@@ -13,22 +13,38 @@ export async function GET(request: Request) {
   const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
   const baseUrl = forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin;
 
-  // Loi tra ve truc tiep tu nha cung cap OAuth (vd nguoi dung tu choi).
-  const oauthErr = searchParams.get("error_description") || searchParams.get("error");
+  const isRecovery = type === "recovery";
+
+  // Loi tra ve truc tiep tu nha cung cap OAuth / email link (vd link het han).
+  const oauthErr =
+    searchParams.get("error_description") || searchParams.get("error");
   if (oauthErr) {
-    return NextResponse.redirect(`${baseUrl}/dang-nhap?error=${encodeURIComponent(oauthErr)}`);
+    // Neu la luong dat lai mat khau, dua nguoi dung ve trang quen mat khau
+    // voi thong bao ro rang thay vi hien loi kho hieu.
+    const dest = isRecovery ? "/quen-mat-khau" : "/dang-nhap";
+    return NextResponse.redirect(
+      `${baseUrl}${dest}?error=${encodeURIComponent(oauthErr)}`
+    );
   }
 
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      // Luong dat lai mat khau: dua thang toi trang nhap mat khau moi.
+      if (isRecovery) {
+        return NextResponse.redirect(`${baseUrl}/dat-lai-mat-khau`);
+      }
       const isEmailVerify =
         type === "signup" || type === "email" || type === "email_change";
-      const dest = nextParam || (isEmailVerify ? "/xac-minh-thanh-cong" : "/tai-khoan");
+      const dest =
+        nextParam || (isEmailVerify ? "/xac-minh-thanh-cong" : "/tai-khoan");
       return NextResponse.redirect(`${baseUrl}${dest}`);
     }
-    return NextResponse.redirect(`${baseUrl}/dang-nhap?error=${encodeURIComponent(error.message)}`);
+    const dest = isRecovery ? "/quen-mat-khau" : "/dang-nhap";
+    return NextResponse.redirect(
+      `${baseUrl}${dest}?error=${encodeURIComponent(error.message)}`
+    );
   }
 
   return NextResponse.redirect(`${baseUrl}/dang-nhap?error=oauth_no_code`);
