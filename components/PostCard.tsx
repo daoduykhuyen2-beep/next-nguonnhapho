@@ -38,6 +38,7 @@ const LOAI_LABEL: Record<string, string> = {
   thue: "Cho thuê",
   dat: "Đất nền",
   can_ho: "Căn hộ",
+  du_an: "Dự án",
   khac: "Khác",
 };
 
