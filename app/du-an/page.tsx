@@ -18,10 +18,8 @@ function parseGiaTy(gia: string | null): number {
   if (!gia) return 0;
   const s = String(gia).trim().toLowerCase();
   if (s.includes("thỏa thuận")) return 0;
-  // Neu co chu "ty" -> lay so tr" truoc
   const mTy = s.match(/([\d.,]+)\s*t\u1ef7/);
   if (mTy) return parseFloat(mTy[1].replace(/\./g, "").replace(",", ".")) || 0;
-  // Neu la so VND lon -> quy ra ty
   const digits = s.replace(/[^0-9]/g, "");
   if (digits.length >= 9) return Math.round((parseInt(digits, 10) / 1e9) * 100) / 100;
   const n = parseFloat(s.replace(/\./g, "").replace(",", "."));
@@ -32,6 +30,21 @@ function parseNum(v: string | null): number {
   if (!v) return 0;
   const m = String(v).replace(/\./g, "").replace(",", ".").match(/[\d.]+/);
   return m ? parseFloat(m[0]) || 0 : 0;
+}
+
+// Lay anh dau tien tu truong anh (JSON array / object imgs / chuoi)
+function pickCover(x: any): string | undefined {
+  if (!x) return undefined;
+  let v: any = x;
+  if (typeof v === "string") {
+    try { v = JSON.parse(v); } catch { return v || undefined; }
+  }
+  if (Array.isArray(v)) return v[0] || undefined;
+  if (typeof v === "object") {
+    if (Array.isArray(v.imgs)) return v.imgs[0] || undefined;
+    if (v.tin) return v.tin;
+  }
+  return undefined;
 }
 
 async function getPostItems(): Promise<DuAnItem[]> {
@@ -64,13 +77,13 @@ async function getPostItems(): Promise<DuAnItem[]> {
       hopDong: "",
       dacDiem: p.mota || "",
       ngayCN: p.created_at ? new Date(p.created_at).toLocaleDateString("vi-VN") : "",
+      anh: pickCover(p.anh),
     };
   });
 }
 
 export default async function DuAnPage() {
   const tinThat = await getPostItems();
-  // Tin that (moi nhat) len dau, sau do la danh sach co san tu file.
   const items = [...tinThat, ...DU_AN_ITEMS];
   return <DuAnClient items={items} />;
 }
