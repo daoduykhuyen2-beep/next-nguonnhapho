@@ -49,6 +49,7 @@ const navLinks = [
   { href: "/tin-dang?loai=thue", label: "Nhà cho thuê" },
   { href: "/tin-tuc", label: "Tin tức" },
   { href: "/goi-thanh-vien", label: "Bảng giá" },
+  { href: "/quy-che", label: "Quy chế đăng tin" },
   { href: "/gioi-thieu", label: "Giới thiệu" },
   { href: "/tuyen-dung", label: "Tuyển dụng" },
 ];
