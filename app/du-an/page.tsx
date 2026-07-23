@@ -1,23 +1,25 @@
 import type { Metadata } from "next";
 import DuAnClient from "./DuAnClient";
-import { DU_AN_ITEMS, type DuAnItem } from "@/lib/duAnData";
+import { type DuAnItem } from "@/lib/duAnData";
+import duAnHcm from "@/lib/duAnHcm.json";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Dự án & Chung cư đang bán | Nguồn Nhà Phố HCM",
+  title: "Nh\u00e0 ph\u1ed1, C\u0103n h\u1ed9 & D\u1ef1 \u00e1n TP.HCM \u0111ang b\u00e1n | Ngu\u1ed3n Nh\u00e0 Ph\u1ed1 HCM",
   description:
-    "Danh sách dự án và căn hộ chung cư đang bán tại TP.HCM và khu vực lân cận — tìm kiếm theo tên dự án, khu vực và mức giá.",
+    "Danh s\u00e1ch nh\u00e0 ph\u1ed1, c\u0103n h\u1ed9 chung c\u01b0 v\u00e0 d\u1ef1 \u00e1n \u0111ang b\u00e1n t\u1ea1i TP.HCM \u2014 \u0111\u1ea7y \u0111\u1ee7 di\u1ec7n t\u00edch, chi\u1ec1u ngang, chi\u1ec1u d\u00e0i, gi\u00e1 v\u00e0 ph\u00e1p l\u00fd.",
 };
 
-// Trang doc truc tiep tu database: moi tin loai "Can ho" (can_ho) hoac
-// "Du an" (du_an) da duyet se tu dong hien thi cong khai tai day.
 export const revalidate = 60;
+
+// Du lieu tinh: toan bo tin BDS TP.HCM tu file JSON.
+const STATIC_ITEMS = duAnHcm as unknown as DuAnItem[];
 
 // Tach so ty tu chuoi gia ("8.8 ty", "28.800.000.000 VND", ...)
 function parseGiaTy(gia: string | null): number {
   if (!gia) return 0;
   const s = String(gia).trim().toLowerCase();
-  if (s.includes("thỏa thuận")) return 0;
+  if (s.includes("th\u1ecfa thu\u1eadn")) return 0;
   const mTy = s.match(/([\d.,]+)\s*t\u1ef7/);
   if (mTy) return parseFloat(mTy[1].replace(/\./g, "").replace(",", ".")) || 0;
   const digits = s.replace(/[^0-9]/g, "");
@@ -62,8 +64,8 @@ async function getPostItems(): Promise<DuAnItem[]> {
     const dt = parseNum(p.dien_tich);
     return {
       ma: p.id,
-      loai: p.loai === "du_an" ? "Dự án" : "Chung cư",
-      htrang: "Mới đăng",
+      loai: p.loai === "du_an" ? "D\u1ef1 \u00e1n" : "Chung c\u01b0",
+      htrang: "M\u1edbi \u0111\u0103ng",
       duAn: p.title || "",
       diaChi: p.title || "",
       duong: p.duong || "",
@@ -73,7 +75,7 @@ async function getPostItems(): Promise<DuAnItem[]> {
       tang: parseNum(p.so_tang),
       gia,
       donGia: dt > 0 && gia > 0 ? Math.round((gia * 1000) / dt) : 0,
-      phapLy: "Đang cập nhật",
+      phapLy: "\u0110ang c\u1eadp nh\u1eadt",
       hopDong: "",
       dacDiem: p.mota || "",
       ngayCN: p.created_at ? new Date(p.created_at).toLocaleDateString("vi-VN") : "",
@@ -84,6 +86,6 @@ async function getPostItems(): Promise<DuAnItem[]> {
 
 export default async function DuAnPage() {
   const tinThat = await getPostItems();
-  const items = [...tinThat, ...DU_AN_ITEMS];
+  const items = [...tinThat, ...STATIC_ITEMS];
   return <DuAnClient items={items} />;
 }
