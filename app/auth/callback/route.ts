@@ -1,51 +1,63 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-export async function GET(request: Request) {
+export async function GET(request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type");
   const nextParam = searchParams.get("next");
 
-  // Xac dinh origin that su khi chay sau proxy (vd Vercel).
-  // request.url co the tra ve host noi bo, nen uu tien header x-forwarded-*.
+  // Xác định origin thật sự (khi đứng sau proxy/Vercel)
   const forwardedHost = request.headers.get("x-forwarded-host");
-  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
-  const baseUrl = forwardedHost ? `${forwardedProto}://${forwardedHost}` : origin;
+  const forwardedProto = request.headers.get("x-forwarded-proto");
+  const baseUrl = forwardedHost
+    ? (forwardedProto || "https") + "://" + forwardedHost
+    : origin;
 
   const isRecovery = type === "recovery";
 
-  // Loi tra ve truc tiep tu nha cung cap OAuth / email link (vd link het han).
+  const errDest = isRecovery
+    ? baseUrl + "/quen-mat-khau?error=expired"
+    : baseUrl + "/dang-nhap?error=auth";
+
+  // Lỗi trả về trực tiếp trên URL
   const oauthErr =
-    searchParams.get("error_description") || searchParams.get("error");
+    searchParams.get("error") || searchParams.get("error_description");
   if (oauthErr) {
-    // Neu la luong dat lai mat khau, dua nguoi dung ve trang quen mat khau
-    // voi thong bao ro rang thay vi hien loi kho hieu.
-    const dest = isRecovery ? "/quen-mat-khau" : "/dang-nhap";
-    return NextResponse.redirect(
-      `${baseUrl}${dest}?error=${encodeURIComponent(oauthErr)}`
-    );
+    return NextResponse.redirect(errDest);
   }
 
+  function successDest() {
+    if (isRecovery) return baseUrl + "/dat-lai-mat-khau";
+    if (nextParam) return baseUrl + nextParam;
+    const isEmailVerify = type === "signup" || type === "email";
+    if (isEmailVerify) return baseUrl + "/dang-nhap?verified=1";
+    return baseUrl + "/";
+  }
+
+  // Luồng token_hash + verifyOtp (ổn định cho email khôi phục mật khẩu)
+  if (tokenHash && type) {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.verifyOtp({
+      type: type,
+      token_hash: tokenHash,
+    });
+    if (error) {
+      return NextResponse.redirect(errDest);
+    }
+    return NextResponse.redirect(successDest());
+  }
+
+  // Luồng PKCE code (dự phòng)
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      // Luong dat lai mat khau: dua thang toi trang nhap mat khau moi.
-      if (isRecovery) {
-        return NextResponse.redirect(`${baseUrl}/dat-lai-mat-khau`);
-      }
-      const isEmailVerify =
-        type === "signup" || type === "email" || type === "email_change";
-      const dest =
-        nextParam || (isEmailVerify ? "/xac-minh-thanh-cong" : "/tai-khoan");
-      return NextResponse.redirect(`${baseUrl}${dest}`);
+    if (error) {
+      return NextResponse.redirect(errDest);
     }
-    const dest = isRecovery ? "/quen-mat-khau" : "/dang-nhap";
-    return NextResponse.redirect(
-      `${baseUrl}${dest}?error=${encodeURIComponent(error.message)}`
-    );
+    return NextResponse.redirect(successDest());
   }
 
-  return NextResponse.redirect(`${baseUrl}/dang-nhap?error=oauth_no_code`);
+  return NextResponse.redirect(errDest);
 }
