@@ -8,13 +8,14 @@ export function formatGia(gia: string | null, loai?: string | null): string {
   const s = String(gia).trim();
   if (!s) return "Thỏa thuận";
   if (/[a-zA-ZÀ-ỹ]/.test(s)) return s;
-  const num = s.replace(/[.,\s]/g, "");
-  if (loai === "thue") {
-    if (/^\d+$/.test(num)) return Number(num).toLocaleString("vi-VN") + " VNĐ/tháng";
+    if (loai === "thue") {
+          const num = s.replace(/[.,\s]/g, "");
+          if (/^\d+$/.test(num)) return Number(num).toLocaleString("vi-VN") + " VNĐ/tháng";
+          return s;
+    }
+    const n = parseFloat(s.replace(/\s/g, "").replace(",", "."));
+    if (Number.isFinite(n)) return n.toLocaleString("vi-VN", { maximumFractionDigits: 2 }) + " tỷ";
     return s;
-  }
-  if (/^\d+$/.test(num)) return num + " tỷ";
-  return s;
 }
 
 export function formatDienTich(dt: string | number | null): string {
