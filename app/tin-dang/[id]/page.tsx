@@ -37,7 +37,7 @@ function parseNumber(s?: string | null): number | null {
   if (!s) return null;
   const m = s.replace(/\s/g, "").match(/[\d.,]+/);
   if (!m) return null;
-  const n = parseFloat(m[0].replace(/\./g, "").replace(",", "."));
+    const n = parseFloat(m[0].replace(",", "."));
   return Number.isFinite(n) ? n : null;
 }
 
@@ -45,7 +45,7 @@ function parseGiaTy(gia?: string | null): number | null {
   if (!gia) return null;
   const raw = gia.toLowerCase();
   const num = parseFloat(
-    (raw.match(/[\d.,]+/)?.[0] ?? "").replace(/\./g, "").replace(",", ".")
+        (raw.match(/[\d.,]+/)?.[0] ?? "").replace(",", ".")
   );
   if (!Number.isFinite(num)) return null;
   return num;
