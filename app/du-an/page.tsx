@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import DuAnClient from "./DuAnClient";
 import { type DuAnItem } from "@/lib/duAnData";
-import duAnHcm from "@/lib/duAnHcm.json";
+// (bo import duAnHcm.json - dung du lieu that tu Supabase)
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 // Du lieu tinh: toan bo tin BDS TP.HCM tu file JSON.
-const STATIC_ITEMS = duAnHcm as unknown as DuAnItem[];
+const STATIC_ITEMS: DuAnItem[] = [];
 
 // Tach so ty tu chuoi gia ("8.8 ty", "28.800.000.000 VND", ...)
 function parseGiaTy(gia: string | null): number {
