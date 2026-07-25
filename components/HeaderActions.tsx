@@ -137,7 +137,7 @@ export default function HeaderActions({ user, avatarUrl, displayName, soDu, memb
   }
 
   return (
-    <div ref={wrapRef} className="flex items-center gap-1 text-sm font-semibold sm:gap-2">
+    <div ref={wrapRef} onMouseLeave={() => setOpen("none")} className="flex items-center gap-1 text-sm font-semibold sm:gap-2">
       {/* Tải app */}
       <div className="relative">
         <button
