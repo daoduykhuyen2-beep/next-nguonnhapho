@@ -19,175 +19,168 @@ export default function DangKyPage() {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
-  const mismatch = confirmPassword.length > 0 && password !== confirmPassword;
+  const mismatch =
+    confirmPassword.length > 0 && password !== confirmPassword;
 
-    async function handleSignup(e: React.FormEvent) {
+  async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
+
     if (password !== confirmPassword) {
       setError("Mật khẩu xác nhận không khớp.");
       return;
     }
-    if (password.length < 8 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+    if (
+      password.length < 8 ||
+      !/[A-Za-z]/.test(password) ||
+      !/[0-9]/.test(password)
+    ) {
       setError("Mật khẩu phải từ 8 ký tự trở lên và gồm cả chữ và số.");
       return;
     }
+
     setLoading(true);
     setError(null);
 
     const supabase = createClient();
-    const { data, error } = await supabase.auth.signUp({
-      email: email.trim(),
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
       password,
       options: {
-        data: { full_name: fullName.trim(), phone: phone.trim() },
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/dang-nhap`,
+        data: { full_name: fullName, phone },
       },
     });
 
     setLoading(false);
-    if (error) {
-      setError(error.message);
+
+    if (signUpError) {
+      setError(signUpError.message);
       return;
     }
 
-    if (data.session) {
-      showToast("Đăng ký thành công! Chào mừng bạn đến với Nguồn Nhà Phố!", "success");
-      router.push("/tai-khoan");
-      router.refresh();
-    } else {
-      showToast("Đăng ký thành công! Chào mừng bạn đến với Nguồn Nhà Phố!", "success");
-      setDone(true);
+    if (
+      data.user &&
+      data.user.identities &&
+      data.user.identities.length === 0
+    ) {
+      setError("Email này đã được đăng ký. Vui lòng đăng nhập hoặc dùng email khác.");
+      return;
     }
+
+    setDone(true);
+    showToast("Đã gửi email xác nhận. Vui lòng kiểm tra hộp thư của bạn.", "success");
   }
 
   if (done) {
     return (
-      <div className="mx-auto max-w-md rounded-xl border bg-white p-6 text-center">
-        <h1 className="mb-2 text-xl font-bold">Đăng ký thành công!</h1>
+      <div className="max-w-md mx-auto py-16 px-4 text-center">
+        <h1 className="text-2xl font-bold mb-4">Kiểm tra email của bạn</h1>
         <p className="text-gray-600">
-          Vui lòng kiểm tra email để xác nhận tài khoản, sau đó đăng nhập.
+          Chúng tôi đã gửi email xác nhận tới <strong>{email}</strong>. Vui lòng mở
+          email và bấm vào liên kết xác nhận để kích hoạt tài khoản, sau đó quay lại
+          đăng nhập.
+        </p>
+        <p className="text-sm text-gray-400 mt-4">
+          Không thấy email? Hãy kiểm tra mục Spam / Quảng cáo.
         </p>
         <Link
           href="/dang-nhap"
-          className="mt-4 inline-block rounded-lg bg-brand px-5 py-2 font-semibold text-white"
+          className="inline-block mt-6 text-red-600 font-semibold"
         >
-          Đến trang đăng nhập
+          Về trang đăng nhập
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-md">
-      <h1 className="mb-6 text-2xl font-bold">Đăng ký tài khoản</h1>
-      <form
-        onSubmit={handleSignup}
-        className="space-y-4 rounded-xl border bg-white p-6"
-      >
+    <div className="max-w-md mx-auto py-10 px-4">
+      <h1 className="text-2xl font-bold mb-6">Đăng ký tài khoản</h1>
+      <form onSubmit={handleSignup} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium">Họ và tên</label>
+          <label className="block mb-1">Họ và tên</label>
           <input
-            type="text"
-            required
+            className="w-full border rounded px-3 py-2"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="w-full rounded-md border px-3 py-2"
+            required
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">Email</label>
+          <label className="block mb-1">Email</label>
           <input
             type="email"
-            required
+            className="w-full border rounded px-3 py-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border px-3 py-2"
+            required
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">
-            Số điện thoại
-          </label>
+          <label className="block mb-1">Số điện thoại</label>
           <input
-            type="tel"
+            className="w-full border rounded px-3 py-2"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="w-full rounded-md border px-3 py-2"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">Mật khẩu</label>
+          <label className="block mb-1">Mật khẩu</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              required
-              minLength={8}
+              placeholder="Tối thiểu 8 ký tự, gồm chữ và số"
+              className="w-full border rounded px-3 py-2 pr-14"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 pr-16"
-              placeholder="Tối thiểu 6 ký tự"
+              required
             />
             <button
               type="button"
-              onClick={() => setShowPassword((v) => !v)}
-              className="absolute inset-y-0 right-0 px-3 text-sm font-medium text-brand"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2 text-red-600"
             >
               {showPassword ? "Ẩn" : "Hiện"}
             </button>
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">
-            Xác nhận mật khẩu
-          </label>
+          <label className="block mb-1">Xác nhận mật khẩu</label>
           <div className="relative">
             <input
               type={showConfirm ? "text" : "password"}
-              required
+              placeholder="Nhập lại mật khẩu"
+              className="w-full border rounded px-3 py-2 pr-14"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className={
-                "w-full rounded-md border px-3 py-2 pr-16 " +
-                (mismatch ? "border-red-500" : "")
-              }
-              placeholder="Nhập lại mật khẩu"
+              required
             />
             <button
               type="button"
-              onClick={() => setShowConfirm((v) => !v)}
-              className="absolute inset-y-0 right-0 px-3 text-sm font-medium text-brand"
+              onClick={() => setShowConfirm(!showConfirm)}
+              className="absolute right-3 top-2 text-red-600"
             >
               {showConfirm ? "Ẩn" : "Hiện"}
             </button>
           </div>
-          {mismatch ? (
-            <p className="mt-1 text-sm text-red-600">
-              Mật khẩu xác nhận không khớp.
-            </p>
-          ) : null}
+          {mismatch && (
+            <p className="text-red-600 text-sm mt-1">Mật khẩu xác nhận không khớp.</p>
+          )}
         </div>
 
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {error && <p className="text-red-600 text-sm">{error}</p>}
 
         <button
           type="submit"
-          disabled={loading || mismatch}
-          className="w-full rounded-lg bg-brand px-4 py-2 font-semibold text-white disabled:opacity-60"
+          disabled={loading}
+          className="w-full bg-red-600 text-white rounded py-2 font-semibold disabled:opacity-60"
         >
-          {loading ? "Đang tạo tài khoản..." : "Đăng ký"}
+          {loading ? "Đang xử lý..." : "Đăng ký"}
         </button>
-</form>
-
-      <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-        <span>
-          Đã có tài khoản?{" "}
-          <Link href="/dang-nhap" className="font-semibold text-brand">
-            Đăng nhập
-          </Link>
-        </span>
-        <Link href="/quen-mat-khau" className="font-semibold text-brand">
-          Quên mật khẩu?
-        </Link>
-      </div>
+      </form>
+      <p className="text-center mt-4 text-sm">
+        Đã có tài khoản? <Link href="/dang-nhap" className="text-red-600">Đăng nhập</Link>
+      </p>
     </div>
   );
 }
