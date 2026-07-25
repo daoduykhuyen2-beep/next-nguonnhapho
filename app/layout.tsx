@@ -47,7 +47,6 @@ export const viewport: Viewport = {
 const navLinks = [
   { href: "/tin-dang?loai=ban", label: "Nhà bán" },
   { href: "/tin-dang?loai=thue", label: "Nhà cho thuê" },
-  { href: "/du-an", label: "Dự án & Chung cư" },
   { href: "/tin-tuc", label: "Tin tức" },
   { href: "/goi-thanh-vien", label: "Bảng giá" },
   { href: "/gioi-thieu", label: "Giới thiệu" },
