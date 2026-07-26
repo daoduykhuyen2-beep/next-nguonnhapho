@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import Link from "next/link";
 import Image from "next/image";
 import "./globals.css";
@@ -107,11 +106,10 @@ export default async function RootLayout({
   return (
     <html lang="vi">
       <body className="flex min-h-screen flex-col bg-white text-black">
-        <Script
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1337313717244533"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
         <header className="sticky top-0 z-40 border-b border-gray-200 bg-white text-black shadow-sm">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
