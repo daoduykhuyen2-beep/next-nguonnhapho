@@ -11,6 +11,7 @@ import Toast from "@/components/Toast";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nguonnhaphohcm.vn"),
+  other: { "google-adsense-account": "ca-pub-1337313717244533" },
   title: {
     default: "Nguồn Nhà Phố HCM – Mua bán, cho thuê nhà phố trung tâm Sài Gòn",
     template: "%s | Nguồn Nhà Phố HCM",
