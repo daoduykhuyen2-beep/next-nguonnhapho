@@ -23,6 +23,8 @@ export function formatDienTich(dt: string | number | null): string {
   const s = String(dt).trim();
   if (!s) return "";
   if (/[a-zA-ZÀ-ỹ]/.test(s)) return s;
+  const ndt = parseFloat(s.replace(/\s/g, "").replace(",", "."));
+  if (Number.isFinite(ndt) && ndt <= 0) return "";
   return s + " m²";
 }
 
@@ -40,6 +42,9 @@ const LOAI_LABEL: Record<string, string> = {
   dat: "Đất nền",
   can_ho: "Căn hộ",
   du_an: "Dự án",
+  "du-an": "Dự án",
+  can_ho_du_an: "Căn hộ dự án",
+  dat_nen: "Đất nền",
   khac: "Khác",
 };
 
@@ -99,7 +104,7 @@ export default function PostCard({ post, idx = 0 }: { post: Post; idx?: number }
           {post.title ?? "(Không có tiêu đề)"}
         </h3>
         <p className="mt-1 font-bold text-brand">{formatGia(post.gia, post.loai)}</p>
-        {post.dien_tich ? (
+        {formatDienTich(post.dien_tich) ? (
           <p className="mt-0.5 text-sm text-gray-600">
             Diện tích: {formatDienTich(post.dien_tich)}
           </p>
