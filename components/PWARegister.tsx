@@ -24,6 +24,9 @@ export default function PWARegister() {
     const onPrompt = (e: Event) => {
       e.preventDefault();
       setDeferred(e as BIPEvent);
+      try {
+        if (localStorage.getItem("pwa-install-dismissed") === "1") return;
+      } catch {}
       setShow(true);
     };
     window.addEventListener("beforeinstallprompt", onPrompt);
@@ -55,6 +58,9 @@ export default function PWARegister() {
     if (choice.outcome === "accepted") {
       setShow(false);
       setDeferred(null);
+      try {
+        localStorage.setItem("pwa-install-dismissed", "1");
+      } catch {}
     }
   };
 
@@ -73,7 +79,12 @@ export default function PWARegister() {
           </div>
         </div>
         <button
-          onClick={() => setShow(false)}
+          onClick={() => {
+            setShow(false);
+            try {
+              localStorage.setItem("pwa-install-dismissed", "1");
+            } catch {}
+          }}
           className="rounded-md px-2 py-1 text-sm text-gray-400 hover:bg-gray-100"
           aria-label="Đóng"
         >
