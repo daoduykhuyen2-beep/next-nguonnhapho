@@ -9,6 +9,7 @@ import LeadForm from "@/components/LeadForm";
 import FavoriteButton from "@/components/FavoriteButton";
 import { getFakeStats } from "@/lib/fakeStats";
 import { pickStockImage } from "@/lib/stockImages";
+import { nhanLoai } from "@/lib/loai";
 
 // Che 5 so cuoi cua so dien thoai bang dau *
 function maskPhone(phone: string): string {
@@ -263,7 +264,7 @@ export default async function TinChiTietPage({
           <section>
             <h2 className="mb-3 text-lg font-semibold">Thông số chi tiết</h2>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Loại</dt><dd className="font-semibold">{post.loai === "thue" ? "Nhà cho thuê" : post.loai === "ban" ? "Nhà bán" : (post.loai ?? "Đang cập nhật")}</dd></div>
+              <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Loại</dt><dd className="font-semibold">{nhanLoai(post.loai)}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều ngang</dt><dd className="font-semibold">{ngang ? `${ngang} m` : "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Chiều dài</dt><dd className="font-semibold">{dai ? `${dai} m` : "Đang cập nhật"}</dd></div>
               <div className="flex justify-between border-b py-1"><dt className="text-gray-500">Số tầng</dt><dd className="font-semibold">{formatSoTang(soTang) || "Đang cập nhật"}</dd></div>
@@ -386,7 +387,7 @@ export default async function TinChiTietPage({
         <aside className="h-fit rounded-xl border bg-white p-4">
           <p className="text-2xl font-bold text-brand">{formatGia(post.gia, post.loai)}</p>
           {post.dien_tich ? <p className="mt-2 text-sm text-gray-600">Diện tích: <b>{formatDienTich(post.dien_tich)}</b></p> : null}
-          {post.loai ? <p className="mt-1 text-sm text-gray-600">Loại: <b>{post.loai === "thue" ? "Nhà cho thuê" : post.loai === "ban" ? "Nhà bán" : post.loai}</b></p> : null}
+          {post.loai ? <p className="mt-1 text-sm text-gray-600">Loại: <b>{nhanLoai(post.loai)}</b></p> : null}
           <hr className="my-3" />
           <p className="text-sm font-semibold">Liên hệ</p>
           <p className="mt-1 text-sm text-gray-700">{post.contact_name ?? "Người đăng"}</p>
