@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
 import { pickStockImage } from "@/lib/stockImages";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,36 @@ const STOCK = [
 
 const isRealImg = (u?: string | null) =>
   !!u && !u.startsWith("data:") && !/placeholder|default/i.test(u);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("news")
+    .select("tieu_de, mo_ta, anh_bia, created_at")
+    .eq("id", id)
+    .single();
+  if (!data) return { title: "Tin tức | Nguồn Nhà Phố HCM" };
+  const title = data.tieu_de + " | Nguồn Nhà Phố HCM";
+  const description = String(data.mo_ta || data.tieu_de || "").slice(0, 160);
+  const images = data.anh_bia ? [data.anh_bia] : undefined;
+  return {
+    title,
+    description,
+    alternates: { canonical: "/tin-tuc/" + id },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      publishedTime: data.created_at,
+      images,
+    },
+  };
+}
 
 export default async function TinTucDetail({
   params,
@@ -62,8 +93,25 @@ export default async function TinTucDetail({
   const cover = realImgs.length ? realImgs[0] : pickStockImage(item.id);
   const gallery = realImgs.length ? realImgs : [cover];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: item.tieu_de,
+    description: item.mo_ta || undefined,
+    image: cover ? [cover] : undefined,
+    datePublished: item.created_at,
+    dateModified: item.created_at,
+    author: { "@type": "Organization", name: "Nguồn Nhà Phố HCM" },
+    publisher: { "@type": "Organization", name: "Nguồn Nhà Phố HCM" },
+    mainEntityOfPage: "https://nguonnhaphohcm.vn/tin-tuc/" + item.id,
+  };
+
   return (
     <article className="mx-auto max-w-3xl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Link href="/tin-tuc" className="text-sm text-brand hover:underline">
         &larr; Quay lại Tin tức
       </Link>
