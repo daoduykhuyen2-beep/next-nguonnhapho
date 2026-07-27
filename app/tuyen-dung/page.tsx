@@ -4,7 +4,7 @@ import { getTongSoCan, formatSoCan } from "@/lib/stats";
 import JobApplyForm from "@/components/JobApplyForm";
 
 export const metadata: Metadata = {
-  title: "Tuyển dụng — Nguồn Nhà Phố HCM",
+  title: "Tuyển dụng",
   description:
     "Tuyển chuyên viên môi giới, cộng tác viên, marketing, pháp lý BĐS tại Nguồn Nhà Phố HCM. Kho hơn 3.500 căn nhà phố thật, hoa hồng 1,5–3%, đào tạo bài bản.",
 };
