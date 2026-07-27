@@ -97,6 +97,8 @@ export default function PostCard({ post, idx = 0 }: { post: Post; idx?: number }
         <img
           src={coverFinal}
           alt={post.title ?? "Tin đăng"}
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover"
         />
       </div>
