@@ -164,6 +164,56 @@ export default async function TinChiTietPage({
   const post = await getPost(id);
   if (!post) notFound();
 
+  const siteBase = "https://nguonnhaphohcm.vn";
+  const listingUrl = `${siteBase}/tin-dang/${post.id}`;
+  const listingImages = Array.isArray(post.anh) ? post.anh.filter(Boolean) : (post.anh ? [post.anh] : []);
+  const listingAddress = [post.duong, post.phuong, post.quan]
+    .filter((v) => typeof v === "string" && v.trim().length > 0)
+    .join(", ");
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    name: post.title ?? "Tin bất động sản",
+    url: listingUrl,
+    description:
+      (typeof post.mota === "string" && post.mota.trim().length > 0
+        ? post.mota
+        : post.title) ?? undefined,
+    image: listingImages.length > 0 ? listingImages : undefined,
+    datePosted: post.created_at ?? undefined,
+    ...(listingAddress
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: listingAddress,
+            addressLocality: post.quan ?? undefined,
+            addressRegion: "TP. Hồ Chí Minh",
+            addressCountry: "VN",
+          },
+        }
+      : {}),
+    ...(typeof post.gia === "number" && post.gia > 0
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: post.gia,
+            priceCurrency: "VND",
+            availability: "https://schema.org/InStock",
+            url: listingUrl,
+          },
+        }
+      : {}),
+    ...(typeof post.dien_tich === "number" && post.dien_tich > 0
+      ? {
+          floorSize: {
+            "@type": "QuantitativeValue",
+            value: post.dien_tich,
+            unitCode: "MTK",
+          },
+        }
+      : {}),
+  };
+
     const _imgs0 = normAnh(post.anh); const imgs = _imgs0.length ? _imgs0 : [pickStockImage(post.id)];
   const diaChi = [post.duong, post.phuong, post.quan].filter(Boolean).join(", ");
   const searchText = `${post.title ?? ""} ${post.mota ?? ""}`;
@@ -225,6 +275,11 @@ export default async function TinChiTietPage({
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Link href="/tin-dang" className="mb-4 inline-block text-sm text-brand hover:underline">
         ← Quay lại danh sách
       </Link>
