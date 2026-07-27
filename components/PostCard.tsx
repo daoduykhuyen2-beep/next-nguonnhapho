@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Post } from "@/lib/types";
 import { getFakeStats } from "@/lib/fakeStats";
 import { pickStockImage } from "@/lib/stockImages";
+import { nhanLoai } from "@/lib/loai";
 
 export function formatGia(gia: string | null, loai?: string | null): string {
   if (!gia) return "Thỏa thuận";
@@ -49,7 +50,7 @@ const LOAI_LABEL: Record<string, string> = {
 };
 
 export default function PostCard({ post, idx = 0 }: { post: Post; idx?: number }) {
-  const loaiLabel = post.loai ? LOAI_LABEL[post.loai] || post.loai : null;
+    const loaiLabel = post.loai ? nhanLoai(post.loai) : null;
   const _pickCover = (x: any): string | null => {
     if (!x) return null;
     let v: any = x;
