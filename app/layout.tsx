@@ -28,6 +28,23 @@ export const metadata: Metadata = {
     description: "Mua bán, cho thuê nhà phố trung tâm Sài Gòn — pháp lý rõ ràng.",
     images: ["/logo.png"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nguồn Nhà Phố HCM",
+    description:
+      "Mua bán, cho thuê nhà phố trung tâm Sài Gòn — pháp lý rõ ràng.",
+    images: ["/logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   manifest: "/manifest.json",
   applicationName: "Nhà Phố HCM",
   appleWebApp: {
