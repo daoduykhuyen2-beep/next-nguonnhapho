@@ -93,6 +93,30 @@ export default async function TinTucDetail({
   const cover = realImgs.length ? realImgs[0] : pickStockImage(item.id);
   const gallery = realImgs.length ? realImgs : [cover];
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Trang chủ",
+        item: "https://nguonnhaphohcm.vn",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Tin tức",
+        item: "https://nguonnhaphohcm.vn/tin-tuc",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: item.tieu_de,
+        item: "https://nguonnhaphohcm.vn/tin-tuc/" + item.id,
+      },
+    ],
+  };
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -111,6 +135,10 @@ export default async function TinTucDetail({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <Link href="/tin-tuc" className="text-sm text-brand hover:underline">
         &larr; Quay lại Tin tức
