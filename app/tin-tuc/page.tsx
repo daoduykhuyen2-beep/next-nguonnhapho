@@ -9,6 +9,14 @@ export const metadata: Metadata = {
   title: "Tin tức",
   description:
     "Tin tức & kiến thức mua nhà an toàn, tin thị trường từ các báo lớn, góc nhìn Founder và video thực tế từ Nguồn Nhà Phố HCM.",
+  alternates: { canonical: "/tin-tuc" },
+  openGraph: {
+    type: "website",
+    url: "/tin-tuc",
+    title: "Tin tức bất động sản — Nguồn Nhà Phố HCM",
+    description:
+      "Tin tức & kiến thức mua nhà an toàn, tin thị trường và video thực tế từ Nguồn Nhà Phố HCM.",
+  },
 };
 
 type NewsItem = {
