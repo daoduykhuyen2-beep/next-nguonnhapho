@@ -184,6 +184,24 @@ export default async function TinDangPage({
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Tin đăng bất động sản",
+            description:
+              "Danh sách tin đăng mua bán, cho thuê nhà phố, shophouse, căn hộ, đất nền trung tâm TP. Hồ Chí Minh.",
+            url: "https://nguonnhaphohcm.vn/tin-dang",
+            isPartOf: {
+              "@type": "WebSite",
+              name: "Nguồn Nhà Phố HCM",
+              url: "https://nguonnhaphohcm.vn",
+            },
+          }),
+        }}
+      />
       <h1 className="mb-4 text-xl font-bold">
         {sp.loai === "thue" ? "Nhà cho thuê" : sp.loai === "ban" ? "Nhà bán" : "Tin đăng bất động sản"}
       </h1>
