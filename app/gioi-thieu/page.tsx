@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   title: "Giới thiệu",
   description:
     "Nguồn Nhà Phố HCM — làm việc chuyên nghiệp, minh bạch từng bước. Tầm nhìn, quy trình, giá trị cốt lõi và cam kết với khách hàng.",
+  alternates: { canonical: "/gioi-thieu" },
+  openGraph: {
+    type: "website",
+    url: "/gioi-thieu",
+    title: "Giới thiệu — Nguồn Nhà Phố HCM",
+    description:
+      "Nguồn Nhà Phố HCM — làm việc chuyên nghiệp, minh bạch. Tầm nhìn, quy trình và cam kết với khách hàng.",
+  },
 };
 
 const QUY_TRINH = [
