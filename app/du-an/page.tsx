@@ -7,6 +7,14 @@ import { createClient } from "@/lib/supabase/server";
 export const metadata: Metadata = {
   title: "Nh\u00e0 ph\u1ed1, C\u0103n h\u1ed9 & D\u1ef1 \u00e1n TP.HCM \u0111ang b\u00e1n",
   description:    "Danh s\u00e1ch nh\u00e0 ph\u1ed1, c\u0103n h\u1ed9 chung c\u01b0 v\u00e0 d\u1ef1 \u00e1n \u0111ang b\u00e1n t\u1ea1i TP.HCM \u2014 \u0111\u1ea7y \u0111\u1ee7 di\u1ec7n t\u00edch, chi\u1ec1u ngang, chi\u1ec1u d\u00e0i, gi\u00e1 v\u00e0 ph\u00e1p l\u00fd.",
+  alternates: { canonical: "/du-an" },
+  openGraph: {
+    type: "website",
+    url: "/du-an",
+    title: "Nh\u00e0 ph\u1ed1, C\u0103n h\u1ed9 & D\u1ef1 \u00e1n TP.HCM \u0111ang b\u00e1n",
+    description:
+      "Nh\u00e0 ph\u1ed1, c\u0103n h\u1ed9 v\u00e0 d\u1ef1 \u00e1n \u0111ang b\u00e1n t\u1ea1i TP.HCM.",
+  },
 };
 
 export const revalidate = 60;
