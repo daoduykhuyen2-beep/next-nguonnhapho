@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import type { Post } from "@/lib/types";
 import PostCard from "@/components/PostCard";
@@ -11,6 +12,21 @@ import TinTucBds from "@/components/home/TinTucBds";
 import DiaDiem from "@/components/home/DiaDiem";
 import DichVu from "@/components/home/DichVu";
 import CamNhan from "@/components/home/CamNhan";
+
+export const metadata: Metadata = {
+  title:
+    "Nguồn Nhà Phố HCM — Mua bán nhà phố, căn hộ, dự án TP.HCM",
+  description:
+    "Nguồn Nhà Phố HCM: kênh đăng tin và tìm kiếm nhà phố, căn hộ, đất nền và dự án bất động sản tại TP. Hồ Chí Minh. Cập nhật tin mới mỗi ngày, giá thật, hình thật.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "Nguồn Nhà Phố HCM — Mua bán nhà phố, căn hộ, dự án TP.HCM",
+    description:
+      "Kênh đăng tin và tìm kiếm nhà phố, căn hộ, đất nền và dự án bất động sản tại TP. Hồ Chí Minh.",
+  },
+};
 
 type HomeVideo = { id: number; title: string | null; tiktok_url: string };
 
