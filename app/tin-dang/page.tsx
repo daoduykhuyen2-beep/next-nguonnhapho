@@ -12,6 +12,14 @@ export const revalidate = 60;
 export const metadata = {
   title: "Tin đăng bất động sản",
   description: "Danh sách tin mua bán, cho thuê nhà đất tại TP. Hồ Chí Minh.",
+  alternates: { canonical: "/tin-dang" },
+  openGraph: {
+    type: "website",
+    url: "/tin-dang",
+    title: "Tin đăng bất động sản — Nguồn Nhà Phố HCM",
+    description:
+      "Danh sách tin mua bán, cho thuê nhà đất tại TP. Hồ Chí Minh.",
+  },
 };
 
 const PAGE_SIZE = 12;
