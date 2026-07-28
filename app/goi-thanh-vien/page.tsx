@@ -9,7 +9,16 @@ import {
 import { getPlansMerged } from "@/lib/plans-server";
 import { createOrder } from "@/app/actions/payment";
 
-export const metadata = { title: "Bảng giá đăng tin & đẩy tin" };
+export const metadata = { title: "Bảng giá đăng tin & đẩy tin",
+  alternates: { canonical: "/goi-thanh-vien" },
+  openGraph: {
+    type: "website",
+    url: "/goi-thanh-vien",
+    title: "Gói thành viên — Nguồn Nhà Phố HCM",
+    description:
+      "Các gói thành viên và dịch vụ đăng tin, đẩy tin của Nguồn Nhà Phố HCM.",
+  },
+};
 export const dynamic = "force-dynamic";
 
 const GROUPS: { key: Plan["group"]; title: string; icon: string; note?: string }[] = [
