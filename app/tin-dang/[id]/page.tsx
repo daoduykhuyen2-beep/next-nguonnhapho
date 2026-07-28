@@ -147,6 +147,7 @@ export async function generateMetadata({
   return {
     title: post.title ?? "Tin đăng",
     description: (post.mota ?? "").slice(0, 160),
+    alternates: { canonical: `/tin-dang/${post.id}` },
     openGraph: {
       title: post.title ?? "Tin đăng",
       description: (post.mota ?? "").slice(0, 160),
@@ -170,6 +171,30 @@ export default async function TinChiTietPage({
   const listingAddress = [post.duong, post.phuong, post.quan]
     .filter((v) => typeof v === "string" && v.trim().length > 0)
     .join(", ");
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Trang chủ",
+        item: siteBase,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Tin đăng",
+        item: `${siteBase}/tin-dang`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title ?? "Tin đăng",
+        item: listingUrl,
+      },
+    ],
+  };
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
@@ -278,6 +303,10 @@ export default async function TinChiTietPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
       <Link href="/tin-dang" className="mb-4 inline-block text-sm text-brand hover:underline">
