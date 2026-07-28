@@ -115,6 +115,24 @@ export default async function TinTucPage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Tin tức bất động sản",
+            description:
+              "Tin tức, kiến thức và cập nhật thị trường bất động sản TP. Hồ Chí Minh.",
+            url: "https://nguonnhaphohcm.vn/tin-tuc",
+            isPartOf: {
+              "@type": "WebSite",
+              name: "Nguồn Nhà Phố HCM",
+              url: "https://nguonnhaphohcm.vn",
+            },
+          }),
+        }}
+      />
       {/* Hero */}
       <section className="bg-white text-black">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
