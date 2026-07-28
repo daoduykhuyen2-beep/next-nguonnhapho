@@ -62,8 +62,7 @@ async function getPostItems(): Promise<DuAnItem[]> {
     .from("web_posts")
     .select("*")
     .eq("trang_thai", "duyet")
-    .in("loai", ["can_ho", "du_an"])
-    .order("created_at", { ascending: false })
+        .order("created_at", { ascending: false })
     .limit(500);
   if (error || !data) return [];
   return data.map((p: any): DuAnItem => {
