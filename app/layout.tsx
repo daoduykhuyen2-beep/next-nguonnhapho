@@ -125,6 +125,38 @@ export default async function RootLayout({
     <html lang="vi">
       <body className="flex min-h-screen flex-col bg-white text-black">
         <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Nguồn Nhà Phố HCM",
+              url: "https://nguonnhaphohcm.vn",
+              logo: "https://nguonnhaphohcm.vn/logo-black.png",
+              description:
+                "Kênh đăng tin mua bán, cho thuê nhà phố, shophouse, căn hộ, đất nền trung tâm TP. Hồ Chí Minh.",
+              areaServed: "Hồ Chí Minh, Việt Nam",
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Nguồn Nhà Phố HCM",
+              url: "https://nguonnhaphohcm.vn",
+              potentialAction: {
+                "@type": "SearchAction",
+                target:
+                  "https://nguonnhaphohcm.vn/tin-dang?q={search_term_string}",
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1337313717244533"
           crossOrigin="anonymous"
